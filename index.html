@@ -3801,5 +3801,89 @@
     })();
   </script>
 
+  <!-- ── OHI TRACKING ── -->
+  <script>
+  (function(){
+    var EVENTS_KEY = 'ohi_events';
+    var events = [];
+    try { events = JSON.parse(localStorage.getItem(EVENTS_KEY)) || []; } catch(e) {}
+
+    function track(type, detail, extra) {
+      var params = new URLSearchParams(window.location.search);
+      var evt = {
+        type: type,
+        detail: detail || '',
+        ts: Date.now(),
+        url: location.pathname,
+        utm_source: params.get('utm_source') || '',
+        utm_medium: params.get('utm_medium') || '',
+        utm_campaign: params.get('utm_campaign') || '',
+        utm_content: params.get('utm_content') || '',
+        device: /Mobi/.test(navigator.userAgent) ? 'mobile' : 'desktop',
+        ref: document.referrer || ''
+      };
+      if (extra) Object.assign(evt, extra);
+      events.push(evt);
+      if (events.length > 5000) events = events.slice(-3000);
+      try { localStorage.setItem(EVENTS_KEY, JSON.stringify(events)); } catch(e) {}
+
+      // GA4 bridge
+      if (typeof gtag === 'function') {
+        gtag('event', type, { detail: detail || '', utm_source: evt.utm_source });
+      }
+    }
+
+    // Pageview
+    track('pageview');
+
+    // Scroll depth milestones
+    var maxScroll = 0;
+    var milestones = [25, 50, 75, 100];
+    window.addEventListener('scroll', function() {
+      var pct = Math.round(window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100);
+      if (pct > maxScroll) {
+        milestones.forEach(function(m) {
+          if (pct >= m && maxScroll < m) track('scroll', String(m));
+        });
+        maxScroll = pct;
+      }
+    });
+
+    // Section views
+    var sections = document.querySelectorAll('section[id]');
+    var sio = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting) {
+          track('section_view', e.target.id);
+          sio.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    sections.forEach(function(s) { sio.observe(s); });
+
+    // CTA clicks
+    document.querySelectorAll('.produto__cta, .oferta__cta, .ctafinal__cta, .hero__cta').forEach(function(el) {
+      el.addEventListener('click', function() {
+        var label = el.className.split(' ')[0] || 'cta';
+        track('cta_click', label);
+      });
+    });
+
+    // FAQ clicks
+    document.querySelectorAll('.faq__trigger').forEach(function(btn, i) {
+      btn.addEventListener('click', function() {
+        track('faq_click', 'pergunta_' + (i + 1));
+      });
+    });
+
+    // Time on page
+    var startTime = Date.now();
+    window.addEventListener('beforeunload', function() {
+      var seconds = Math.round((Date.now() - startTime) / 1000);
+      track('time_on_page', String(seconds));
+    });
+  })();
+  </script>
+
 </body>
 </html>

@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin · O Homem Inseguro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0B0D10;
+      --surface: #151820;
+      --surface-2: #1C2028;
+      --border: #262B35;
+      --text: #E8E0D5;
+      --text-mid: #A09890;
+      --muted: #6B6560;
+      --ember: #A32626;
+      --ember-dim: #7C1D1D;
+      --green: #2D9B5E;
+      --green-dim: rgba(45,155,94,0.15);
+      --blue: #3B82C4;
+      --blue-dim: rgba(59,130,196,0.15);
+      --yellow: #C4A43B;
+      --yellow-dim: rgba(196,164,59,0.15);
+      --red-dim: rgba(163,38,38,0.15);
+      --font: 'Inter', system-ui, sans-serif;
+      --radius: 10px;
+    }
+
+    html, body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    body {
+      max-width: 640px;
+      margin: 0 auto;
+      padding: 24px 16px 100px;
+    }
+
+    /* ── TELA DE PIN ── */
+    .lock {
+      min-height: 80vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .lock h1 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+    .lock p { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+
+    .pin-dots { display: flex; gap: 12px; margin-bottom: 24px; }
+
+    .pin-dot {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      border: 2px solid var(--border);
+      transition: all 0.15s;
+    }
+    .pin-dot.filled { background: var(--ember); border-color: var(--ember); }
+
+    .pin-pad { display: grid; grid-template-columns: repeat(3, 64px); gap: 10px; }
+
+    .pin-key {
+      width: 64px; height: 56px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 20px; font-weight: 600;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.1s;
+    }
+    .pin-key:active { background: var(--surface-2); transform: scale(0.96); }
+    .pin-key.small { font-size: 13px; font-weight: 500; color: var(--muted); }
+
+    .pin-error { color: var(--ember); font-size: 12px; margin-top: 12px; min-height: 18px; }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 24px;
+    }
+    .header h1 { font-size: 18px; font-weight: 700; }
+    .header small { font-size: 11px; color: var(--muted); display: block; margin-top: 2px; }
+
+    .btn-ghost {
+      background: none; border: none;
+      color: var(--muted); font-family: var(--font); font-size: 12px;
+      cursor: pointer; padding: 6px 10px; border-radius: 6px;
+    }
+    .btn-ghost:hover { color: var(--text); background: var(--surface); }
+
+    /* ── ABAS ── */
+    .tabs {
+      display: flex; gap: 4px;
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 4px;
+      margin-bottom: 24px;
+      overflow-x: auto;
+    }
+
+    .tab {
+      flex: 1; padding: 10px 6px;
+      border-radius: 7px; border: none;
+      background: transparent;
+      color: var(--muted);
+      font-family: var(--font); font-size: 12px; font-weight: 600;
+      cursor: pointer; white-space: nowrap;
+      transition: all 0.15s;
+    }
+    .tab:hover { color: var(--text); }
+    .tab.active { background: var(--surface-2); color: var(--text); }
+
+    /* ── PAGINAS ── */
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .desc {
+      font-size: 12px; color: var(--muted);
+      margin-bottom: 16px; line-height: 1.5;
+    }
+
+    /* ── KPI ── */
+    .kpi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+
+    .kpi {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+    .kpi__label {
+      font-size: 11px; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;
+    }
+    .kpi__value { font-size: 24px; font-weight: 700; font-variant-numeric: tabular-nums; }
+    .kpi__sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+    /* ── CARD ── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px; margin-bottom: 16px;
+    }
+    .card__head {
+      font-size: 13px; font-weight: 600; margin-bottom: 14px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .card__head .sub { color: var(--muted); font-weight: 400; font-size: 12px; }
+
+    /* ── GRAFICO ── */
+    .chart { display: flex; align-items: flex-end; gap: 6px; height: 80px; margin-bottom: 8px; }
+
+    .chart-col {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; gap: 4px; height: 100%; justify-content: flex-end;
+    }
+    .chart-bar {
+      width: 100%; border-radius: 4px 4px 0 0;
+      background: var(--ember); min-height: 3px;
+    }
+    .chart-lbl { font-size: 10px; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+    /* ── FORMULARIO ── */
+    .fg { margin-bottom: 14px; }
+    .fg label { display: block; font-size: 12px; font-weight: 500; color: var(--text-mid); margin-bottom: 5px; }
+
+    .input {
+      width: 100%; background: var(--surface-2);
+      border: 1px solid var(--border); border-radius: 8px;
+      color: var(--text); font-family: var(--font); font-size: 14px;
+      padding: 11px 14px; outline: none; transition: border-color 0.2s;
+    }
+    .input:focus { border-color: var(--ember); }
+    .input::placeholder { color: var(--muted); }
+
+    .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      gap: 6px; padding: 12px 20px; border-radius: 8px;
+      font-family: var(--font); font-size: 14px; font-weight: 600;
+      cursor: pointer; border: 1px solid var(--border);
+      background: var(--surface-2); color: var(--text);
+      transition: all 0.15s; width: 100%;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn--red { background: var(--ember); border-color: var(--ember); color: #fff; }
+    .btn--sm { padding: 8px 14px; font-size: 12px; width: auto; }
+
+    /* ── TABELA ── */
+    .tbl { width: 100%; font-size: 13px; border-collapse: collapse; }
+    .tbl th {
+      text-align: left; font-size: 11px; font-weight: 600;
+      color: var(--muted); text-transform: uppercase; letter-spacing: 0.03em;
+      padding: 8px 6px; border-bottom: 1px solid var(--border);
+    }
+    .tbl td { padding: 10px 6px; border-bottom: 1px solid var(--border); font-variant-numeric: tabular-nums; }
+    .tbl tr:last-child td { border-bottom: none; }
+
+    /* ── CHECKLIST ── */
+    .ck-item {
+      display: flex; align-items: flex-start; gap: 12px;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+    }
+    .ck-item:last-child { border-bottom: none; }
+
+    .ck-box {
+      width: 22px; height: 22px; border-radius: 6px;
+      border: 2px solid var(--border); background: var(--surface-2);
+      cursor: pointer; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      margin-top: 1px; transition: all 0.15s;
+    }
+    .ck-box.on { background: var(--green); border-color: var(--green); }
+    .ck-box svg { display: none; }
+    .ck-box.on svg { display: block; }
+
+    .ck-text { font-size: 13px; line-height: 1.4; }
+    .ck-item.done .ck-text { color: var(--muted); text-decoration: line-through; }
+
+    .badge {
+      display: inline-block; padding: 2px 7px; border-radius: 4px;
+      font-size: 10px; font-weight: 600; margin-left: 6px; vertical-align: middle;
+    }
+    .badge-r { background: var(--red-dim); color: var(--ember); }
+    .badge-g { background: var(--green-dim); color: var(--green); }
+    .badge-b { background: var(--blue-dim); color: var(--blue); }
+    .badge-y { background: var(--yellow-dim); color: var(--yellow); }
+
+    /* ── UTM RESULTADO ── */
+    .utm-out {
+      background: var(--surface-2); border: 1px solid var(--border);
+      border-radius: 8px; padding: 14px; margin-top: 12px;
+      word-break: break-all; font-size: 12px; line-height: 1.6;
+      color: var(--green); font-family: monospace;
+    }
+
+    /* ── STATUS ── */
+    .svc {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+    }
+    .svc:last-child { border-bottom: none; }
+    .dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .dot.on { background: var(--green); }
+    .dot.off { background: var(--muted); }
+    .svc strong { font-size: 13px; display: block; }
+    .svc span { font-size: 11px; color: var(--muted); }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(10px);
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 8px; padding: 10px 20px;
+      font-size: 13px; font-weight: 500; z-index: 100;
+      opacity: 0; transition: all 0.25s; pointer-events: none;
+    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    .empty { text-align: center; padding: 30px 16px; color: var(--muted); font-size: 13px; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+
+<!-- ══ PIN ══ -->
+<div class="lock" id="lock">
+  <h1 id="lock-t">Crie seu PIN</h1>
+  <p id="lock-d">Escolha 4 digitos para proteger seu painel</p>
+  <div class="pin-dots">
+    <div class="pin-dot" id="d0"></div>
+    <div class="pin-dot" id="d1"></div>
+    <div class="pin-dot" id="d2"></div>
+    <div class="pin-dot" id="d3"></div>
+  </div>
+  <div class="pin-pad">
+    <button class="pin-key" data-n="1">1</button>
+    <button class="pin-key" data-n="2">2</button>
+    <button class="pin-key" data-n="3">3</button>
+    <button class="pin-key" data-n="4">4</button>
+    <button class="pin-key" data-n="5">5</button>
+    <button class="pin-key" data-n="6">6</button>
+    <button class="pin-key" data-n="7">7</button>
+    <button class="pin-key" data-n="8">8</button>
+    <button class="pin-key" data-n="9">9</button>
+    <button class="pin-key small" id="pk-clear">Limpar</button>
+    <button class="pin-key" data-n="0">0</button>
+    <button class="pin-key small" id="pk-back">&larr;</button>
+  </div>
+  <div class="pin-error" id="pin-err"></div>
+</div>
+
+<!-- ══ APP ══ -->
+<div id="app" class="hidden">
+  <div class="header">
+    <div>
+      <h1>Painel Admin</h1>
+      <small>O Homem Inseguro</small>
+    </div>
+    <button class="btn-ghost" id="btn-sair">Sair</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-t="resumo">Resumo</button>
+    <button class="tab" data-t="registrar">Registrar</button>
+    <button class="tab" data-t="utm">UTM</button>
+    <button class="tab" data-t="checklist">Checklist</button>
+    <button class="tab" data-t="ajustes">Ajustes</button>
+  </div>
+
+  <!-- ═══ RESUMO ═══ -->
+  <div class="page active" id="p-resumo">
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi__label">Visitas (7d)</div>
+        <div class="kpi__value" id="k-vis">0</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">Vendas (7d)</div>
+        <div class="kpi__value" id="k-ven">0</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">Receita (7d)</div>
+        <div class="kpi__value" id="k-rec">R$ 0</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">ROAS</div>
+        <div class="kpi__value" id="k-roas">--</div>
+        <div class="kpi__sub">Receita / Custo Ads</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card__head">Visitas por dia</div>
+      <div class="chart" id="chart"></div>
+    </div>
+    <div class="card">
+      <div class="card__head">Historico recente</div>
+      <div style="overflow-x:auto">
+        <table class="tbl">
+          <thead><tr><th>Data</th><th>Vis.</th><th>Vendas</th><th>Receita</th></tr></thead>
+          <tbody id="tb-recent"><tr><td colspan="4" class="empty">Registre suas metricas na aba "Registrar"</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ REGISTRAR ═══ -->
+  <div class="page" id="p-registrar">
+    <p class="desc">Registre os numeros do dia. Pegue visitas no Google Analytics, vendas e receita no painel da Kiwify, custo de ads no Meta Ads ou Google Ads.</p>
+    <div class="card">
+      <div class="fg">
+        <label>Data</label>
+        <input class="input" type="date" id="m-date" />
+      </div>
+      <div class="row2">
+        <div class="fg"><label>Visitas</label><input class="input" type="number" id="m-vis" placeholder="0" min="0" /></div>
+        <div class="fg"><label>Cliques CTA</label><input class="input" type="number" id="m-cli" placeholder="0" min="0" /></div>
+      </div>
+      <div class="row2">
+        <div class="fg"><label>Vendas</label><input class="input" type="number" id="m-ven" placeholder="0" min="0" /></div>
+        <div class="fg"><label>Receita (R$)</label><input class="input" type="number" id="m-rec" placeholder="0.00" min="0" step="0.01" /></div>
+      </div>
+      <div class="fg">
+        <label>Custo de anuncios (R$)</label>
+        <input class="input" type="number" id="m-ads" placeholder="0.00" min="0" step="0.01" />
+      </div>
+      <button class="btn btn--red" id="btn-salvar">Salvar metricas do dia</button>
+    </div>
+    <div class="card">
+      <div class="card__head">Todos os registros <span class="sub" id="m-count"></span></div>
+      <div style="overflow-x:auto">
+        <table class="tbl">
+          <thead><tr><th>Data</th><th>Vis.</th><th>Cliq.</th><th>Ven.</th><th>Rec.</th><th>Ads</th><th>ROAS</th><th></th></tr></thead>
+          <tbody id="tb-all"><tr><td colspan="8" class="empty">Nenhum registro</td></tr></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ UTM ═══ -->
+  <div class="page" id="p-utm">
+    <p class="desc">Gere links com UTM para saber de onde vem cada visitante. Use um link diferente para cada anuncio, post ou canal.</p>
+    <div class="card">
+      <div class="card__head">Criar link</div>
+      <div class="fg"><label>URL da sua pagina</label><input class="input" id="u-base" placeholder="https://seusite.com" /></div>
+      <div class="row2">
+        <div class="fg"><label>Origem (utm_source)</label><input class="input" id="u-src" placeholder="instagram" /></div>
+        <div class="fg"><label>Meio (utm_medium)</label><input class="input" id="u-med" placeholder="story" /></div>
+      </div>
+      <div class="fg"><label>Campanha (utm_campaign)</label><input class="input" id="u-camp" placeholder="lancamento-setembro" /></div>
+      <button class="btn btn--red" id="btn-utm">Gerar link com UTM</button>
+      <div class="utm-out hidden" id="utm-out"></div>
+      <button class="btn btn--sm hidden" id="btn-copy" style="margin-top:8px">Copiar link</button>
+    </div>
+    <div class="card">
+      <div class="card__head">Links criados <button class="btn-ghost btn--sm" id="btn-utm-clear">Limpar</button></div>
+      <div id="utm-list"><p class="empty">Nenhum link gerado</p></div>
+    </div>
+  </div>
+
+  <!-- ═══ CHECKLIST ═══ -->
+  <div class="page" id="p-checklist">
+    <p class="desc">Antes de ativar o trafego, confirme que tudo esta no lugar.</p>
+    <div class="card">
+      <div class="card__head">Pre-lancamento <span class="sub" id="ck-prog"></span></div>
+      <div id="ck-pre"></div>
+    </div>
+    <div class="card">
+      <div class="card__head">Pos-lancamento</div>
+      <div id="ck-post"></div>
+    </div>
+  </div>
+
+  <!-- ═══ AJUSTES ═══ -->
+  <div class="page" id="p-ajustes">
+    <p class="desc">Configure seus servicos de tracking. Voce vai precisar dos IDs do Google Analytics e Meta Pixel.</p>
+    <div class="card">
+      <div class="card__head">Status</div>
+      <div id="svc-list"></div>
+    </div>
+    <div class="card">
+      <div class="card__head">Google Analytics 4</div>
+      <p class="desc" style="margin-bottom:10px">GA4 > Administrador > Fluxos de dados > Measurement ID</p>
+      <div class="fg"><label>Measurement ID</label><input class="input" id="c-ga4" placeholder="G-XXXXXXXXXX" /></div>
+      <button class="btn btn--sm" id="sv-ga4">Salvar</button>
+    </div>
+    <div class="card">
+      <div class="card__head">Meta Pixel</div>
+      <p class="desc" style="margin-bottom:10px">Meta Business Suite > Gerenciador de Eventos > Pixel ID</p>
+      <div class="fg"><label>Pixel ID</label><input class="input" id="c-pix" placeholder="1234567890" /></div>
+      <button class="btn btn--sm" id="sv-pix">Salvar</button>
+    </div>
+    <div class="card">
+      <div class="card__head">Checkout (Kiwify)</div>
+      <div class="fg"><label>Link do checkout</label><input class="input" id="c-chk" placeholder="https://pay.kiwify.com.br/..." /></div>
+      <button class="btn btn--sm" id="sv-chk">Salvar</button>
+    </div>
+    <div class="card">
+      <div class="card__head">Seguranca</div>
+      <button class="btn" id="btn-pin">Alterar PIN de acesso</button>
+    </div>
+    <div class="card">
+      <div class="card__head">Dados</div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn--sm" id="btn-exp">Exportar JSON</button>
+        <button class="btn btn--sm" id="btn-imp">Importar JSON</button>
+      </div>
+      <input type="file" id="imp-file" accept=".json" style="display:none" />
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+(function() {
+  'use strict';
+
+  var KEY = 'ohi_admin_v2';
+
+  // ── STORAGE ──
+  function load() {
+    try { return JSON.parse(localStorage.getItem(KEY)) || fresh(); } catch(e) { return fresh(); }
+  }
+  function save() {
+    try { localStorage.setItem(KEY, JSON.stringify(D)); } catch(e) {}
+  }
+  function fresh() {
+    return { pin: '', config: { ga4: '', pixel: '', checkout: 'https://pay.kiwify.com.br/3bs6O18' }, metrics: [], utms: [], checklist: {} };
+  }
+
+  var D = load();
+
+  // ── HELPERS ──
+  function $(id) { return document.getElementById(id); }
+
+  function toast(m) {
+    var t = $('toast'); t.textContent = m; t.classList.add('show');
+    setTimeout(function() { t.classList.remove('show'); }, 2200);
+  }
+
+  function today() {
+    var d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+
+  function sd(s) { var p = s.split('-'); return p[2] + '/' + p[1]; }
+
+  function esc(s) { var d = document.createElement('div'); d.textContent = s; return d.innerHTML; }
+
+  function hashPin(p) {
+    var h = 0;
+    for (var i = 0; i < p.length; i++) { h = ((h << 5) - h) + p.charCodeAt(i); h |= 0; }
+    return 'p' + Math.abs(h).toString(36);
+  }
+
+  // ── PIN ──
+  var buf = '', mode = D.pin ? 'unlock' : 'create', confirm_pin = '';
+
+  function showLock() {
+    $('lock').classList.remove('hidden');
+    $('app').classList.add('hidden');
+    buf = '';
+    dots();
+    $('pin-err').textContent = '';
+    if (mode === 'create') { $('lock-t').textContent = 'Crie seu PIN'; $('lock-d').textContent = 'Escolha 4 digitos para proteger seu painel'; }
+    else if (mode === 'confirm') { $('lock-t').textContent = 'Confirme o PIN'; $('lock-d').textContent = 'Digite novamente para confirmar'; }
+    else { $('lock-t').textContent = 'Digite seu PIN'; $('lock-d').textContent = 'Entre com seus 4 digitos'; }
+  }
+
+  function dots() { for (var i = 0; i < 4; i++) $('d'+i).className = 'pin-dot' + (i < buf.length ? ' filled' : ''); }
+
+  function pinDone() {
+    if (mode === 'create') {
+      confirm_pin = buf; mode = 'confirm'; buf = ''; showLock();
+    } else if (mode === 'confirm') {
+      if (buf === confirm_pin) {
+        D.pin = hashPin(buf); save(); toast('PIN criado!'); unlock();
+      } else {
+        $('pin-err').textContent = 'Nao coincidem. Tente de novo.';
+        mode = 'create'; confirm_pin = ''; buf = ''; dots();
+      }
+    } else {
+      if (hashPin(buf) === D.pin) { unlock(); }
+      else { $('pin-err').textContent = 'PIN incorreto'; buf = ''; dots(); }
+    }
+  }
+
+  function unlock() {
+    $('lock').classList.add('hidden');
+    $('app').classList.remove('hidden');
+    renderAll();
+  }
+
+  document.querySelectorAll('.pin-key[data-n]').forEach(function(k) {
+    k.addEventListener('click', function() {
+      if (buf.length >= 4) return;
+      buf += this.dataset.n; dots();
+      if (buf.length === 4) setTimeout(pinDone, 200);
+    });
+  });
+
+  $('pk-clear').addEventListener('click', function() { buf = ''; dots(); });
+  $('pk-back').addEventListener('click', function() { buf = buf.slice(0,-1); dots(); });
+  $('btn-sair').addEventListener('click', function() { mode = 'unlock'; buf = ''; showLock(); });
+  $('btn-pin').addEventListener('click', function() { mode = 'create'; confirm_pin = ''; buf = ''; showLock(); });
+
+  showLock();
+
+  // ── TABS ──
+  document.querySelectorAll('.tab').forEach(function(t) {
+    t.addEventListener('click', function() {
+      document.querySelectorAll('.tab').forEach(function(x) { x.classList.remove('active'); });
+      this.classList.add('active');
+      document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+      $('p-' + this.dataset.t).classList.add('active');
+    });
+  });
+
+  // ── RENDER ──
+  function renderAll() { renderDash(); renderMetrics(); renderUTMs(); renderCK(); renderCfg(); }
+
+  function last7() {
+    var days = [];
+    for (var i = 6; i >= 0; i--) {
+      var d = new Date(); d.setDate(d.getDate() - i);
+      days.push(d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'));
+    }
+    return days;
+  }
+
+  function renderDash() {
+    var days = last7();
+    var tV=0, tS=0, tR=0, tA=0, byDay = {};
+    days.forEach(function(d) { byDay[d] = 0; });
+
+    D.metrics.forEach(function(m) {
+      if (days.indexOf(m.date) >= 0) {
+        tV += (parseInt(m.vis)||0); tS += (parseInt(m.ven)||0);
+        tR += (parseFloat(m.rec)||0); tA += (parseFloat(m.ads)||0);
+        byDay[m.date] = parseInt(m.vis)||0;
+      }
+    });
+
+    $('k-vis').textContent = tV.toLocaleString('pt-BR');
+    $('k-ven').textContent = tS;
+    $('k-rec').textContent = 'R$ ' + tR.toFixed(2).replace('.',',');
+    $('k-roas').textContent = tA > 0 ? (tR/tA).toFixed(1)+'x' : '--';
+
+    var ch = $('chart');
+    var mx = Math.max.apply(null, days.map(function(d) { return byDay[d]; })) || 1;
+    ch.innerHTML = '';
+    days.forEach(function(d) {
+      var v = byDay[d], pct = Math.max(v/mx*100, 4);
+      ch.innerHTML += '<div class="chart-col"><div class="chart-bar" style="height:'+pct+'%"></div><div class="chart-lbl">'+sd(d)+'</div></div>';
+    });
+
+    var recent = D.metrics.slice(0,7);
+    var tb = $('tb-recent');
+    if (!recent.length) { tb.innerHTML = '<tr><td colspan="4" class="empty">Registre suas metricas na aba "Registrar"</td></tr>'; return; }
+    tb.innerHTML = '';
+    recent.forEach(function(m) {
+      tb.innerHTML += '<tr><td>'+sd(m.date)+'</td><td>'+(m.vis||0)+'</td><td>'+(m.ven||0)+'</td><td>R$ '+(parseFloat(m.rec)||0).toFixed(2).replace('.',',')+'</td></tr>';
+    });
+  }
+
+  function renderMetrics() {
+    $('m-count').textContent = D.metrics.length + ' registros';
+    var tb = $('tb-all');
+    if (!D.metrics.length) { tb.innerHTML = '<tr><td colspan="8" class="empty">Nenhum registro</td></tr>'; return; }
+    tb.innerHTML = '';
+    D.metrics.forEach(function(m, i) {
+      var r = parseFloat(m.rec)||0, a = parseFloat(m.ads)||0;
+      var roas = a > 0 ? (r/a).toFixed(1)+'x' : '--';
+      tb.innerHTML += '<tr><td>'+sd(m.date)+'</td><td>'+(m.vis||0)+'</td><td>'+(m.cli||0)+'</td><td>'+(m.ven||0)+'</td><td>R$'+r.toFixed(0)+'</td><td>R$'+a.toFixed(0)+'</td><td>'+roas+'</td><td><button class="btn-ghost del-m" data-i="'+i+'" style="color:var(--ember);cursor:pointer">x</button></td></tr>';
+    });
+    tb.querySelectorAll('.del-m').forEach(function(b) {
+      b.addEventListener('click', function() {
+        D.metrics.splice(parseInt(this.dataset.i), 1); save(); renderMetrics(); renderDash();
+      });
+    });
+  }
+
+  // ── SALVAR METRICA ──
+  $('m-date').value = today();
+  $('btn-salvar').addEventListener('click', function() {
+    var date = $('m-date').value;
+    if (!date) { toast('Selecione a data'); return; }
+    var entry = { date: date, vis: $('m-vis').value||'0', cli: $('m-cli').value||'0', ven: $('m-ven').value||'0', rec: $('m-rec').value||'0', ads: $('m-ads').value||'0' };
+    var idx = D.metrics.findIndex(function(m) { return m.date === date; });
+    if (idx >= 0) D.metrics[idx] = entry; else D.metrics.push(entry);
+    D.metrics.sort(function(a,b) { return b.date.localeCompare(a.date); });
+    save();
+    $('m-vis').value=''; $('m-cli').value=''; $('m-ven').value=''; $('m-rec').value=''; $('m-ads').value='';
+    renderMetrics(); renderDash(); toast('Salvo!');
+  });
+
+  // ── UTM ──
+  $('btn-utm').addEventListener('click', function() {
+    var base = $('u-base').value.trim() || 'https://seusite.com';
+    var src = $('u-src').value.trim(), med = $('u-med').value.trim(), camp = $('u-camp').value.trim();
+    if (!src || !med || !camp) { toast('Preencha origem, meio e campanha'); return; }
+    if (base.indexOf('http') !== 0) base = 'https://' + base;
+    var url = new URL(base);
+    url.searchParams.set('utm_source', src);
+    url.searchParams.set('utm_medium', med);
+    url.searchParams.set('utm_campaign', camp);
+    var result = url.toString();
+    $('utm-out').textContent = result;
+    $('utm-out').classList.remove('hidden');
+    $('btn-copy').classList.remove('hidden');
+    D.utms.unshift({ url: result, src: src, med: med, camp: camp, date: today() });
+    if (D.utms.length > 50) D.utms.length = 50;
+    save(); renderUTMs();
+  });
+
+  $('btn-copy').addEventListener('click', function() {
+    navigator.clipboard.writeText($('utm-out').textContent); toast('Link copiado!');
+  });
+
+  $('btn-utm-clear').addEventListener('click', function() {
+    if (confirm('Limpar todos os links?')) { D.utms = []; save(); renderUTMs(); }
+  });
+
+  function renderUTMs() {
+    var el = $('utm-list');
+    if (!D.utms.length) { el.innerHTML = '<p class="empty">Nenhum link gerado</p>'; return; }
+    el.innerHTML = '<table class="tbl"><thead><tr><th>Origem</th><th>Campanha</th><th></th></tr></thead><tbody></tbody></table>';
+    var tb = el.querySelector('tbody');
+    D.utms.forEach(function(u) {
+      var tr = document.createElement('tr');
+      tr.innerHTML = '<td>'+esc(u.src)+' / '+esc(u.med)+'</td><td>'+esc(u.camp)+'</td><td><button class="btn-ghost" style="color:var(--blue);cursor:pointer">Copiar</button></td>';
+      tr.querySelector('button').addEventListener('click', function() { navigator.clipboard.writeText(u.url); toast('Copiado!'); });
+      tb.appendChild(tr);
+    });
+  }
+
+  // ── CHECKLIST ──
+  var CK_PRE = [
+    { id:'ga4', t:'Google Analytics 4 configurado', tg:'Tracking', c:'b' },
+    { id:'pixel', t:'Meta Pixel instalado', tg:'Tracking', c:'b' },
+    { id:'checkout', t:'Link do checkout testado (fiz uma compra teste)', tg:'Critico', c:'r' },
+    { id:'mobile', t:'Pagina testada no celular', tg:'UX', c:'g' },
+    { id:'speed', t:'PageSpeed acima de 90', tg:'Performance', c:'y' },
+    { id:'ssl', t:'HTTPS ativo', tg:'Seguranca', c:'r' },
+    { id:'og', t:'Imagem e texto de compartilhamento configurados', tg:'SEO', c:'g' },
+    { id:'domain', t:'Dominio apontado', tg:'Infra', c:'y' },
+    { id:'utm', t:'Links UTM criados para cada canal', tg:'Marketing', c:'y' },
+    { id:'terms', t:'Termos de uso e privacidade publicados', tg:'Legal', c:'r' },
+  ];
+  var CK_POST = [
+    { id:'pv', t:'Dados chegando no GA4 (tempo real)', tg:'Tracking', c:'b' },
+    { id:'pp', t:'Eventos do Pixel no Gerenciador de Eventos', tg:'Tracking', c:'b' },
+    { id:'pb', t:'Compra real de teste feita', tg:'Critico', c:'r' },
+    { id:'pa', t:'Campanhas de trafego configuradas', tg:'Marketing', c:'y' },
+    { id:'pd', t:'Rotina diaria de registro de metricas', tg:'Operacao', c:'g' },
+  ];
+
+  function renderCK() {
+    ckGroup('ck-pre', CK_PRE); ckGroup('ck-post', CK_POST);
+    var done = CK_PRE.filter(function(c) { return D.checklist[c.id]; }).length;
+    $('ck-prog').textContent = done + '/' + CK_PRE.length;
+  }
+
+  function ckGroup(id, items) {
+    var el = $(id); el.innerHTML = '';
+    items.forEach(function(item) {
+      var on = !!D.checklist[item.id];
+      var div = document.createElement('div');
+      div.className = 'ck-item' + (on ? ' done' : '');
+      div.innerHTML = '<div class="ck-box'+(on?' on':'')+'"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg></div><span class="ck-text">'+item.t+' <span class="badge badge-'+item.c+'">'+item.tg+'</span></span>';
+      div.querySelector('.ck-box').addEventListener('click', function() {
+        D.checklist[item.id] = !D.checklist[item.id]; save(); renderCK();
+      });
+      el.appendChild(div);
+    });
+  }
+
+  // ── CONFIG ──
+  function renderCfg() {
+    $('c-ga4').value = D.config.ga4||'';
+    $('c-pix').value = D.config.pixel||'';
+    $('c-chk').value = D.config.checkout||'';
+
+    var el = $('svc-list');
+    var svcs = [
+      { n:'Google Analytics 4', on:!!D.config.ga4 },
+      { n:'Meta Pixel', on:!!D.config.pixel },
+      { n:'Checkout Kiwify', on:!!D.config.checkout },
+    ];
+    el.innerHTML = '';
+    svcs.forEach(function(s) {
+      el.innerHTML += '<div class="svc"><div class="dot '+(s.on?'on':'off')+'"></div><div><strong>'+s.n+'</strong><span>'+(s.on?'Configurado':'Nao configurado')+'</span></div></div>';
+    });
+  }
+
+  $('sv-ga4').addEventListener('click', function() { D.config.ga4 = $('c-ga4').value.trim(); save(); renderCfg(); toast('Salvo!'); });
+  $('sv-pix').addEventListener('click', function() { D.config.pixel = $('c-pix').value.trim(); save(); renderCfg(); toast('Salvo!'); });
+  $('sv-chk').addEventListener('click', function() { D.config.checkout = $('c-chk').value.trim(); save(); renderCfg(); toast('Salvo!'); });
+
+  // ── EXPORT / IMPORT ──
+  $('btn-exp').addEventListener('click', function() {
+    var blob = new Blob([JSON.stringify(D, null, 2)], { type: 'application/json' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+    a.download = 'ohi-admin-backup.json'; a.click();
+  });
+  $('btn-imp').addEventListener('click', function() { $('imp-file').click(); });
+  $('imp-file').addEventListener('change', function(e) {
+    var f = e.target.files[0]; if (!f) return;
+    var r = new FileReader();
+    r.onload = function(ev) {
+      try { D = JSON.parse(ev.target.result); save(); renderAll(); toast('Dados importados!'); }
+      catch(err) { toast('Erro: arquivo invalido'); }
+    };
+    r.readAsText(f);
+  });
+
+  // ── INIT UTM BASE ──
+  if (D.config.checkout) {
+    try { $('u-base').value = new URL(D.config.checkout).origin.replace('pay.kiwify.com.br','seusite.com'); } catch(e) {}
+  }
+})();
+</script>
+
+</body>
+</html>
