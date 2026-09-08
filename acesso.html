@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Acessar Material — O Homem Inseguro</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:        #080A0C;
+      --surface:    #0F1318;
+      --text:       #E8E0D5;
+      --muted:      #7A7468;
+      --ember:      #7C1D1D;
+      --ember-glow: #A32626;
+      --serif:      'Playfair Display', Georgia, serif;
+      --sans:       'Inter', system-ui, sans-serif;
+    }
+
+    html, body {
+      min-height: 100%;
+      background: var(--ink);
+      color: var(--text);
+      font-family: var(--sans);
+      -webkit-font-smoothing: antialiased;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 24px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+    }
+
+    .brand {
+      font-family: var(--serif);
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      margin-bottom: 40px;
+    }
+
+    /* ── ESTADOS ── */
+    .state { display: none; }
+    .state.active { display: block; }
+
+    /* estado: formulário */
+    .title {
+      font-family: var(--serif);
+      font-weight: 900;
+      font-size: clamp(1.6rem, 5vw, 2.1rem);
+      line-height: 1.2;
+      margin-bottom: 12px;
+    }
+
+    .subtitle {
+      font-size: 0.88rem;
+      font-weight: 300;
+      line-height: 1.65;
+      color: var(--muted);
+      margin-bottom: 36px;
+    }
+
+    label {
+      display: block;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    input[type="email"] {
+      width: 100%;
+      padding: 16px 18px;
+      background: var(--surface);
+      border: 1px solid rgba(255,255,255,0.07);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 0.95rem;
+      font-weight: 300;
+      outline: none;
+      transition: border-color 0.2s;
+      margin-bottom: 16px;
+      border-radius: 0;
+      -webkit-appearance: none;
+    }
+
+    input[type="email"]:focus {
+      border-color: var(--ember-glow);
+    }
+
+    input[type="email"]::placeholder {
+      color: #3A3630;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 18px;
+      background: var(--ember);
+      color: #F0E8E0;
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: 0 0 40px rgba(124,29,29,0.3), 0 2px 8px rgba(0,0,0,0.5);
+    }
+
+    .btn:hover { background: var(--ember-glow); }
+    .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .error-msg {
+      margin-top: 14px;
+      font-size: 0.82rem;
+      color: #C0504A;
+      line-height: 1.55;
+      display: none;
+    }
+
+    .error-msg.visible { display: block; }
+
+    /* estado: carregando */
+    .loading-wrap {
+      text-align: center;
+      padding: 20px 0;
+    }
+
+    .spinner {
+      width: 32px;
+      height: 32px;
+      border: 2px solid rgba(255,255,255,0.08);
+      border-top-color: var(--ember-glow);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loading-wrap p {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    /* estado: sucesso */
+    .success-icon {
+      width: 48px;
+      height: 48px;
+      border: 1px solid var(--ember);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 28px;
+    }
+
+    .success-icon svg {
+      width: 20px;
+      height: 20px;
+      stroke: var(--ember-glow);
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .success-title {
+      font-family: var(--serif);
+      font-weight: 900;
+      font-size: clamp(1.4rem, 4vw, 1.8rem);
+      line-height: 1.25;
+      margin-bottom: 14px;
+    }
+
+    .success-sub {
+      font-size: 0.88rem;
+      font-weight: 300;
+      line-height: 1.65;
+      color: var(--muted);
+      margin-bottom: 32px;
+    }
+
+    .btn-download {
+      display: block;
+      width: 100%;
+      padding: 18px;
+      background: var(--ember);
+      color: #F0E8E0;
+      font-family: var(--sans);
+      font-size: 0.9rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      text-align: center;
+      cursor: pointer;
+      transition: background 0.2s;
+      box-shadow: 0 0 40px rgba(124,29,29,0.3), 0 2px 8px rgba(0,0,0,0.5);
+    }
+
+    .btn-download:hover { background: var(--ember-glow); }
+
+    .disclaimer {
+      margin-top: 14px;
+      font-size: 0.75rem;
+      color: #3A3630;
+      text-align: center;
+    }
+
+    /* divisor */
+    .divider {
+      width: 32px;
+      height: 1px;
+      background: var(--ember);
+      margin: 32px 0;
+      opacity: 0.6;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="card">
+    <p class="brand">O Homem Inseguro</p>
+
+    <!-- ESTADO 1: Formulário -->
+    <div class="state active" id="stateForm">
+      <h1 class="title">Acesse seu material</h1>
+      <p class="subtitle">Digite o e-mail que você usou na compra. Vamos verificar e liberar o download.</p>
+
+      <label for="emailInput">Seu e-mail</label>
+      <input
+        type="email"
+        id="emailInput"
+        placeholder="seuemail@exemplo.com"
+        autocomplete="email"
+        inputmode="email"
+      />
+
+      <button class="btn" id="btnVerificar" onclick="verificar()">
+        Verificar e acessar
+      </button>
+
+      <p class="error-msg" id="errorMsg"></p>
+    </div>
+
+    <!-- ESTADO 2: Carregando -->
+    <div class="state" id="stateLoading">
+      <div class="loading-wrap">
+        <div class="spinner"></div>
+        <p>Verificando sua compra…</p>
+      </div>
+    </div>
+
+    <!-- ESTADO 3: Sucesso -->
+    <div class="state" id="stateSuccess">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      <h2 class="success-title">Compra confirmada.<br>Seu material está pronto.</h2>
+      <p class="success-sub">Clique no botão abaixo para baixar o PDF. Salve em um lugar seguro — o link é pessoal.</p>
+      <a href="#" class="btn-download" id="btnDownload" download>
+        Baixar O Homem Inseguro (PDF)
+      </a>
+      <p class="disclaimer">Este link é vinculado ao seu e-mail. Não compartilhe.</p>
+    </div>
+
+  </div>
+
+  <script>
+    // ── COLE AQUI A URL DO SEU WEB APP DO GOOGLE APPS SCRIPT ──
+    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbw73Qi8Jj2GP-w8E84jIWyyIVOAzT16R8hx80bzTUjBLAPQisQ5wCPXTDXWgx5nXSbZYw/exec';
+
+    function setState(id) {
+      document.querySelectorAll('.state').forEach(el => el.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function mostrarErro(msg) {
+      const el = document.getElementById('errorMsg');
+      el.textContent = msg;
+      el.classList.add('visible');
+      document.getElementById('btnVerificar').disabled = false;
+    }
+
+    async function verificar() {
+      const input = document.getElementById('emailInput');
+      const email = input.value.trim().toLowerCase();
+
+      // Validação básica
+      if (!email || !email.includes('@')) {
+        mostrarErro('Digite um e-mail válido.');
+        return;
+      }
+
+      document.getElementById('errorMsg').classList.remove('visible');
+      document.getElementById('btnVerificar').disabled = true;
+      setState('stateLoading');
+
+      try {
+        const res  = await fetch(`${SCRIPT_URL}?email=${encodeURIComponent(email)}`);
+        const data = await res.json();
+
+        if (data.ok && data.url) {
+          document.getElementById('btnDownload').href = data.url;
+          setState('stateSuccess');
+        } else {
+          setState('stateForm');
+          mostrarErro('E-mail não encontrado. Verifique se usou o mesmo e-mail da compra. Se acabou de comprar, aguarde 1 minuto e tente novamente.');
+        }
+      } catch (err) {
+        setState('stateForm');
+        mostrarErro('Erro de conexão. Tente novamente em alguns instantes.');
+      }
+    }
+
+    // Permite submeter com Enter
+    document.getElementById('emailInput').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') verificar();
+    });
+  </script>
+
+</body>
+</html>
