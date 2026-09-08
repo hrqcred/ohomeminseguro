@@ -3803,10 +3803,51 @@
 
   <!-- ── OHI TRACKING ── -->
   <script>
+  window.OHI_SUPA_URL = '';
+  window.OHI_SUPA_KEY = '';
+  </script>
+  <script>
   (function(){
     var EVENTS_KEY = 'ohi_events';
     var events = [];
     try { events = JSON.parse(localStorage.getItem(EVENTS_KEY)) || []; } catch(e) {}
+
+    var SUPA_URL = window.OHI_SUPA_URL || '';
+    var SUPA_KEY = window.OHI_SUPA_KEY || '';
+
+    var sid = sessionStorage.getItem('ohi_sid');
+    if (!sid) {
+      sid = typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).slice(2) + Date.now().toString(36);
+      sessionStorage.setItem('ohi_sid', sid);
+    }
+
+    function sendSupa(evt) {
+      if (!SUPA_URL) return;
+      var payload = {
+        session_id: sid,
+        type: evt.type,
+        detail: evt.detail,
+        utm_source: evt.utm_source,
+        utm_medium: evt.utm_medium,
+        utm_campaign: evt.utm_campaign,
+        utm_content: evt.utm_content,
+        device: evt.device,
+        referrer: evt.ref
+      };
+      try {
+        fetch(SUPA_URL + '/rest/v1/events', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': SUPA_KEY,
+            'Authorization': 'Bearer ' + SUPA_KEY,
+            'Prefer': 'return=minimal'
+          },
+          body: JSON.stringify(payload),
+          keepalive: true
+        }).catch(function(){});
+      } catch(e) {}
+    }
 
     function track(type, detail, extra) {
       var params = new URLSearchParams(window.location.search);
@@ -3827,16 +3868,15 @@
       if (events.length > 5000) events = events.slice(-3000);
       try { localStorage.setItem(EVENTS_KEY, JSON.stringify(events)); } catch(e) {}
 
-      // GA4 bridge
+      sendSupa(evt);
+
       if (typeof gtag === 'function') {
         gtag('event', type, { detail: detail || '', utm_source: evt.utm_source });
       }
     }
 
-    // Pageview
     track('pageview');
 
-    // Scroll depth milestones
     var maxScroll = 0;
     var milestones = [25, 50, 75, 100];
     window.addEventListener('scroll', function() {
@@ -3849,7 +3889,6 @@
       }
     });
 
-    // Section views
     var sections = document.querySelectorAll('section[id]');
     var sio = new IntersectionObserver(function(entries) {
       entries.forEach(function(e) {
@@ -3861,7 +3900,6 @@
     }, { threshold: 0.3 });
     sections.forEach(function(s) { sio.observe(s); });
 
-    // CTA clicks
     document.querySelectorAll('.produto__cta, .oferta__cta, .ctafinal__cta, .hero__cta').forEach(function(el) {
       el.addEventListener('click', function() {
         var label = el.className.split(' ')[0] || 'cta';
@@ -3869,14 +3907,12 @@
       });
     });
 
-    // FAQ clicks
     document.querySelectorAll('.faq__trigger').forEach(function(btn, i) {
       btn.addEventListener('click', function() {
         track('faq_click', 'pergunta_' + (i + 1));
       });
     });
 
-    // Time on page
     var startTime = Date.now();
     window.addEventListener('beforeunload', function() {
       var seconds = Math.round((Date.now() - startTime) / 1000);

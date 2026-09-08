@@ -347,8 +347,17 @@
       <div class="card__head">Visitas por dia</div>
       <div class="chart" id="chart"></div>
     </div>
+    <div class="card" id="card-traffic" style="display:none">
+      <div class="card__head">Trafego por campanha <span class="sub">(automatico)</span></div>
+      <div style="overflow-x:auto">
+        <table class="tbl">
+          <thead><tr><th>Campanha</th><th>Visitas</th><th>Cliques</th><th>Device</th></tr></thead>
+          <tbody id="tb-camps"></tbody>
+        </table>
+      </div>
+    </div>
     <div class="card">
-      <div class="card__head">Historico recente</div>
+      <div class="card__head">Historico recente <span class="sub">(manual)</span></div>
       <div style="overflow-x:auto">
         <table class="tbl">
           <thead><tr><th>Data</th><th>Vis.</th><th>Vendas</th><th>Receita</th></tr></thead>
@@ -450,6 +459,13 @@
       <button class="btn btn--sm" id="sv-chk">Salvar</button>
     </div>
     <div class="card">
+      <div class="card__head">Supabase (Tracking automatico)</div>
+      <p class="desc" style="margin-bottom:10px">Conecte ao Supabase para contar visitas automaticamente. Pegue URL e Key em supabase.com > Settings > API.</p>
+      <div class="fg"><label>Project URL</label><input class="input" id="c-supa-url" placeholder="https://xxxxx.supabase.co" /></div>
+      <div class="fg"><label>Anon Key</label><input class="input" id="c-supa-key" placeholder="eyJhbGciOi..." /></div>
+      <button class="btn btn--sm" id="sv-supa">Salvar</button>
+    </div>
+    <div class="card">
       <div class="card__head">Seguranca</div>
       <button class="btn" id="btn-pin">Alterar PIN de acesso</button>
     </div>
@@ -480,7 +496,7 @@
     try { localStorage.setItem(KEY, JSON.stringify(D)); } catch(e) {}
   }
   function fresh() {
-    return { pin: '', config: { ga4: '', pixel: '', checkout: 'https://pay.kiwify.com.br/3bs6O18' }, metrics: [], utms: [], checklist: {} };
+    return { pin: '', config: { ga4: '', pixel: '', checkout: 'https://pay.kiwify.com.br/3bs6O18', supaUrl: '', supaKey: '' }, metrics: [], utms: [], checklist: {} };
   }
 
   var D = load();
@@ -583,38 +599,107 @@
     return days;
   }
 
+  function supaFetch(params) {
+    var url = D.config.supaUrl;
+    var key = D.config.supaKey;
+    if (!url || !key) return Promise.resolve(null);
+    var qs = Object.keys(params).map(function(k) { return k + '=' + encodeURIComponent(params[k]); }).join('&');
+    return fetch(url + '/rest/v1/events?' + qs, {
+      headers: { 'apikey': key, 'Authorization': 'Bearer ' + key }
+    }).then(function(r) { return r.ok ? r.json() : null; }).catch(function() { return null; });
+  }
+
   function renderDash() {
     var days = last7();
-    var tV=0, tS=0, tR=0, tA=0, byDay = {};
-    days.forEach(function(d) { byDay[d] = 0; });
+    var tS=0, tR=0, tA=0;
 
     D.metrics.forEach(function(m) {
       if (days.indexOf(m.date) >= 0) {
-        tV += (parseInt(m.vis)||0); tS += (parseInt(m.ven)||0);
-        tR += (parseFloat(m.rec)||0); tA += (parseFloat(m.ads)||0);
-        byDay[m.date] = parseInt(m.vis)||0;
+        tS += (parseInt(m.ven)||0);
+        tR += (parseFloat(m.rec)||0);
+        tA += (parseFloat(m.ads)||0);
       }
     });
 
-    $('k-vis').textContent = tV.toLocaleString('pt-BR');
     $('k-ven').textContent = tS;
     $('k-rec').textContent = 'R$ ' + tR.toFixed(2).replace('.',',');
     $('k-roas').textContent = tA > 0 ? (tR/tA).toFixed(1)+'x' : '--';
 
-    var ch = $('chart');
-    var mx = Math.max.apply(null, days.map(function(d) { return byDay[d]; })) || 1;
-    ch.innerHTML = '';
-    days.forEach(function(d) {
-      var v = byDay[d], pct = Math.max(v/mx*100, 4);
-      ch.innerHTML += '<div class="chart-col"><div class="chart-bar" style="height:'+pct+'%"></div><div class="chart-lbl">'+sd(d)+'</div></div>';
-    });
-
     var recent = D.metrics.slice(0,7);
     var tb = $('tb-recent');
-    if (!recent.length) { tb.innerHTML = '<tr><td colspan="4" class="empty">Registre suas metricas na aba "Registrar"</td></tr>'; return; }
-    tb.innerHTML = '';
-    recent.forEach(function(m) {
-      tb.innerHTML += '<tr><td>'+sd(m.date)+'</td><td>'+(m.vis||0)+'</td><td>'+(m.ven||0)+'</td><td>R$ '+(parseFloat(m.rec)||0).toFixed(2).replace('.',',')+'</td></tr>';
+    if (!recent.length) { tb.innerHTML = '<tr><td colspan="4" class="empty">Registre vendas/receita na aba "Registrar"</td></tr>'; }
+    else {
+      tb.innerHTML = '';
+      recent.forEach(function(m) {
+        tb.innerHTML += '<tr><td>'+sd(m.date)+'</td><td>'+(m.vis||0)+'</td><td>'+(m.ven||0)+'</td><td>R$ '+(parseFloat(m.rec)||0).toFixed(2).replace('.',',')+'</td></tr>';
+      });
+    }
+
+    if (!D.config.supaUrl || !D.config.supaKey) {
+      $('k-vis').textContent = '0';
+      $('card-traffic').style.display = 'none';
+      var ch = $('chart'); ch.innerHTML = '';
+      days.forEach(function(d) {
+        ch.innerHTML += '<div class="chart-col"><div class="chart-bar" style="height:4%"></div><div class="chart-lbl">'+sd(d)+'</div></div>';
+      });
+      return;
+    }
+
+    var since = new Date();
+    since.setDate(since.getDate() - 7);
+    supaFetch({
+      select: '*',
+      created_at: 'gte.' + since.toISOString(),
+      order: 'created_at.desc',
+      limit: '10000'
+    }).then(function(events) {
+      if (!events) { $('k-vis').textContent = 'Erro'; return; }
+
+      var pageviews = events.filter(function(e) { return e.type === 'pageview'; });
+      var ctaClicks = events.filter(function(e) { return e.type === 'cta_click'; });
+
+      $('k-vis').textContent = pageviews.length.toLocaleString('pt-BR');
+
+      var byDay = {};
+      days.forEach(function(d) { byDay[d] = 0; });
+      pageviews.forEach(function(e) {
+        var d = e.created_at.slice(0, 10);
+        if (byDay[d] !== undefined) byDay[d]++;
+      });
+      var ch = $('chart');
+      var mx = Math.max.apply(null, days.map(function(d) { return byDay[d]; })) || 1;
+      ch.innerHTML = '';
+      days.forEach(function(d) {
+        var v = byDay[d], pct = Math.max(v/mx*100, 4);
+        ch.innerHTML += '<div class="chart-col"><div class="chart-bar" style="height:'+pct+'%"></div><div class="chart-lbl">'+sd(d)+'</div></div>';
+      });
+
+      var camps = {};
+      pageviews.forEach(function(e) {
+        var key = e.utm_campaign || '(direto)';
+        if (!camps[key]) camps[key] = { views: 0, clicks: 0, src: e.utm_source || '-', med: e.utm_medium || '-', mobile: 0, desktop: 0 };
+        camps[key].views++;
+        if (e.device === 'mobile') camps[key].mobile++; else camps[key].desktop++;
+      });
+      ctaClicks.forEach(function(e) {
+        var key = e.utm_campaign || '(direto)';
+        if (camps[key]) camps[key].clicks++;
+      });
+
+      var campArr = Object.keys(camps).map(function(k) { return { name: k, data: camps[k] }; });
+      campArr.sort(function(a,b) { return b.data.views - a.data.views; });
+
+      var tbC = $('tb-camps');
+      if (campArr.length) {
+        $('card-traffic').style.display = 'block';
+        tbC.innerHTML = '';
+        campArr.forEach(function(c) {
+          var devStr = c.data.mobile + ' mob / ' + c.data.desktop + ' desk';
+          tbC.innerHTML += '<tr><td>'+esc(c.name)+'<br><span style="font-size:10px;color:var(--muted)">'+esc(c.data.src)+' / '+esc(c.data.med)+'</span></td><td>'+c.data.views+'</td><td>'+c.data.clicks+'</td><td style="font-size:11px">'+devStr+'</td></tr>';
+        });
+      } else {
+        $('card-traffic').style.display = 'none';
+      }
     });
   }
 
@@ -735,12 +820,15 @@
     $('c-ga4').value = D.config.ga4||'';
     $('c-pix').value = D.config.pixel||'';
     $('c-chk').value = D.config.checkout||'';
+    $('c-supa-url').value = D.config.supaUrl||'';
+    $('c-supa-key').value = D.config.supaKey||'';
 
     var el = $('svc-list');
     var svcs = [
       { n:'Google Analytics 4', on:!!D.config.ga4 },
       { n:'Meta Pixel', on:!!D.config.pixel },
       { n:'Checkout Kiwify', on:!!D.config.checkout },
+      { n:'Supabase (Tracking)', on:!!(D.config.supaUrl && D.config.supaKey) },
     ];
     el.innerHTML = '';
     svcs.forEach(function(s) {
@@ -751,6 +839,11 @@
   $('sv-ga4').addEventListener('click', function() { D.config.ga4 = $('c-ga4').value.trim(); save(); renderCfg(); toast('Salvo!'); });
   $('sv-pix').addEventListener('click', function() { D.config.pixel = $('c-pix').value.trim(); save(); renderCfg(); toast('Salvo!'); });
   $('sv-chk').addEventListener('click', function() { D.config.checkout = $('c-chk').value.trim(); save(); renderCfg(); toast('Salvo!'); });
+  $('sv-supa').addEventListener('click', function() {
+    D.config.supaUrl = $('c-supa-url').value.trim().replace(/\/+$/, '');
+    D.config.supaKey = $('c-supa-key').value.trim();
+    save(); renderCfg(); toast('Salvo!');
+  });
 
   // ── EXPORT / IMPORT ──
   $('btn-exp').addEventListener('click', function() {
