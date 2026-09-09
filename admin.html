@@ -496,10 +496,15 @@
     try { localStorage.setItem(KEY, JSON.stringify(D)); } catch(e) {}
   }
   function fresh() {
-    return { pin: '', config: { ga4: '', pixel: '', checkout: 'https://pay.kiwify.com.br/3bs6O18', supaUrl: '', supaKey: '' }, metrics: [], utms: [], checklist: {} };
+    return { pin: '', config: { ga4: '', pixel: '', checkout: 'https://pay.kiwify.com.br/3bs6O18', supaUrl: 'https://zfljisjwrnkhfsmwdace.supabase.co', supaKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmbGppc2p3cm5raGZzbXdkYWNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4OTE2NTMsImV4cCI6MjEwNDQ2NzY1M30.YGOH7x6XL-EhiWdSoSRjmMKC8yCdyhisP6zAX3UupHI' }, metrics: [], utms: [], checklist: {} };
   }
 
   var D = load();
+  if (!D.config.supaUrl || !D.config.supaKey) {
+    D.config.supaUrl = 'https://zfljisjwrnkhfsmwdace.supabase.co';
+    D.config.supaKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmbGppc2p3cm5raGZzbXdkYWNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4OTE2NTMsImV4cCI6MjEwNDQ2NzY1M30.YGOH7x6XL-EhiWdSoSRjmMKC8yCdyhisP6zAX3UupHI';
+    save();
+  }
 
   // ── HELPERS ──
   function $(id) { return document.getElementById(id); }

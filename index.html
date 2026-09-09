@@ -36,7 +36,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ── VIEWPORT BLUR VIGNETTE ── */
+    /* ── VIGNETTE ── */
     .vignette-top,
     .vignette-bottom {
       position: fixed;
@@ -49,12 +49,7 @@
 
     .vignette-top {
       top: 0;
-      background: linear-gradient(
-        to bottom,
-        rgba(8, 10, 12, 0.85) 0%,
-        rgba(8, 10, 12, 0.4) 40%,
-        transparent 100%
-      );
+      background: linear-gradient(to bottom, rgba(8,10,12,0.85) 0%, rgba(8,10,12,0.4) 40%, transparent 100%);
       -webkit-backdrop-filter: blur(6px);
       backdrop-filter: blur(6px);
       -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 100%);
@@ -63,51 +58,48 @@
 
     .vignette-bottom {
       bottom: 0;
-      background: linear-gradient(
-        to top,
-        rgba(8, 10, 12, 0.85) 0%,
-        rgba(8, 10, 12, 0.4) 40%,
-        transparent 100%
-      );
+      background: linear-gradient(to top, rgba(8,10,12,0.85) 0%, rgba(8,10,12,0.4) 40%, transparent 100%);
       -webkit-backdrop-filter: blur(6px);
       backdrop-filter: blur(6px);
       -webkit-mask-image: linear-gradient(to top, black 0%, transparent 100%);
       mask-image: linear-gradient(to top, black 0%, transparent 100%);
     }
 
-    /* ── STAGGERED DELAYS ── */
-    .modulo:nth-child(2) { transition-delay: 0.08s; }
-    .modulo:nth-child(3) { transition-delay: 0.16s; }
-    .modulo:nth-child(4) { transition-delay: 0.24s; }
-    .modulo:nth-child(5) { transition-delay: 0.32s; }
-    .modulo:nth-child(6) { transition-delay: 0.40s; }
-    .modulo:nth-child(7) { transition-delay: 0.48s; }
-
-    .paraquem__item:nth-child(2) { transition-delay: 0.08s; }
-    .paraquem__item:nth-child(3) { transition-delay: 0.16s; }
-    .paraquem__item:nth-child(4) { transition-delay: 0.24s; }
-    .paraquem__item:nth-child(5) { transition-delay: 0.32s; }
-    .paraquem__item:nth-child(6) { transition-delay: 0.40s; }
-
-    .depoimento:nth-child(2) { transition-delay: 0.1s; }
-    .depoimento:nth-child(3) { transition-delay: 0.2s; }
-
-    .oferta__beneficio:nth-child(2) { transition-delay: 0.06s; }
-    .oferta__beneficio:nth-child(3) { transition-delay: 0.12s; }
-    .oferta__beneficio:nth-child(4) { transition-delay: 0.18s; }
-    .oferta__beneficio:nth-child(5) { transition-delay: 0.24s; }
-
-    .faq__item:nth-child(2) { transition-delay: 0.08s; }
-    .faq__item:nth-child(3) { transition-delay: 0.16s; }
-    .faq__item:nth-child(4) { transition-delay: 0.24s; }
-    .faq__item:nth-child(5) { transition-delay: 0.32s; }
-    .faq__item:nth-child(6) { transition-delay: 0.40s; }
-
     @media (prefers-reduced-motion: reduce) {
       .vignette-top, .vignette-bottom {
         backdrop-filter: none;
         -webkit-backdrop-filter: none;
       }
+    }
+
+    /* ── SCROLL REVEAL BASE ── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.in-view {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    .reveal:nth-child(2) { transition-delay: 0.06s; }
+    .reveal:nth-child(3) { transition-delay: 0.12s; }
+    .reveal:nth-child(4) { transition-delay: 0.18s; }
+    .reveal:nth-child(5) { transition-delay: 0.24s; }
+    .reveal:nth-child(6) { transition-delay: 0.30s; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { opacity: 1; transform: none; }
+    }
+
+    /* ── SECTION DIVIDER ── */
+    .sec-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(to right, transparent, #1C1E22 20%, #1C1E22 80%, transparent);
     }
 
     /* ── HERO ── */
@@ -120,17 +112,15 @@
       overflow: hidden;
     }
 
-    /* Photo layer — Unsplash cinematic man portrait */
     .hero__photo {
       position: absolute;
       inset: 0;
-      background-image: url('https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=1200&q=80&fit=crop&crop=faces');
+      background-image: url('https://images.pexels.com/photos/30865219/pexels-photo-30865219.jpeg?auto=compress&cs=tinysrgb&w=1200');
       background-size: cover;
-      background-position: center 20%;
-      filter: grayscale(30%) contrast(1.1);
+      background-position: center 40%;
+      filter: grayscale(55%) contrast(1.1) brightness(0.85);
     }
 
-    /* Multi-stop cinematic gradient — heavy at bottom, barely lifted at top */
     .hero__photo::after {
       content: '';
       position: absolute;
@@ -138,15 +128,14 @@
       background:
         linear-gradient(
           to bottom,
-          rgba(8, 10, 12, 0.55)  0%,
-          rgba(8, 10, 12, 0.10) 30%,
-          rgba(8, 10, 12, 0.10) 45%,
-          rgba(8, 10, 12, 0.72) 68%,
-          rgba(8, 10, 12, 0.96) 100%
+          rgba(8,10,12,0.65) 0%,
+          rgba(8,10,12,0.30) 25%,
+          rgba(8,10,12,0.25) 45%,
+          rgba(8,10,12,0.75) 65%,
+          rgba(8,10,12,0.97) 100%
         );
     }
 
-    /* Vertical tension line — single red accent, far left */
     .hero__tension {
       position: absolute;
       top: 18%;
@@ -157,7 +146,6 @@
       opacity: 0.85;
     }
 
-    /* Content area sits above gradients */
     .hero__content {
       position: relative;
       z-index: 2;
@@ -185,7 +173,6 @@
       margin-bottom: 24px;
     }
 
-    /* The emotional break — second sentence dimmer */
     .hero__headline em {
       font-style: normal;
       color: #C4BAB0;
@@ -202,8 +189,7 @@
       letter-spacing: 0.01em;
     }
 
-    /* CTA */
-    .hero__cta {
+    .cta {
       display: inline-block;
       padding: 17px 28px;
       background: var(--ember);
@@ -215,24 +201,30 @@
       text-decoration: none;
       border: none;
       cursor: pointer;
-      position: relative;
       transition: background 0.25s ease;
-      /* subtle ember shadow */
-      box-shadow: 0 0 40px rgba(124, 29, 29, 0.35), 0 2px 8px rgba(0,0,0,0.5);
+      box-shadow: 0 0 40px rgba(124,29,29,0.35), 0 2px 8px rgba(0,0,0,0.5);
     }
 
-    .hero__cta:hover,
-    .hero__cta:focus-visible {
+    .cta:hover,
+    .cta:focus-visible {
       background: var(--ember-glow);
       outline: none;
     }
 
-    .hero__cta:focus-visible {
+    .cta:focus-visible {
       outline: 2px solid var(--ember-glow);
       outline-offset: 3px;
     }
 
-    /* Scroll ghost — very subtle */
+    .cta--large {
+      padding: 20px 36px;
+      font-size: 0.95rem;
+      width: 100%;
+      max-width: 400px;
+      text-align: center;
+      box-shadow: 0 0 60px rgba(124,29,29,0.4), 0 4px 12px rgba(0,0,0,0.5);
+    }
+
     .hero__scroll {
       position: absolute;
       bottom: 28px;
@@ -258,7 +250,7 @@
       background: var(--muted);
     }
 
-    /* ── PAGE-LOAD ANIMATION — single orchestrated reveal ── */
+    /* Page-load animation */
     @keyframes fadeUp {
       from { opacity: 0; transform: translateY(18px); }
       to   { opacity: 1; transform: translateY(0); }
@@ -269,650 +261,96 @@
       to   { opacity: 1; }
     }
 
-    .hero__photo  { animation: photoReveal 1.4s ease forwards; }
-    .hero__label  { opacity: 0; animation: fadeUp 0.7s ease 0.6s forwards; }
-    .hero__headline { opacity: 0; animation: fadeUp 0.8s ease 0.85s forwards; }
-    .hero__sub    { opacity: 0; animation: fadeUp 0.7s ease 1.1s forwards; }
-    .hero__cta    { opacity: 0; animation: fadeUp 0.7s ease 1.35s forwards; }
+    .hero__photo   { animation: photoReveal 1.4s ease forwards; }
+    .hero__label   { opacity: 0; animation: fadeUp 0.7s ease 0.6s forwards; }
+    .hero__headline{ opacity: 0; animation: fadeUp 0.8s ease 0.85s forwards; }
+    .hero__sub     { opacity: 0; animation: fadeUp 0.7s ease 1.1s forwards; }
+    .hero .cta     { opacity: 0; animation: fadeUp 0.7s ease 1.35s forwards; }
 
     @media (prefers-reduced-motion: reduce) {
       .hero__photo, .hero__label, .hero__headline,
-      .hero__sub, .hero__cta { animation: none; opacity: 1; }
-    }
-
-    /* ── DESKTOP ADJUSTMENTS ── */
-    @media (min-width: 640px) {
-      .hero__content {
-        padding: 0 56px 72px;
-      }
-
-      .hero__tension {
-        left: 56px;
-      }
-
-      .hero__headline {
-        font-size: clamp(2.8rem, 4.5vw, 4rem);
-        max-width: 580px;
-      }
-    }
-
-    @media (min-width: 1024px) {
-      .hero__photo {
-        background-position: 65% 20%;
-      }
-
-      .hero__content {
-        padding: 0 80px 96px;
-        max-width: 660px;
-      }
-
-      .hero__tension {
-        left: 80px;
-      }
-    }
-
-    /* ── CICLO ── */
-    .ciclo {
-      background: var(--ink);
-      padding: 80px 28px 88px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .ciclo__header {
-      max-width: 520px;
-      margin-bottom: 56px;
-    }
-
-    .ciclo__eyebrow {
-      font-size: 10px;
-      letter-spacing: 0.22em;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-
-    .ciclo__title {
-      font-family: var(--serif);
-      font-size: clamp(1.6rem, 6vw, 2.4rem);
-      font-weight: 700;
-      color: var(--text);
-      line-height: 1.2;
-      margin-bottom: 14px;
-    }
-
-    .ciclo__sub {
-      font-size: 13px;
-      font-weight: 300;
-      color: #5A564E;
-      line-height: 1.65;
-    }
-
-    /* ── Flow timeline ── */
-    .flow {
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      list-style: none;
-      gap: 0;
-    }
-
-    .flow::before {
-      content: '';
-      position: absolute;
-      left: 16px;
-      top: 0;
-      bottom: 0;
-      width: 1px;
-      background: linear-gradient(to bottom, transparent, #1C1E22 4%, #1C1E22 96%, transparent);
-    }
-
-    /* ── Card ── */
-    .flow__card {
-      position: relative;
-      padding-left: 52px;
-      padding-bottom: 12px;
-    }
-
-    .flow__card:last-child { padding-bottom: 0; }
-
-    /* Dot on the timeline */
-    .flow__dot {
-      position: absolute;
-      left: 6px;
-      top: 22px;
-      width: 21px;
-      height: 21px;
-      border-radius: 50%;
-      border: 1px solid #1C1E22;
-      background: var(--ink);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1;
-      transition: all 0.5s ease;
-    }
-
-    .flow__dot-inner {
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: #2A2820;
-      transition: all 0.5s ease;
-    }
-
-    /* Card body */
-    .flow__body {
-      background: #12151A;
-      border: 1px solid #1E2128;
-      padding: 22px 24px 24px;
-      position: relative;
-      transition: border-color 0.4s ease, background 0.4s ease;
-    }
-
-    .flow__num {
-      font-size: 10px;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      color: #4A4540;
-      font-variant-numeric: tabular-nums;
-      margin-bottom: 8px;
-      transition: color 0.4s ease;
-    }
-
-    .flow__name {
-      font-family: var(--serif);
-      font-size: clamp(1.05rem, 3.5vw, 1.2rem);
-      font-weight: 700;
-      color: #8A8478;
-      line-height: 1.3;
-      margin-bottom: 10px;
-      transition: color 0.4s ease;
-    }
-
-    .flow__desc {
-      font-size: 13px;
-      font-weight: 300;
-      color: #6A645C;
-      line-height: 1.7;
-      transition: color 0.4s ease;
-    }
-
-    /* Arrow connector between cards */
-    .flow__arrow {
-      display: flex;
-      justify-content: center;
-      padding: 6px 0 6px 52px;
-      color: #3A3530;
-      font-size: 14px;
-      line-height: 1;
-      transition: color 0.4s ease;
-    }
-
-    /* ── Visible / reveal states ── */
-    .flow__card.is-visible .flow__dot {
-      border-color: #5A1515;
-      background: #120606;
-      box-shadow: 0 0 18px rgba(124, 29, 29, 0.25);
-    }
-
-    .flow__card.is-visible .flow__dot-inner {
-      background: var(--ember-glow);
-      box-shadow: 0 0 6px rgba(163, 38, 38, 0.6);
-    }
-
-    .flow__card.is-visible .flow__body {
-      border-color: #2A1A18;
-      background: #151010;
-    }
-
-    .flow__card.is-visible .flow__num  { color: #A33030; }
-    .flow__card.is-visible .flow__name { color: var(--text); }
-    .flow__card.is-visible .flow__desc { color: #9A9490; }
-
-    .flow__arrow.is-visible { color: #6B2020; }
-
-    /* Scroll-driven reveal animation */
-    .flow__card,
-    .flow__arrow {
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s ease, transform 0.6s ease,
-                  border-color 0.4s ease, background 0.4s ease, color 0.4s ease;
-    }
-
-    .flow__card.in-view,
-    .flow__arrow.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* ── Cycle-loop closer ── */
-    .flow__loop {
-      display: flex;
-      align-items: center;
-      gap: 16px;
-      margin-top: 32px;
-      padding-left: 52px;
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.6s ease 0.15s, transform 0.6s ease 0.15s;
-    }
-
-    .flow__loop.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .flow__loop-line {
-      flex: 1;
-      height: 1px;
-      background: linear-gradient(to right, #2A1010, #1C1E22 40%, transparent);
-    }
-
-    .flow__loop-label {
-      font-size: 10px;
-      letter-spacing: 0.18em;
-      color: #3A1010;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .flow__loop-icon {
-      width: 28px;
-      height: 28px;
-      border: 1px solid #2A1010;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #5A1515;
-      font-size: 12px;
-      flex-shrink: 0;
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .flow__card, .flow__arrow, .flow__loop {
-        opacity: 1;
-        transform: none;
-        transition: border-color 0.4s ease, background 0.4s ease, color 0.4s ease;
-      }
-    }
-
-    /* ── Desktop: staggered two-column ── */
-    @media (min-width: 640px) {
-      .ciclo { padding: 96px 56px 104px; }
-    }
-
-    @media (min-width: 768px) {
-      .flow { max-width: 540px; }
-      .flow__body { padding: 26px 28px 28px; }
-    }
-
-    @media (min-width: 1024px) {
-      .ciclo {
-        padding: 112px 80px 120px;
-        max-width: 900px;
-        margin: 0 auto;
-      }
-
-      .flow {
-        max-width: 600px;
-      }
-
-      .flow::before { left: 18px; }
-      .flow__dot { left: 8px; }
-    }
-
-    /* ── TRANSFORMAÇÃO ── */
-    .transf {
-      background: var(--ink);
-      padding: 96px 28px 104px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .transf::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(to right, transparent, #1C1E22 20%, #1C1E22 80%, transparent);
-    }
-
-    .transf__header {
-      max-width: 520px;
-      margin-bottom: 56px;
-    }
-
-    .transf__eyebrow {
-      font-size: 10px;
-      letter-spacing: 0.22em;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-
-    .transf__title {
-      font-family: var(--serif);
-      font-size: clamp(1.6rem, 6vw, 2.4rem);
-      font-weight: 700;
-      color: var(--text);
-      line-height: 1.2;
-      margin-bottom: 14px;
-    }
-
-    .transf__sub {
-      font-size: 13px;
-      font-weight: 300;
-      color: #5A564E;
-      line-height: 1.65;
-    }
-
-    /* Grid de antes/depois */
-    .transf__grid {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-      max-width: 640px;
-    }
-
-    .transf__row {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      gap: 0;
-      align-items: stretch;
-      opacity: 0;
-      transform: translateY(24px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .transf__row.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    /* Lado "antes" */
-    .transf__before {
-      background: #12151A;
-      border: 1px solid #1E2128;
-      padding: 20px 22px;
-      position: relative;
-    }
-
-    .transf__before::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 2px;
-      height: 100%;
-      background: linear-gradient(to bottom, #3A1010, transparent);
-    }
-
-    /* Seta central */
-    .transf__arrow {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 48px;
-      flex-shrink: 0;
-      color: #4A4540;
-      font-size: 18px;
-      transition: color 0.4s ease;
-    }
-
-    .transf__row.in-view .transf__arrow {
-      color: var(--ember-glow);
-    }
-
-    /* Lado "depois" */
-    .transf__after {
-      background: #12151A;
-      border: 1px solid #1E2128;
-      padding: 20px 22px;
-      position: relative;
-      transition: border-color 0.4s ease, background 0.4s ease;
-    }
-
-    .transf__after::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      right: 0;
-      width: 2px;
-      height: 100%;
-      background: linear-gradient(to bottom, #1A3A1A, transparent);
-    }
-
-    .transf__row.in-view .transf__after {
-      border-color: #1A2A1A;
-      background: #101510;
-    }
-
-    .transf__tag {
-      font-size: 9px;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      margin-bottom: 10px;
-      font-weight: 500;
-    }
-
-    .transf__before .transf__tag {
-      color: #5A2020;
-    }
-
-    .transf__after .transf__tag {
-      color: #2A5A2A;
-    }
-
-    .transf__row.in-view .transf__after .transf__tag {
-      color: #4A8A4A;
-    }
-
-    .transf__label {
-      font-family: var(--serif);
-      font-size: clamp(0.92rem, 3vw, 1.05rem);
-      font-weight: 700;
-      line-height: 1.3;
-      margin-bottom: 8px;
-      transition: color 0.4s ease;
-    }
-
-    .transf__before .transf__label {
-      color: #6A5A58;
-    }
-
-    .transf__after .transf__label {
-      color: #6A7A6A;
-    }
-
-    .transf__row.in-view .transf__after .transf__label {
-      color: #C4D4C0;
-    }
-
-    .transf__detail {
-      font-size: 12px;
-      font-weight: 300;
-      line-height: 1.65;
-      transition: color 0.4s ease;
-    }
-
-    .transf__before .transf__detail {
-      color: #5A5450;
-    }
-
-    .transf__after .transf__detail {
-      color: #5A6A5A;
-    }
-
-    .transf__row.in-view .transf__after .transf__detail {
-      color: #8A9A88;
-    }
-
-    /* Fechamento */
-    .transf__closer {
-      margin-top: 48px;
-      max-width: 440px;
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.6s ease 0.15s, transform 0.6s ease 0.15s;
-    }
-
-    .transf__closer.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .transf__closer-text {
-      font-family: var(--serif);
-      font-size: clamp(1rem, 3.5vw, 1.15rem);
-      font-weight: 700;
-      font-style: italic;
-      line-height: 1.55;
-      color: #C4BAB0;
-    }
-
-    .transf__closer-text strong {
-      font-style: normal;
-      color: var(--text);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .transf__row, .transf__closer {
-        opacity: 1;
-        transform: none;
-      }
-    }
-
-    @media (max-width: 479px) {
-      .transf__row {
-        grid-template-columns: 1fr;
-        gap: 0;
-      }
-      .transf__arrow {
-        width: 100%;
-        height: 32px;
-        font-size: 16px;
-        transform: rotate(90deg);
-      }
-      .transf__row.in-view .transf__arrow {
-        transform: rotate(90deg);
-      }
-      .transf__before,
-      .transf__after {
-        padding: 18px 20px;
-      }
+      .hero__sub, .hero .cta { animation: none; opacity: 1; }
     }
 
     @media (min-width: 640px) {
-      .transf { padding: 112px 56px 120px; }
-      .transf__arrow { width: 56px; }
+      .hero__content { padding: 0 56px 72px; }
+      .hero__tension { left: 56px; }
+      .hero__headline { font-size: clamp(2.8rem, 4.5vw, 4rem); max-width: 580px; }
     }
 
     @media (min-width: 1024px) {
-      .transf {
-        padding: 128px 80px 136px;
-        max-width: 900px;
-        margin: 0 auto;
-      }
-
-      .transf__grid { max-width: 720px; }
-      .transf__arrow { width: 64px; font-size: 20px; }
+      .hero__photo { background-position: center 35%; }
+      .hero__content { padding: 0 80px 96px; max-width: 660px; }
+      .hero__tension { left: 80px; }
     }
 
-    /* ── RIVAL ── */
-    .rival {
+    /* ── PROBLEMA (compact recognition section) ── */
+    .problema {
       position: relative;
       background: var(--surface);
-      padding: 96px 28px 104px;
+      padding: 72px 28px 80px;
       overflow: hidden;
     }
 
-    .rival::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(to right, transparent, #1C1E22 20%, #1C1E22 80%, transparent);
-    }
-
-    .rival__ghost {
+    .problema__ghost {
       position: absolute;
       top: 50%;
       right: -5%;
       transform: translateY(-50%);
-      width: 380px;
-      height: 380px;
+      width: 300px;
+      height: 300px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(124, 29, 29, 0.06) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(124,29,29,0.06) 0%, transparent 70%);
       pointer-events: none;
     }
 
-    .rival__inner {
+    .problema__inner {
       position: relative;
       z-index: 1;
-      max-width: 600px;
+      max-width: 560px;
     }
 
-    .rival__eyebrow {
+    .eyebrow {
       font-size: 10px;
       letter-spacing: 0.22em;
       color: var(--muted);
       text-transform: uppercase;
-      margin-bottom: 20px;
-    }
-
-    .rival__headline {
-      font-family: var(--serif);
-      font-weight: 900;
-      font-size: clamp(1.8rem, 7vw, 3rem);
-      line-height: 1.12;
-      color: var(--text);
       margin-bottom: 16px;
     }
 
-    .rival__headline-accent {
+    .sec-title {
+      font-family: var(--serif);
+      font-weight: 900;
+      font-size: clamp(1.6rem, 6vw, 2.4rem);
+      line-height: 1.2;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+
+    .sec-title-accent {
       color: var(--ember-glow);
     }
 
-    .rival__divider {
-      width: 48px;
-      height: 2px;
-      background: var(--ember);
-      margin: 28px 0 32px;
-      opacity: 0.7;
-    }
-
-    .rival__body {
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .rival__text {
+    .problema__text {
       font-size: clamp(0.88rem, 3.2vw, 0.95rem);
       font-weight: 300;
       line-height: 1.75;
       color: #9A9490;
+      margin-bottom: 20px;
     }
 
-    .rival__text strong {
+    .problema__text strong {
       font-weight: 500;
       color: var(--text);
     }
 
-    .rival__quote {
+    .problema__quote {
       position: relative;
-      padding: 24px 0 24px 24px;
-      margin: 8px 0;
+      padding: 20px 0 20px 24px;
+      margin: 4px 0 20px;
     }
 
-    .rival__quote::before {
+    .problema__quote::before {
       content: '';
       position: absolute;
       left: 0;
@@ -922,86 +360,34 @@
       background: linear-gradient(to bottom, var(--ember-glow), transparent);
     }
 
-    .rival__quote p {
+    .problema__quote p {
       font-family: var(--serif);
-      font-size: clamp(1.05rem, 3.8vw, 1.25rem);
+      font-size: clamp(1rem, 3.5vw, 1.15rem);
       font-weight: 700;
       font-style: italic;
       line-height: 1.5;
       color: #C4BAB0;
     }
 
-    /* Scroll reveal */
-    .rival__inner > * {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .rival__inner > *.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
     @media (min-width: 640px) {
-      .rival { padding: 112px 56px 120px; }
-      .rival__ghost { width: 500px; height: 500px; right: -8%; }
+      .problema { padding: 88px 56px 96px; }
     }
 
     @media (min-width: 1024px) {
-      .rival {
-        padding: 128px 80px 136px;
-        max-width: 900px;
-        margin: 0 auto;
-      }
-
-      .rival__ghost { width: 600px; height: 600px; right: -10%; }
+      .problema { padding: 96px 80px 104px; max-width: 900px; margin: 0 auto; }
     }
 
-    /* ── MÓDULOS ── */
+    /* ── MODULOS (compact) ── */
     .modulos {
-      background: var(--surface);
-      padding: 96px 28px 104px;
       position: relative;
+      background: var(--ink);
+      padding: 72px 28px 80px;
       overflow: hidden;
     }
 
-    .modulos::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(to right, transparent, #1C1E22 20%, #1C1E22 80%, transparent);
-    }
-
     .modulos__inner {
-      max-width: 800px;
+      max-width: 600px;
       margin: 0 auto;
-    }
-
-    .modulos__eyebrow {
-      font-size: 10px;
-      letter-spacing: 0.22em;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .modulos__headline {
-      font-family: var(--serif);
-      font-weight: 900;
-      font-size: clamp(1.8rem, 7vw, 3rem);
-      line-height: 1.12;
-      color: var(--text);
-      text-align: center;
-      margin-bottom: 16px;
-    }
-
-    .modulos__headline-accent {
-      color: var(--ember-glow);
     }
 
     .modulos__tagline {
@@ -1009,590 +395,84 @@
       font-weight: 300;
       color: #857E76;
       line-height: 1.65;
-      text-align: center;
       max-width: 460px;
-      margin: 0 auto 56px;
-    }
-
-    .modulos__eyebrow,
-    .modulos__headline,
-    .modulos__tagline {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .modulos__eyebrow.in-view,
-    .modulos__headline.in-view,
-    .modulos__tagline.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .modulos__grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 16px;
+      margin-bottom: 40px;
     }
 
     .modulo {
       position: relative;
-      background: #12151A;
-      border: 1px solid #1E2128;
-      padding: 28px 24px 24px;
-      transition: border-color 0.4s ease, background 0.4s ease, transform 0.4s ease;
-      opacity: 0;
-      transform: translateY(24px);
+      display: flex;
+      gap: 16px;
+      padding: 20px 0;
+      border-bottom: 1px solid rgba(122,116,104,0.12);
     }
 
-    .modulo.in-view {
-      opacity: 1;
-      transform: translateY(0);
-      transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.4s ease, background 0.4s ease;
-    }
-
-    .modulo::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 2px;
-      height: 0;
-      background: linear-gradient(to bottom, var(--ember-glow), transparent);
-      transition: height 0.6s ease 0.2s;
-    }
-
-    .modulo.in-view::before {
-      height: 100%;
-    }
-
-    .modulo:hover {
-      border-color: #2A1A18;
-      background: #151010;
+    .modulo:first-child {
+      border-top: 1px solid rgba(122,116,104,0.12);
     }
 
     .modulo__num {
       font-size: 10px;
       font-weight: 500;
-      letter-spacing: 0.12em;
-      color: #4A4540;
+      letter-spacing: 0.1em;
+      color: var(--ember-glow);
       font-variant-numeric: tabular-nums;
-      margin-bottom: 12px;
-      transition: color 0.4s ease;
+      flex-shrink: 0;
+      padding-top: 3px;
     }
 
-    .modulo:hover .modulo__num {
-      color: var(--ember-glow);
-    }
-
-    .modulo__icon {
-      width: 36px;
-      height: 36px;
-      border-radius: 50%;
-      border: 1px solid #1E2128;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 16px;
-      color: #5A5450;
-      font-size: 14px;
-      transition: border-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
-    }
-
-    .modulo:hover .modulo__icon {
-      border-color: #5A1515;
-      color: var(--ember-glow);
-      box-shadow: 0 0 18px rgba(124, 29, 29, 0.2);
+    .modulo__body {
+      flex: 1;
     }
 
     .modulo__name {
       font-family: var(--serif);
-      font-size: clamp(1.05rem, 3.5vw, 1.2rem);
+      font-size: clamp(0.95rem, 3vw, 1.1rem);
       font-weight: 700;
-      color: #8A8478;
-      line-height: 1.3;
-      margin-bottom: 10px;
-      transition: color 0.4s ease;
-    }
-
-    .modulo:hover .modulo__name {
       color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 4px;
     }
 
     .modulo__desc {
       font-size: 13px;
       font-weight: 300;
       color: #6A645C;
-      line-height: 1.7;
-      transition: color 0.4s ease;
-    }
-
-    .modulo:hover .modulo__desc {
-      color: #9A9490;
-    }
-
-    .modulos__footer {
-      margin-top: 48px;
-      text-align: center;
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.6s ease 0.15s, transform 0.6s ease 0.15s;
-    }
-
-    .modulos__footer.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .modulos__footer-text {
-      font-family: var(--serif);
-      font-size: clamp(1rem, 3.5vw, 1.15rem);
-      font-weight: 700;
-      font-style: italic;
-      color: #C4BAB0;
-      line-height: 1.55;
-      max-width: 460px;
-      margin: 0 auto;
-    }
-
-    .modulos__footer-text strong {
-      font-style: normal;
-      color: var(--text);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .modulos__eyebrow, .modulos__headline, .modulos__tagline,
-      .modulo, .modulos__footer {
-        opacity: 1;
-        transform: none;
-      }
-      .modulo::before { height: 100%; }
-    }
-
-    @media (min-width: 640px) {
-      .modulos { padding: 112px 56px 120px; }
-      .modulos__grid { grid-template-columns: 1fr 1fr; }
-    }
-
-    @media (min-width: 1024px) {
-      .modulos {
-        padding: 128px 80px 136px;
-        max-width: 900px;
-        margin: 0 auto;
-      }
-    }
-
-    /* ── FRASE DE IMPACTO ── */
-    .impacto {
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 70svh;
-      padding: 80px 28px;
-      background: var(--ink);
-      overflow: hidden;
-    }
-
-    .impacto::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(to right, transparent, #1C1E22 20%, #1C1E22 80%, transparent);
-    }
-
-    .impacto__glow {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 480px;
-      height: 480px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(124, 29, 29, 0.08) 0%, transparent 65%);
-      pointer-events: none;
-    }
-
-    .impacto__inner {
-      position: relative;
-      z-index: 1;
-      max-width: 580px;
-      text-align: center;
-    }
-
-    .impacto__line {
-      width: 40px;
-      height: 2px;
-      background: var(--ember);
-      margin: 0 auto 40px;
-      opacity: 0.6;
-    }
-
-    .impacto__frase {
-      font-family: var(--serif);
-      font-weight: 700;
-      font-size: clamp(1.35rem, 5vw, 2rem);
-      line-height: 1.45;
-      color: #C4BAB0;
-      letter-spacing: -0.01em;
-    }
-
-    .impacto__frase strong {
-      color: var(--text);
-      font-weight: 900;
-    }
-
-    .impacto__line-bottom {
-      width: 40px;
-      height: 2px;
-      background: var(--ember);
-      margin: 40px auto 0;
-      opacity: 0.6;
-    }
-
-    .impacto__inner > * {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-
-    .impacto__inner > *.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .impacto__inner > * {
-        opacity: 1;
-        transform: none;
-      }
-    }
-
-    @media (min-width: 640px) {
-      .impacto { padding: 96px 56px; min-height: 60svh; }
-    }
-
-    @media (min-width: 1024px) {
-      .impacto {
-        padding: 112px 80px;
-        max-width: 900px;
-        margin: 0 auto;
-      }
-    }
-
-    /* ── PARA QUEM É ── */
-    .paraquem {
-      background: var(--surface);
-      padding: 96px 28px 104px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .paraquem::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(to right, transparent, #1C1E22 20%, #1C1E22 80%, transparent);
-    }
-
-    .paraquem__inner {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .paraquem__eyebrow {
-      font-size: 10px;
-      letter-spacing: 0.22em;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .paraquem__headline {
-      font-family: var(--serif);
-      font-weight: 900;
-      font-size: clamp(1.8rem, 7vw, 3rem);
-      line-height: 1.12;
-      color: var(--text);
-      text-align: center;
-      margin-bottom: 16px;
-    }
-
-    .paraquem__headline-accent {
-      color: var(--ember-glow);
-    }
-
-    .paraquem__tagline {
-      font-size: clamp(0.85rem, 3vw, 0.95rem);
-      font-weight: 300;
-      color: #857E76;
       line-height: 1.65;
-      text-align: center;
-      max-width: 460px;
-      margin: 0 auto 56px;
-    }
-
-    .paraquem__eyebrow,
-    .paraquem__headline,
-    .paraquem__tagline {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .paraquem__eyebrow.in-view,
-    .paraquem__headline.in-view,
-    .paraquem__tagline.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .paraquem__grid {
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .paraquem__item {
-      position: relative;
-      display: flex;
-      align-items: flex-start;
-      gap: 20px;
-      background: #12151A;
-      border: 1px solid #1E2128;
-      padding: 24px 24px;
-      transition: border-color 0.4s ease, background 0.4s ease;
-      opacity: 0;
-      transform: translateY(24px);
-    }
-
-    .paraquem__item.in-view {
-      opacity: 1;
-      transform: translateY(0);
-      transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.4s ease, background 0.4s ease;
-    }
-
-    .paraquem__item:hover {
-      border-color: #2A1A18;
-      background: #151010;
-    }
-
-    .paraquem__icon {
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      border: 1px solid #1E2128;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      color: #5A5450;
-      font-size: 14px;
-      transition: border-color 0.4s ease, color 0.4s ease, box-shadow 0.4s ease;
-    }
-
-    .paraquem__item:hover .paraquem__icon {
-      border-color: #5A1515;
-      color: var(--ember-glow);
-      box-shadow: 0 0 18px rgba(124, 29, 29, 0.2);
-    }
-
-    .paraquem__text {
-      flex: 1;
-    }
-
-    .paraquem__name {
-      font-family: var(--serif);
-      font-size: clamp(1rem, 3.5vw, 1.1rem);
-      font-weight: 700;
-      color: #8A8478;
-      line-height: 1.3;
-      margin-bottom: 6px;
-      transition: color 0.4s ease;
-    }
-
-    .paraquem__item:hover .paraquem__name {
-      color: var(--text);
-    }
-
-    .paraquem__desc {
-      font-size: 13px;
-      font-weight: 300;
-      color: #6A645C;
-      line-height: 1.7;
-      transition: color 0.4s ease;
-    }
-
-    .paraquem__item:hover .paraquem__desc {
-      color: #9A9490;
-    }
-
-    .paraquem__ember {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 2px;
-      height: 0;
-      background: linear-gradient(to bottom, var(--ember-glow), transparent);
-      transition: height 0.6s ease 0.2s;
-    }
-
-    .paraquem__item.in-view .paraquem__ember {
-      height: 100%;
-    }
-
-    .paraquem__closer {
-      margin-top: 48px;
-      text-align: center;
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.6s ease 0.15s, transform 0.6s ease 0.15s;
-    }
-
-    .paraquem__closer.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .paraquem__closer-text {
-      font-family: var(--serif);
-      font-size: clamp(1rem, 3.5vw, 1.15rem);
-      font-weight: 700;
-      font-style: italic;
-      color: #C4BAB0;
-      line-height: 1.55;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    .paraquem__closer-text strong {
-      font-style: normal;
-      color: var(--text);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .paraquem__eyebrow, .paraquem__headline, .paraquem__tagline,
-      .paraquem__item, .paraquem__closer {
-        opacity: 1;
-        transform: none;
-      }
-      .paraquem__ember { height: 100%; }
     }
 
     @media (min-width: 640px) {
-      .paraquem { padding: 112px 56px 120px; }
+      .modulos { padding: 88px 56px 96px; }
     }
 
     @media (min-width: 1024px) {
-      .paraquem {
-        padding: 128px 80px 136px;
-        max-width: 900px;
-        margin: 0 auto;
-      }
+      .modulos { padding: 96px 80px 104px; max-width: 900px; margin: 0 auto; }
     }
 
     /* ── DEPOIMENTOS ── */
     .depoimentos {
-      background: var(--surface);
-      padding: 96px 28px 104px;
       position: relative;
+      background: var(--surface);
+      padding: 72px 28px 80px;
       overflow: hidden;
     }
 
-    .depoimentos::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(to right, transparent, #1C1E22 20%, #1C1E22 80%, transparent);
-    }
-
     .depoimentos__inner {
-      max-width: 800px;
+      max-width: 600px;
       margin: 0 auto;
-    }
-
-    .depoimentos__eyebrow {
-      font-size: 10px;
-      letter-spacing: 0.22em;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .depoimentos__headline {
-      font-family: var(--serif);
-      font-weight: 900;
-      font-size: clamp(1.8rem, 7vw, 3rem);
-      line-height: 1.12;
-      color: var(--text);
-      text-align: center;
-      margin-bottom: 16px;
-    }
-
-    .depoimentos__headline-accent {
-      color: var(--ember-glow);
-    }
-
-    .depoimentos__tagline {
-      font-size: clamp(0.85rem, 3vw, 0.95rem);
-      font-weight: 300;
-      color: #857E76;
-      line-height: 1.65;
-      text-align: center;
-      max-width: 460px;
-      margin: 0 auto 56px;
-    }
-
-    .depoimentos__eyebrow,
-    .depoimentos__headline,
-    .depoimentos__tagline {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .depoimentos__eyebrow.in-view,
-    .depoimentos__headline.in-view,
-    .depoimentos__tagline.in-view {
-      opacity: 1;
-      transform: translateY(0);
     }
 
     .depoimentos__grid {
       display: flex;
       flex-direction: column;
-      gap: 20px;
-      max-width: 640px;
-      margin: 0 auto;
+      gap: 16px;
     }
 
     .depoimento {
       position: relative;
       background: #12151A;
       border: 1px solid #1E2128;
-      padding: 32px 28px 28px;
-      transition: border-color 0.4s ease, background 0.4s ease;
-      opacity: 0;
-      transform: translateY(24px);
-    }
-
-    .depoimento.in-view {
-      opacity: 1;
-      transform: translateY(0);
-      transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.4s ease, background 0.4s ease;
+      padding: 28px 24px 24px;
     }
 
     .depoimento::before {
@@ -1601,54 +481,29 @@
       top: 0;
       left: 0;
       width: 2px;
-      height: 0;
-      background: linear-gradient(to bottom, var(--ember-glow), transparent);
-      transition: height 0.6s ease 0.2s;
-    }
-
-    .depoimento.in-view::before {
       height: 100%;
-    }
-
-    .depoimento:hover {
-      border-color: #2A1A18;
-      background: #151010;
-    }
-
-    .depoimento__aspas {
-      font-family: var(--serif);
-      font-size: 48px;
-      font-weight: 900;
-      line-height: 1;
-      color: var(--ember);
-      opacity: 0.4;
-      margin-bottom: 8px;
-      user-select: none;
+      background: linear-gradient(to bottom, var(--ember-glow), transparent);
     }
 
     .depoimento__texto {
       font-family: var(--serif);
-      font-size: clamp(0.95rem, 3.5vw, 1.1rem);
+      font-size: clamp(0.92rem, 3vw, 1.05rem);
       font-weight: 700;
       font-style: italic;
       color: #C4BAB0;
       line-height: 1.6;
-      margin-bottom: 20px;
-    }
-
-    .depoimento:hover .depoimento__texto {
-      color: var(--text);
+      margin-bottom: 16px;
     }
 
     .depoimento__footer {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
     }
 
     .depoimento__avatar {
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       border-radius: 50%;
       background: #1A1D22;
       border: 1px solid #2A2D32;
@@ -1657,441 +512,43 @@
       justify-content: center;
       flex-shrink: 0;
       color: #4A4540;
-      font-size: 14px;
-      transition: border-color 0.4s ease, color 0.4s ease;
-    }
-
-    .depoimento:hover .depoimento__avatar {
-      border-color: #5A1515;
-      color: var(--ember-glow);
-    }
-
-    .depoimento__autor {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
+      font-size: 13px;
     }
 
     .depoimento__nome {
       font-size: 13px;
       font-weight: 500;
       color: #8A8478;
-      transition: color 0.4s ease;
-    }
-
-    .depoimento:hover .depoimento__nome {
-      color: var(--text);
     }
 
     .depoimento__contexto {
       font-size: 11px;
       font-weight: 300;
       color: #5A564E;
-      letter-spacing: 0.02em;
-    }
-
-    .depoimento__divider {
-      width: 100%;
-      height: 1px;
-      background: linear-gradient(to right, #1E2128, transparent);
-      margin-bottom: 20px;
-    }
-
-    .depoimentos__closer {
-      margin-top: 48px;
-      text-align: center;
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.6s ease 0.15s, transform 0.6s ease 0.15s;
-    }
-
-    .depoimentos__closer.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .depoimentos__closer-text {
-      font-family: var(--serif);
-      font-size: clamp(1rem, 3.5vw, 1.15rem);
-      font-weight: 700;
-      font-style: italic;
-      color: #C4BAB0;
-      line-height: 1.55;
-      max-width: 480px;
-      margin: 0 auto;
-    }
-
-    .depoimentos__closer-text strong {
-      font-style: normal;
-      color: var(--text);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .depoimentos__eyebrow, .depoimentos__headline, .depoimentos__tagline,
-      .depoimento, .depoimentos__closer {
-        opacity: 1;
-        transform: none;
-      }
-      .depoimento::before { height: 100%; }
     }
 
     @media (min-width: 640px) {
-      .depoimentos { padding: 112px 56px 120px; }
-      .depoimentos__grid { grid-template-columns: 1fr; }
+      .depoimentos { padding: 88px 56px 96px; }
     }
 
     @media (min-width: 768px) {
       .depoimentos__grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
-        max-width: 800px;
       }
-
-      .depoimento--destaque {
-        grid-column: 1 / -1;
-      }
+      .depoimento--wide { grid-column: 1 / -1; }
     }
 
     @media (min-width: 1024px) {
-      .depoimentos {
-        padding: 128px 80px 136px;
-        max-width: 900px;
-        margin: 0 auto;
-      }
-    }
-
-    /* ── PRODUTO ── */
-    .produto {
-      background: var(--ink);
-      padding: 96px 28px 104px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .produto::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(to right, transparent, #1C1E22 20%, #1C1E22 80%, transparent);
-    }
-
-    .produto__inner {
-      max-width: 800px;
-      margin: 0 auto;
-    }
-
-    .produto__eyebrow {
-      font-size: 10px;
-      letter-spacing: 0.22em;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .produto__headline {
-      font-family: var(--serif);
-      font-weight: 900;
-      font-size: clamp(1.8rem, 7vw, 3rem);
-      line-height: 1.12;
-      color: var(--text);
-      text-align: center;
-      margin-bottom: 16px;
-    }
-
-    .produto__headline-accent {
-      color: var(--ember-glow);
-    }
-
-    .produto__tagline {
-      font-size: clamp(0.85rem, 3vw, 0.95rem);
-      font-weight: 300;
-      color: #857E76;
-      line-height: 1.65;
-      text-align: center;
-      max-width: 480px;
-      margin: 0 auto 56px;
-    }
-
-    /* Layout principal: mockup + descrição */
-    .produto__showcase {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 48px;
-    }
-
-    /* Mockup do celular */
-    .produto__device {
-      position: relative;
-      width: 240px;
-      flex-shrink: 0;
-    }
-
-    .produto__phone {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 9 / 19.5;
-      background: #1A1D22;
-      border-radius: 32px;
-      border: 2px solid #2A2D32;
-      overflow: hidden;
-      box-shadow:
-        0 0 0 1px rgba(255,255,255,0.03),
-        0 24px 80px rgba(0,0,0,0.6),
-        0 0 60px rgba(124, 29, 29, 0.1);
-    }
-
-    .produto__phone-notch {
-      position: absolute;
-      top: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 100px;
-      height: 28px;
-      background: #1A1D22;
-      border-radius: 0 0 18px 18px;
-      z-index: 2;
-    }
-
-    .produto__phone-screen {
-      position: absolute;
-      inset: 8px;
-      border-radius: 24px;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(160deg, #0F1318 0%, #1A0808 100%);
-    }
-
-    .produto__phone-cover {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 24px;
-    }
-
-    /* Placeholder da capa quando não houver imagem */
-    .produto__phone-placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 32px 20px;
-      gap: 16px;
-      width: 100%;
-      height: 100%;
-    }
-
-    .produto__phone-placeholder-line {
-      width: 32px;
-      height: 2px;
-      background: var(--ember);
-      opacity: 0.6;
-    }
-
-    .produto__phone-placeholder-title {
-      font-family: var(--serif);
-      font-size: 16px;
-      font-weight: 700;
-      color: var(--text);
-      line-height: 1.3;
-    }
-
-    .produto__phone-placeholder-sub {
-      font-size: 9px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    /* Glow atrás do device */
-    .produto__device-glow {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      width: 320px;
-      height: 320px;
-      border-radius: 50%;
-      background: radial-gradient(circle, rgba(124, 29, 29, 0.12) 0%, transparent 70%);
-      pointer-events: none;
-      z-index: -1;
-    }
-
-    /* Descrição do produto */
-    .produto__info {
-      max-width: 440px;
-      text-align: center;
-    }
-
-    .produto__badge {
-      display: inline-block;
-      font-size: 10px;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--ember-glow);
-      border: 1px solid #3A1515;
-      padding: 6px 14px;
-      margin-bottom: 24px;
-    }
-
-    .produto__name {
-      font-family: var(--serif);
-      font-size: clamp(1.3rem, 5vw, 1.8rem);
-      font-weight: 700;
-      color: var(--text);
-      line-height: 1.2;
-      margin-bottom: 16px;
-    }
-
-    .produto__desc {
-      font-size: clamp(0.85rem, 3vw, 0.95rem);
-      font-weight: 300;
-      color: #9A9490;
-      line-height: 1.75;
-      margin-bottom: 32px;
-    }
-
-    .produto__desc strong {
-      font-weight: 500;
-      color: var(--text);
-    }
-
-    /* Lista de tópicos */
-    .produto__topics {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 36px;
-      text-align: left;
-    }
-
-    .produto__topic {
-      display: flex;
-      align-items: flex-start;
-      gap: 12px;
-      font-size: 13px;
-      font-weight: 300;
-      color: #8A8478;
-      line-height: 1.55;
-    }
-
-    .produto__topic-dot {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--ember);
-      flex-shrink: 0;
-      margin-top: 6px;
-    }
-
-    /* CTA do produto */
-    .produto__cta {
-      display: inline-block;
-      padding: 17px 36px;
-      background: var(--ember);
-      color: #F0E8E0;
-      font-family: var(--sans);
-      font-size: 0.88rem;
-      font-weight: 500;
-      letter-spacing: 0.03em;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      transition: background 0.25s ease;
-      box-shadow: 0 0 40px rgba(124, 29, 29, 0.35), 0 2px 8px rgba(0,0,0,0.5);
-    }
-
-    .produto__cta:hover,
-    .produto__cta:focus-visible {
-      background: var(--ember-glow);
-      outline: none;
-    }
-
-    .produto__cta:focus-visible {
-      outline: 2px solid var(--ember-glow);
-      outline-offset: 3px;
-    }
-
-    /* Scroll reveal */
-    .produto__showcase,
-    .produto__eyebrow,
-    .produto__headline,
-    .produto__tagline {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .produto__showcase.in-view,
-    .produto__eyebrow.in-view,
-    .produto__headline.in-view,
-    .produto__tagline.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .produto__showcase,
-      .produto__eyebrow,
-      .produto__headline,
-      .produto__tagline {
-        opacity: 1;
-        transform: none;
-      }
-    }
-
-    @media (min-width: 640px) {
-      .produto { padding: 112px 56px 120px; }
-      .produto__device { width: 260px; }
-    }
-
-    @media (min-width: 768px) {
-      .produto__showcase {
-        flex-direction: row;
-        align-items: center;
-        gap: 56px;
-      }
-
-      .produto__info { text-align: left; }
-      .produto__device { width: 240px; }
-    }
-
-    @media (min-width: 1024px) {
-      .produto {
-        padding: 128px 80px 136px;
-        max-width: 900px;
-        margin: 0 auto;
-      }
-
-      .produto__device { width: 270px; }
-      .produto__showcase { gap: 72px; }
+      .depoimentos { padding: 96px 80px 104px; max-width: 900px; margin: 0 auto; }
     }
 
     /* ── OFERTA ── */
     .oferta {
-      background: var(--ink);
-      padding: 96px 28px 104px;
       position: relative;
+      background: var(--ink);
+      padding: 72px 28px 80px;
       overflow: hidden;
-    }
-
-    .oferta::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(to right, transparent, #1C1E22 20%, #1C1E22 80%, transparent);
     }
 
     .oferta__glow {
@@ -2099,58 +556,24 @@
       top: 30%;
       left: 50%;
       transform: translateX(-50%);
-      width: 600px;
-      height: 600px;
+      width: 500px;
+      height: 500px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(124, 29, 29, 0.07) 0%, transparent 65%);
+      background: radial-gradient(circle, rgba(124,29,29,0.07) 0%, transparent 65%);
       pointer-events: none;
     }
 
     .oferta__inner {
       position: relative;
       z-index: 1;
-      max-width: 580px;
+      max-width: 520px;
       margin: 0 auto;
     }
 
-    .oferta__eyebrow {
-      font-size: 10px;
-      letter-spacing: 0.22em;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .oferta__headline {
-      font-family: var(--serif);
-      font-weight: 900;
-      font-size: clamp(1.8rem, 7vw, 3rem);
-      line-height: 1.12;
-      color: var(--text);
-      text-align: center;
-      margin-bottom: 16px;
-    }
-
-    .oferta__headline-accent {
-      color: var(--ember-glow);
-    }
-
-    .oferta__tagline {
-      font-size: clamp(0.85rem, 3vw, 0.95rem);
-      font-weight: 300;
-      color: #857E76;
-      line-height: 1.65;
-      text-align: center;
-      max-width: 460px;
-      margin: 0 auto 48px;
-    }
-
-    /* Card da oferta */
     .oferta__card {
       background: #12151A;
       border: 1px solid #1E2128;
-      padding: 40px 32px 44px;
+      padding: 36px 28px 40px;
       position: relative;
       overflow: hidden;
     }
@@ -2167,7 +590,7 @@
 
     .oferta__badge-wrap {
       text-align: center;
-      margin-bottom: 32px;
+      margin-bottom: 28px;
     }
 
     .oferta__badge {
@@ -2184,27 +607,19 @@
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      margin-bottom: 40px;
+      gap: 14px;
+      margin-bottom: 32px;
     }
 
     .oferta__beneficio {
       display: flex;
       align-items: flex-start;
-      gap: 14px;
-      opacity: 0;
-      transform: translateY(14px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-
-    .oferta__beneficio.in-view {
-      opacity: 1;
-      transform: translateY(0);
+      gap: 12px;
     }
 
     .oferta__check {
-      width: 22px;
-      height: 22px;
+      width: 20px;
+      height: 20px;
       border-radius: 50%;
       border: 1px solid #5A1515;
       background: #120606;
@@ -2217,7 +632,7 @@
     }
 
     .oferta__beneficio-text {
-      font-size: clamp(0.88rem, 3vw, 0.95rem);
+      font-size: clamp(0.85rem, 3vw, 0.92rem);
       font-weight: 300;
       color: #9A9490;
       line-height: 1.55;
@@ -2232,30 +647,29 @@
       width: 100%;
       height: 1px;
       background: linear-gradient(to right, transparent, #1E2128 20%, #1E2128 80%, transparent);
-      margin-bottom: 40px;
+      margin-bottom: 32px;
     }
 
-    /* Bloco de preço */
     .oferta__preco-wrap {
       text-align: center;
-      margin-bottom: 36px;
+      margin-bottom: 28px;
     }
 
     .oferta__preco-de {
       font-size: 13px;
       font-weight: 300;
       color: #5A564E;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       text-decoration: line-through;
     }
 
     .oferta__preco {
       font-family: var(--serif);
-      font-size: clamp(2.4rem, 8vw, 3.2rem);
+      font-size: clamp(2.2rem, 8vw, 3rem);
       font-weight: 900;
       color: var(--text);
       line-height: 1;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .oferta__preco-moeda {
@@ -2270,55 +684,21 @@
       font-size: 13px;
       font-weight: 300;
       color: #5A564E;
-      line-height: 1.5;
     }
 
-    /* CTA da oferta */
     .oferta__cta-wrap {
       text-align: center;
-      margin-bottom: 32px;
-    }
-
-    .oferta__cta {
-      display: inline-block;
-      width: 100%;
-      max-width: 400px;
-      padding: 20px 36px;
-      background: var(--ember);
-      color: #F0E8E0;
-      font-family: var(--sans);
-      font-size: 0.95rem;
-      font-weight: 500;
-      letter-spacing: 0.03em;
-      text-decoration: none;
-      text-align: center;
-      border: none;
-      cursor: pointer;
-      transition: background 0.25s ease, box-shadow 0.25s ease;
-      box-shadow: 0 0 60px rgba(124, 29, 29, 0.4), 0 4px 12px rgba(0,0,0,0.5);
-    }
-
-    .oferta__cta:hover,
-    .oferta__cta:focus-visible {
-      background: var(--ember-glow);
-      box-shadow: 0 0 80px rgba(163, 38, 38, 0.45), 0 4px 16px rgba(0,0,0,0.5);
-      outline: none;
-    }
-
-    .oferta__cta:focus-visible {
-      outline: 2px solid var(--ember-glow);
-      outline-offset: 3px;
+      margin-bottom: 24px;
     }
 
     .oferta__garantia {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 8px;
       color: #5A564E;
       font-size: 12px;
       font-weight: 300;
-      letter-spacing: 0.02em;
     }
 
     .oferta__garantia-icon {
@@ -2326,49 +706,25 @@
       flex-shrink: 0;
     }
 
+    @media (min-width: 640px) {
+      .oferta { padding: 88px 56px 96px; }
+      .oferta__card { padding: 44px 40px 48px; }
+    }
+
+    @media (min-width: 1024px) {
+      .oferta { padding: 96px 80px 104px; max-width: 900px; margin: 0 auto; }
+    }
+
     /* ── FAQ ── */
     .faq {
       position: relative;
-      padding: 100px 28px;
-      background: var(--ink);
+      padding: 72px 28px 80px;
+      background: var(--surface);
     }
 
     .faq__inner {
-      max-width: 720px;
+      max-width: 600px;
       margin: 0 auto;
-    }
-
-    .faq__eyebrow {
-      font-size: 10px;
-      letter-spacing: 0.22em;
-      color: var(--muted);
-      text-transform: uppercase;
-      margin-bottom: 16px;
-      opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .faq__headline {
-      font-family: var(--serif);
-      font-size: clamp(1.6rem, 6vw, 2.4rem);
-      font-weight: 700;
-      color: var(--text);
-      line-height: 1.2;
-      margin-bottom: 48px;
-      opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 0.6s ease 0.1s, transform 0.6s ease 0.1s;
-    }
-
-    .faq__eyebrow.in-view,
-    .faq__headline.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .faq__headline-accent {
-      color: var(--ember-glow);
     }
 
     .faq__list {
@@ -2377,19 +733,11 @@
     }
 
     .faq__item {
-      border-top: 1px solid rgba(122, 116, 104, 0.2);
-      opacity: 0;
-      transform: translateY(14px);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-    }
-
-    .faq__item.in-view {
-      opacity: 1;
-      transform: translateY(0);
+      border-top: 1px solid rgba(122,116,104,0.2);
     }
 
     .faq__item:last-child {
-      border-bottom: 1px solid rgba(122, 116, 104, 0.2);
+      border-bottom: 1px solid rgba(122,116,104,0.2);
     }
 
     .faq__trigger {
@@ -2398,14 +746,14 @@
       justify-content: space-between;
       gap: 16px;
       width: 100%;
-      padding: 22px 0;
+      padding: 20px 0;
       background: none;
       border: none;
       cursor: pointer;
       text-align: left;
       color: var(--text);
       font-family: var(--sans);
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 400;
       line-height: 1.5;
       transition: color 0.25s ease;
@@ -2420,17 +768,17 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
-      background: rgba(122, 116, 104, 0.12);
+      background: rgba(122,116,104,0.12);
       color: var(--muted);
       transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
     }
 
     .faq__trigger[aria-expanded="true"] .faq__icon {
       transform: rotate(45deg);
-      background: rgba(163, 38, 38, 0.15);
+      background: rgba(163,38,38,0.15);
       color: var(--ember-glow);
     }
 
@@ -2446,115 +794,97 @@
     }
 
     .faq__answer p {
-      padding: 0 0 24px;
-      font-size: 14px;
+      padding: 0 0 20px;
+      font-size: 13px;
       font-weight: 300;
       color: var(--muted);
       line-height: 1.75;
     }
 
-    @media (max-width: 600px) {
-      .faq {
-        padding: 72px 20px;
-      }
-      .faq__trigger {
-        font-size: 14px;
-        padding: 18px 0;
-      }
-      .faq__answer p {
-        font-size: 13px;
-      }
+    @media (min-width: 640px) {
+      .faq { padding: 88px 56px 96px; }
     }
 
-    /* ── GLOBAL MOBILE FIXES ── */
-    @media (max-width: 479px) {
-      .hero__content {
-        padding: 0 20px 44px;
-      }
-      .hero__tension {
-        left: 20px;
-      }
-      .hero__cta {
-        display: block;
-        text-align: center;
-        padding: 16px 20px;
-        font-size: 0.84rem;
-      }
-      .ciclo {
-        padding: 64px 20px 72px;
-      }
-      .transf {
-        padding: 72px 20px 80px;
-      }
-      .rival {
-        padding: 72px 20px 80px;
-      }
-      .modulos {
-        padding: 72px 20px 80px;
-      }
-      .modulo {
-        padding: 24px 20px 20px;
-      }
-      .impacto {
-        padding: 64px 20px;
-      }
-      .paraquem {
-        padding: 72px 20px 80px;
-      }
-      .paraquem__item {
-        padding: 20px 18px;
-        gap: 16px;
-      }
-      .depoimentos {
-        padding: 72px 20px 80px;
-      }
-      .depoimento {
-        padding: 28px 22px 24px;
-      }
-      .produto {
-        padding: 72px 20px 80px;
-      }
-      .produto__device {
-        width: 200px;
-      }
-      .oferta {
-        padding: 72px 20px 80px;
-      }
-      .oferta__card {
-        padding: 32px 20px 36px;
-      }
-      .oferta__cta {
-        padding: 18px 24px;
-        font-size: 0.88rem;
-      }
-      .ctafinal {
-        padding: 72px 20px 88px;
-      }
-      .ctafinal__cta {
-        padding: 18px 32px;
-        font-size: 0.92rem;
-      }
+    @media (min-width: 1024px) {
+      .faq { padding: 96px 80px 104px; max-width: 900px; margin: 0 auto; }
+    }
+
+    /* ── CTA FINAL ── */
+    .ctafinal {
+      position: relative;
+      padding: 80px 28px 96px;
+      text-align: center;
+      overflow: hidden;
+      background: var(--ink);
+    }
+
+    .ctafinal__glow {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 500px;
+      height: 350px;
+      background: radial-gradient(ellipse at center bottom, rgba(124,29,29,0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .ctafinal__inner {
+      position: relative;
+      z-index: 1;
+      max-width: 520px;
+      margin: 0 auto;
+    }
+
+    .ctafinal__divider {
+      width: 1px;
+      height: 48px;
+      background: linear-gradient(to bottom, transparent, var(--ember-glow));
+      margin: 0 auto 36px;
+      opacity: 0.7;
+    }
+
+    .ctafinal__text {
+      font-family: var(--serif);
+      font-size: clamp(1.2rem, 4vw, 1.6rem);
+      font-weight: 700;
+      line-height: 1.5;
+      color: #8A8478;
+      margin-bottom: 36px;
+    }
+
+    .ctafinal__highlight {
+      display: block;
+      color: var(--text);
+      margin-top: 8px;
+    }
+
+    .ctafinal__sub {
+      margin-top: 16px;
+      font-size: 12px;
+      font-weight: 300;
+      color: #5A564E;
+    }
+
+    @media (min-width: 640px) {
+      .ctafinal { padding: 96px 56px 112px; }
+    }
+
+    @media (min-width: 1024px) {
+      .ctafinal { padding: 104px 80px 120px; max-width: 900px; margin: 0 auto; }
     }
 
     /* ── FOOTER ── */
     .footer {
       background: #070809;
-      padding: 56px 28px 40px;
+      padding: 48px 28px 36px;
       position: relative;
     }
 
-    .footer::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-      background: linear-gradient(to right, transparent, #1C1E22 20%, #1C1E22 80%, transparent);
-    }
+    .footer .sec-line { top: 0; }
 
     .footer__inner {
-      max-width: 800px;
+      max-width: 600px;
       margin: 0 auto;
     }
 
@@ -2562,8 +892,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 24px;
-      margin-bottom: 40px;
+      gap: 20px;
+      margin-bottom: 32px;
     }
 
     .footer__brand {
@@ -2571,7 +901,6 @@
       font-size: 1rem;
       font-weight: 700;
       color: #5A564E;
-      letter-spacing: 0.02em;
     }
 
     .footer__links {
@@ -2587,19 +916,16 @@
       font-weight: 400;
       color: #5A564E;
       text-decoration: none;
-      letter-spacing: 0.02em;
       transition: color 0.25s ease;
     }
 
-    .footer__link:hover {
-      color: var(--text);
-    }
+    .footer__link:hover { color: var(--text); }
 
     .footer__divider {
       width: 100%;
       height: 1px;
       background: linear-gradient(to right, transparent, #1A1D22 20%, #1A1D22 80%, transparent);
-      margin-bottom: 28px;
+      margin-bottom: 24px;
     }
 
     .footer__disclaimer {
@@ -2608,8 +934,8 @@
       color: #3E3A35;
       line-height: 1.7;
       text-align: center;
-      max-width: 560px;
-      margin: 0 auto 20px;
+      max-width: 500px;
+      margin: 0 auto 16px;
     }
 
     .footer__copy {
@@ -2617,180 +943,31 @@
       font-weight: 300;
       color: #2E2A25;
       text-align: center;
-      letter-spacing: 0.02em;
     }
 
     @media (min-width: 640px) {
-      .footer { padding: 64px 56px 44px; }
+      .footer { padding: 56px 56px 40px; }
       .footer__top { flex-direction: row; justify-content: space-between; }
     }
 
-    @media (min-width: 1024px) {
-      .footer { padding: 72px 80px 48px; }
-    }
-
-    /* ── CTA FINAL ── */
-    .ctafinal {
-      position: relative;
-      padding: 100px 28px 120px;
-      text-align: center;
-      overflow: hidden;
-      background: var(--ink);
-    }
-
-    .ctafinal__glow {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 600px;
-      height: 400px;
-      background: radial-gradient(ellipse at center bottom, rgba(124, 29, 29, 0.15) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .ctafinal__inner {
-      position: relative;
-      z-index: 1;
-      max-width: 600px;
-      margin: 0 auto;
-    }
-
-    .ctafinal__divider {
-      width: 1px;
-      height: 60px;
-      background: linear-gradient(to bottom, transparent, var(--ember-glow));
-      margin: 0 auto 48px;
-      opacity: 0;
-      transform: scaleY(0);
-      transform-origin: top;
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-
-    .ctafinal__divider.in-view {
-      opacity: 0.7;
-      transform: scaleY(1);
-    }
-
-    .ctafinal__text {
-      font-family: var(--serif);
-      font-size: clamp(1.3rem, 4.5vw, 1.75rem);
-      font-weight: 700;
-      line-height: 1.5;
-      color: #8A8478;
-      margin-bottom: 20px;
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
-    }
-
-    .ctafinal__text.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .ctafinal__highlight {
-      display: block;
-      color: var(--text);
-      margin-top: 8px;
-    }
-
-    .ctafinal__cta-wrap {
-      margin-top: 48px;
-      opacity: 0;
-      transform: translateY(16px);
-      transition: opacity 0.8s ease 0.5s, transform 0.8s ease 0.5s;
-    }
-
-    .ctafinal__cta-wrap.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    .ctafinal__cta {
-      display: inline-block;
-      padding: 22px 48px;
-      background: var(--ember);
-      color: #F0E8E0;
-      font-family: var(--sans);
-      font-size: 1rem;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-      text-decoration: none;
-      text-align: center;
-      border: none;
-      cursor: pointer;
-      transition: background 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
-      box-shadow: 0 0 80px rgba(124, 29, 29, 0.5), 0 4px 16px rgba(0,0,0,0.5);
-    }
-
-    .ctafinal__cta:hover,
-    .ctafinal__cta:focus-visible {
-      background: var(--ember-glow);
-      box-shadow: 0 0 100px rgba(163, 38, 38, 0.5), 0 4px 20px rgba(0,0,0,0.5);
-      transform: translateY(-1px);
-      outline: none;
-    }
-
-    .ctafinal__cta:focus-visible {
-      outline: 2px solid var(--ember-glow);
-      outline-offset: 3px;
-    }
-
-    .ctafinal__sub {
-      margin-top: 20px;
-      font-size: 12px;
-      font-weight: 300;
-      color: #5A564E;
-      letter-spacing: 0.02em;
-    }
-
-    @media (min-width: 768px) {
-      .ctafinal {
-        padding: 140px 40px 160px;
+    /* ── MOBILE ── */
+    @media (max-width: 479px) {
+      .hero__content { padding: 0 20px 44px; }
+      .hero__tension { left: 20px; }
+      .hero .cta {
+        display: block;
+        text-align: center;
+        padding: 16px 20px;
+        font-size: 0.84rem;
       }
-      .ctafinal__cta {
-        padding: 22px 60px;
-      }
-    }
-
-    /* Scroll reveal */
-    .oferta__eyebrow,
-    .oferta__headline,
-    .oferta__tagline,
-    .oferta__card {
-      opacity: 0;
-      transform: translateY(20px);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .oferta__eyebrow.in-view,
-    .oferta__headline.in-view,
-    .oferta__tagline.in-view,
-    .oferta__card.in-view {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      .oferta__eyebrow, .oferta__headline, .oferta__tagline,
-      .oferta__card {
-        opacity: 1;
-        transform: none;
-      }
-    }
-
-    @media (min-width: 640px) {
-      .oferta { padding: 112px 56px 120px; }
-      .oferta__card { padding: 48px 44px 52px; }
-    }
-
-    @media (min-width: 1024px) {
-      .oferta {
-        padding: 128px 80px 136px;
-        max-width: 900px;
-        margin: 0 auto;
-      }
+      .problema { padding: 56px 20px 64px; }
+      .modulos { padding: 56px 20px 64px; }
+      .depoimentos { padding: 56px 20px 64px; }
+      .depoimento { padding: 24px 20px 20px; }
+      .oferta { padding: 56px 20px 64px; }
+      .oferta__card { padding: 28px 20px 32px; }
+      .faq { padding: 56px 20px 64px; }
+      .ctafinal { padding: 56px 20px 72px; }
     }
   </style>
 </head>
@@ -2799,8 +976,8 @@
   <div class="vignette-top" aria-hidden="true"></div>
   <div class="vignette-bottom" aria-hidden="true"></div>
 
+  <!-- ── HERO ── -->
   <section class="hero" aria-label="Hero">
-
     <div class="hero__photo" role="img" aria-label="Homem em pensamento introspectivo"></div>
     <div class="hero__tension" aria-hidden="true"></div>
 
@@ -2808,16 +985,16 @@
       <p class="hero__label">O Homem Inseguro</p>
 
       <h1 class="hero__headline">
-        Você não tem medo<br>de perdê-la.<br>
-        <em>Você tem medo de descobrir que não é suficiente.</em>
+        Voce nao tem medo<br>de perde-la.<br>
+        <em>Voce tem medo de descobrir que nao e suficiente.</em>
       </h1>
 
       <p class="hero__sub">
-        O ciúme. A comparação constante. A sensação de que qualquer hora alguém melhor aparece. Isso tem nome. E tem saída.
+        O ciume. A comparacao constante. A sensacao de que qualquer hora alguem melhor aparece. Isso tem nome. E tem saida.
       </p>
 
-      <a href="#ciclo" class="hero__cta">
-        Quero entender o que está acontecendo comigo
+      <a href="#oferta" class="cta">
+        Quero parar de repetir esse ciclo
       </a>
     </div>
 
@@ -2825,674 +1002,213 @@
       <div class="hero__scroll-line"></div>
       <span>rolar</span>
     </div>
-
   </section>
 
-  <!-- ── CICLO ── -->
-  <section class="ciclo" id="ciclo" aria-label="O ciclo da insegurança">
+  <!-- ── PROBLEMA ── -->
+  <section class="problema" aria-label="O problema">
+    <div class="sec-line" aria-hidden="true"></div>
+    <div class="problema__ghost" aria-hidden="true"></div>
 
-    <div class="ciclo__header">
-      <p class="ciclo__eyebrow">O ciclo invisível</p>
-      <h2 class="ciclo__title">Por que ele nunca<br>para sozinho</h2>
-      <p class="ciclo__sub">Cada estágio alimenta o próximo. Um ciclo que se repete até que algo mude.</p>
-    </div>
+    <div class="problema__inner">
+      <p class="eyebrow reveal">Voce se reconhece?</p>
 
-    <ol class="flow" id="flow">
-
-      <li class="flow__card">
-        <div class="flow__dot"><div class="flow__dot-inner"></div></div>
-        <div class="flow__body">
-          <span class="flow__num">01</span>
-          <h3 class="flow__name">Medo</h3>
-          <p class="flow__desc">Um gatilho. Uma mensagem, um nome, um silêncio. O corpo responde antes da mente. A sensação já está lá.</p>
-        </div>
-      </li>
-      <div class="flow__arrow" aria-hidden="true">&#8595;</div>
-
-      <li class="flow__card">
-        <div class="flow__dot"><div class="flow__dot-inner"></div></div>
-        <div class="flow__body">
-          <span class="flow__num">02</span>
-          <h3 class="flow__name">Pensamentos</h3>
-          <p class="flow__desc">A mente começa a trabalhar: "e se...?", "por que ela...?", "e aquele cara...?" Cenários que nunca terminam bem.</p>
-        </div>
-      </li>
-      <div class="flow__arrow" aria-hidden="true">&#8595;</div>
-
-      <li class="flow__card">
-        <div class="flow__dot"><div class="flow__dot-inner"></div></div>
-        <div class="flow__body">
-          <span class="flow__num">03</span>
-          <h3 class="flow__name">Comparação</h3>
-          <p class="flow__desc">Você começa a se medir contra outros. Reais ou imaginados. Eles são mais, você é menos. A comparação sempre perde.</p>
-        </div>
-      </li>
-      <div class="flow__arrow" aria-hidden="true">&#8595;</div>
-
-      <li class="flow__card">
-        <div class="flow__dot"><div class="flow__dot-inner"></div></div>
-        <div class="flow__body">
-          <span class="flow__num">04</span>
-          <h3 class="flow__name">Validação</h3>
-          <p class="flow__desc">Você busca uma prova de que ainda é suficiente. Uma resposta rápida, um elogio, uma confirmação. O alívio dura pouco.</p>
-        </div>
-      </li>
-      <div class="flow__arrow" aria-hidden="true">&#8595;</div>
-
-      <li class="flow__card">
-        <div class="flow__dot"><div class="flow__dot-inner"></div></div>
-        <div class="flow__body">
-          <span class="flow__num">05</span>
-          <h3 class="flow__name">Impulso</h3>
-          <p class="flow__desc">A tensão vira ação: uma pergunta que não deveria ser feita, uma invasão de privacidade, uma cena. O descontrole parece lógico naquele momento.</p>
-        </div>
-      </li>
-      <div class="flow__arrow" aria-hidden="true">&#8595;</div>
-
-      <li class="flow__card">
-        <div class="flow__dot"><div class="flow__dot-inner"></div></div>
-        <div class="flow__body">
-          <span class="flow__num">06</span>
-          <h3 class="flow__name">Arrependimento</h3>
-          <p class="flow__desc">A clareza chega depois. O que foi dito não pode ser desfeito. Você sabe que foi longe demais. E isso machuca diferente.</p>
-        </div>
-      </li>
-      <div class="flow__arrow" aria-hidden="true">&#8595;</div>
-
-      <li class="flow__card">
-        <div class="flow__dot"><div class="flow__dot-inner"></div></div>
-        <div class="flow__body">
-          <span class="flow__num">07</span>
-          <h3 class="flow__name">Mais insegurança</h3>
-          <p class="flow__desc">O comportamento confirma o que você temia: que não consegue controlar. O medo cresce. O ciclo recomeça.</p>
-        </div>
-      </li>
-
-    </ol>
-
-    <div class="flow__loop" aria-hidden="true">
-      <div class="flow__loop-icon">&#8635;</div>
-      <span class="flow__loop-label">o ciclo recomeça</span>
-      <div class="flow__loop-line"></div>
-    </div>
-
-  </section>
-
-  <!-- ── TRANSFORMAÇÃO ── -->
-  <section class="transf" aria-label="Transformação">
-
-    <div class="transf__header">
-      <p class="transf__eyebrow">A transformação</p>
-      <h2 class="transf__title">De refém dos seus medos<br>a dono das suas escolhas</h2>
-      <p class="transf__sub">A insegurança não desaparece. Mas o que você faz com ela muda completamente.</p>
-    </div>
-
-    <div class="transf__grid">
-
-      <div class="transf__row">
-        <div class="transf__before">
-          <span class="transf__tag">Antes</span>
-          <h3 class="transf__label">Ciúme reativo</h3>
-          <p class="transf__detail">Checa o celular, persegue perfis, interroga sobre qualquer nome novo.</p>
-        </div>
-        <div class="transf__arrow" aria-hidden="true">&#8594;</div>
-        <div class="transf__after">
-          <span class="transf__tag">Depois</span>
-          <h3 class="transf__label">Consciência emocional</h3>
-          <p class="transf__detail">Reconhece o gatilho, nomeia o que sente e escolhe como responder.</p>
-        </div>
-      </div>
-
-      <div class="transf__row">
-        <div class="transf__before">
-          <span class="transf__tag">Antes</span>
-          <h3 class="transf__label">Comparação destrutiva</h3>
-          <p class="transf__detail">Se mede contra todo homem que cruza o caminho dela. Sempre sai perdendo.</p>
-        </div>
-        <div class="transf__arrow" aria-hidden="true">&#8594;</div>
-        <div class="transf__after">
-          <span class="transf__tag">Depois</span>
-          <h3 class="transf__label">Confiança construída</h3>
-          <p class="transf__detail">Entende que valor próprio não depende de ser melhor que ninguém.</p>
-        </div>
-      </div>
-
-      <div class="transf__row">
-        <div class="transf__before">
-          <span class="transf__tag">Antes</span>
-          <h3 class="transf__label">Necessidade de controle</h3>
-          <p class="transf__detail">Quer saber onde ela está, com quem fala, o que faz. A liberdade dela parece ameaça.</p>
-        </div>
-        <div class="transf__arrow" aria-hidden="true">&#8594;</div>
-        <div class="transf__after">
-          <span class="transf__tag">Depois</span>
-          <h3 class="transf__label">Autocontrole real</h3>
-          <p class="transf__detail">Regula a própria ansiedade sem precisar controlar o outro. Segurança que vem de dentro.</p>
-        </div>
-      </div>
-
-      <div class="transf__row">
-        <div class="transf__before">
-          <span class="transf__tag">Antes</span>
-          <h3 class="transf__label">Explosões e silêncios</h3>
-          <p class="transf__detail">Ou grita o que sente, ou engole tudo até não aguentar. Os dois machucam.</p>
-        </div>
-        <div class="transf__arrow" aria-hidden="true">&#8594;</div>
-        <div class="transf__after">
-          <span class="transf__tag">Depois</span>
-          <h3 class="transf__label">Comunicação madura</h3>
-          <p class="transf__detail">Diz o que precisa sem acusar. Escuta sem se defender. Conversa sem drama.</p>
-        </div>
-      </div>
-
-    </div>
-
-    <div class="transf__closer">
-      <p class="transf__closer-text">
-        Não é sobre virar outro homem. É sobre <strong>parar de sabotar quem você já é.</strong>
-      </p>
-    </div>
-
-  </section>
-
-  <!-- ── RIVAL ── -->
-  <section class="rival" aria-label="O rival">
-
-    <div class="rival__ghost" aria-hidden="true"></div>
-
-    <div class="rival__inner">
-
-      <p class="rival__eyebrow">A verdade que ninguém conta</p>
-
-      <h2 class="rival__headline">
-        O rival quase nunca<br>é <span class="rival__headline-accent">outro homem.</span>
+      <h2 class="sec-title reveal">
+        O rival quase nunca e <span class="sec-title-accent">outro homem.</span>
       </h2>
 
-      <div class="rival__divider" aria-hidden="true"></div>
+      <p class="problema__text reveal">
+        Voce nao esta competindo com o ex dela, com o colega de trabalho, com o cara da academia. Voce esta competindo com uma <strong>versao que nao existe</strong>. Um fantasma que a sua propria mente criou para te convencer de que voce nao e suficiente.
+      </p>
 
-      <div class="rival__body">
-
-        <p class="rival__text">
-          Você não está competindo com o ex dela, com o colega de trabalho, com o cara da academia. Você está competindo com uma <strong>versão que não existe</strong>. Um fantasma que a sua própria mente criou.
+      <div class="problema__quote reveal">
+        <p>
+          Confianca nao e controlar o que ela faz. E nao precisar controlar para se sentir seguro.
         </p>
-
-        <div class="rival__quote">
-          <p>
-            "Ele é mais confiante. Mais interessante. Mais suficiente. Ele não teria essa insegurança."
-          </p>
-        </div>
-
-        <p class="rival__text">
-          Esse rival perfeito não erra, não duvida, não sente medo. <strong>E é exatamente por isso que ele não existe.</strong> Ele é uma projeção do que você acredita que deveria ser. E enquanto você compete com ele, perde a chance de ser quem realmente é.
-        </p>
-
-        <p class="rival__text">
-          O problema nunca foi o outro. O problema é a história que você conta sobre si mesmo. E essa história pode ser reescrita.
-        </p>
-
       </div>
 
+      <p class="problema__text reveal">
+        Enquanto voce checa o celular, persegue perfis e interroga sobre qualquer nome novo, o problema cresce. Porque o ciclo nunca para sozinho. <strong>Mas ele pode ser quebrado.</strong>
+      </p>
     </div>
-
   </section>
 
-  <!-- ── MÓDULOS ── -->
-  <section class="modulos" id="modulos" aria-label="Módulos do treinamento">
+  <!-- ── MODULOS ── -->
+  <section class="modulos" id="modulos" aria-label="O que voce vai aprender">
+    <div class="sec-line" aria-hidden="true"></div>
 
     <div class="modulos__inner">
+      <p class="eyebrow reveal">O que voce vai aprender</p>
 
-      <p class="modulos__eyebrow">O que você vai aprender</p>
-
-      <h2 class="modulos__headline">
-        7 módulos para quebrar<br>
-        <span class="modulos__headline-accent">o ciclo de uma vez.</span>
+      <h2 class="sec-title reveal">
+        7 modulos para quebrar <span class="sec-title-accent">o ciclo de uma vez.</span>
       </h2>
 
-      <p class="modulos__tagline">
-        Cada módulo ataca um ponto específico da insegurança. Sem enrolação, sem teoria vazia — só o que funciona.
+      <p class="modulos__tagline reveal">
+        Sem enrolacao, sem teoria vazia. So o que funciona.
       </p>
 
-      <div class="modulos__grid">
-
-        <div class="modulo">
-          <span class="modulo__num">MÓDULO 01</span>
-          <div class="modulo__icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a5 5 0 0 1 5 5c0 4-5 7-5 7S7 11 7 7a5 5 0 0 1 5-5z"/><circle cx="12" cy="7" r="1.5"/><path d="M5 21c0-4 3.5-7 7-7s7 3 7 7"/></svg>
-          </div>
-          <h3 class="modulo__name">A origem da insegurança</h3>
-          <p class="modulo__desc">De onde vem esse medo que parece não ter explicação. As raízes que ninguém te contou — e que você carrega desde antes do primeiro relacionamento.</p>
+      <div class="modulo reveal">
+        <span class="modulo__num">01</span>
+        <div class="modulo__body">
+          <h3 class="modulo__name">A origem da inseguranca</h3>
+          <p class="modulo__desc">De onde vem esse medo que parece nao ter explicacao.</p>
         </div>
+      </div>
 
-        <div class="modulo">
-          <span class="modulo__num">MÓDULO 02</span>
-          <div class="modulo__icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          </div>
-          <h3 class="modulo__name">O jogo da comparação</h3>
-          <p class="modulo__desc">Por que você se mede contra outros homens e sempre perde. Como desligar esse radar que transforma qualquer um em ameaça.</p>
+      <div class="modulo reveal">
+        <span class="modulo__num">02</span>
+        <div class="modulo__body">
+          <h3 class="modulo__name">O jogo da comparacao</h3>
+          <p class="modulo__desc">Por que voce se mede contra outros homens e sempre perde.</p>
         </div>
+      </div>
 
-        <div class="modulo">
-          <span class="modulo__num">MÓDULO 03</span>
-          <div class="modulo__icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          </div>
-          <h3 class="modulo__name">A armadilha da validação</h3>
-          <p class="modulo__desc">A dependência silenciosa de ser aprovado por ela. Por que nenhum elogio é suficiente — e como construir uma base que não desmorona com um silêncio.</p>
+      <div class="modulo reveal">
+        <span class="modulo__num">03</span>
+        <div class="modulo__body">
+          <h3 class="modulo__name">A armadilha da validacao</h3>
+          <p class="modulo__desc">A dependencia silenciosa de ser aprovado por ela.</p>
         </div>
+      </div>
 
-        <div class="modulo">
-          <span class="modulo__num">MÓDULO 04</span>
-          <div class="modulo__icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          </div>
-          <h3 class="modulo__name">Ciúme: o monstro familiar</h3>
-          <p class="modulo__desc">O que o ciúme realmente é, de onde ele vem e por que ele não protege nada. O mapa completo para desarmar o gatilho antes que ele dispare.</p>
+      <div class="modulo reveal">
+        <span class="modulo__num">04</span>
+        <div class="modulo__body">
+          <h3 class="modulo__name">Ciume: o monstro familiar</h3>
+          <p class="modulo__desc">O mapa completo para desarmar o gatilho antes que ele dispare.</p>
         </div>
+      </div>
 
-        <div class="modulo">
-          <span class="modulo__num">MÓDULO 05</span>
-          <div class="modulo__icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
-          </div>
+      <div class="modulo reveal">
+        <span class="modulo__num">05</span>
+        <div class="modulo__body">
           <h3 class="modulo__name">Comportamentos que afastam</h3>
-          <p class="modulo__desc">Controlar, interrogar, cobrar provas de amor. O inventário honesto de tudo que você faz achando que protege — e que na verdade destrói.</p>
+          <p class="modulo__desc">O inventario honesto de tudo que voce faz achando que protege.</p>
         </div>
-
-        <div class="modulo">
-          <span class="modulo__num">MÓDULO 06</span>
-          <div class="modulo__icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 6v6l4 2"/></svg>
-          </div>
-          <h3 class="modulo__name">Confiança interna</h3>
-          <p class="modulo__desc">Como construir uma segurança que não depende dela, dos outros ou das circunstâncias. O pilar que faltava — e que muda tudo de uma vez.</p>
-        </div>
-
-        <div class="modulo">
-          <span class="modulo__num">MÓDULO 07</span>
-          <div class="modulo__icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          </div>
-          <h3 class="modulo__name">Comunicação madura</h3>
-          <p class="modulo__desc">Falar o que sente sem acusar. Ouvir sem se defender. Resolver conflitos sem drama, sem gritos e sem engolir. A habilidade que salva relacionamentos.</p>
-        </div>
-
       </div>
 
-      <div class="modulos__footer">
-        <p class="modulos__footer-text">
-          Cada módulo é um passo. <strong>Nenhum pode ser pulado.</strong> Porque a insegurança não se resolve com atalhos.
-        </p>
+      <div class="modulo reveal">
+        <span class="modulo__num">06</span>
+        <div class="modulo__body">
+          <h3 class="modulo__name">Confianca interna</h3>
+          <p class="modulo__desc">Como construir seguranca que nao depende dela.</p>
+        </div>
       </div>
 
+      <div class="modulo reveal">
+        <span class="modulo__num">07</span>
+        <div class="modulo__body">
+          <h3 class="modulo__name">Comunicacao madura</h3>
+          <p class="modulo__desc">Falar o que sente sem acusar. Resolver sem drama.</p>
+        </div>
+      </div>
     </div>
-
-  </section>
-
-  <!-- ── FRASE DE IMPACTO ── -->
-  <section class="impacto" aria-label="Frase de impacto">
-
-    <div class="impacto__glow" aria-hidden="true"></div>
-
-    <div class="impacto__inner">
-      <div class="impacto__line" aria-hidden="true"></div>
-      <p class="impacto__frase">
-        Confiança não é controlar o que ela faz.<br>
-        É <strong>não precisar controlar para se sentir seguro.</strong>
-      </p>
-      <div class="impacto__line-bottom" aria-hidden="true"></div>
-    </div>
-
-  </section>
-
-  <!-- ── PARA QUEM É ── -->
-  <section class="paraquem" id="paraquem" aria-label="Para quem é">
-
-    <div class="paraquem__inner">
-
-      <p class="paraquem__eyebrow">Para quem é</p>
-
-      <h2 class="paraquem__headline">
-        Isso foi feito para<br>
-        <span class="paraquem__headline-accent">quem se reconhece aqui.</span>
-      </h2>
-
-      <p class="paraquem__tagline">
-        Não é sobre ser fraco. É sobre ter coragem de olhar para o que machuca e decidir que não quer mais viver assim.
-      </p>
-
-      <div class="paraquem__grid">
-
-        <div class="paraquem__item">
-          <div class="paraquem__ember" aria-hidden="true"></div>
-          <div class="paraquem__icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4"/><path d="M12 16h.01"/></svg>
-          </div>
-          <div class="paraquem__text">
-            <h3 class="paraquem__name">O que pensa demais</h3>
-            <p class="paraquem__desc">Analisa cada palavra, cada demora pra responder, cada curtida. A mente não para. E quanto mais pensa, pior fica.</p>
-          </div>
-        </div>
-
-        <div class="paraquem__item">
-          <div class="paraquem__ember" aria-hidden="true"></div>
-          <div class="paraquem__icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-          </div>
-          <div class="paraquem__text">
-            <h3 class="paraquem__name">O que sente ciúmes e sabe que exagera</h3>
-            <p class="paraquem__desc">Sabe que não deveria sentir aquilo. Mas sente. E não consegue simplesmente "parar", mesmo quando tenta.</p>
-          </div>
-        </div>
-
-        <div class="paraquem__item">
-          <div class="paraquem__ember" aria-hidden="true"></div>
-          <div class="paraquem__icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-          </div>
-          <div class="paraquem__text">
-            <h3 class="paraquem__name">O que se compara com outros homens</h3>
-            <p class="paraquem__desc">Olha para o lado e sempre acha que o outro é mais. Mais confiante, mais interessante, mais suficiente. A comparação nunca tem fim.</p>
-          </div>
-        </div>
-
-        <div class="paraquem__item">
-          <div class="paraquem__ember" aria-hidden="true"></div>
-          <div class="paraquem__icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          </div>
-          <div class="paraquem__text">
-            <h3 class="paraquem__name">O que busca validação o tempo todo</h3>
-            <p class="paraquem__desc">Precisa ouvir que é amado, que é escolhido, que não vai ser trocado. O alívio vem, mas dura pouco. Nunca é o bastante.</p>
-          </div>
-        </div>
-
-        <div class="paraquem__item">
-          <div class="paraquem__ember" aria-hidden="true"></div>
-          <div class="paraquem__icon">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 6v6l4 2"/></svg>
-          </div>
-          <div class="paraquem__text">
-            <h3 class="paraquem__name">O que quer construir segurança de verdade</h3>
-            <p class="paraquem__desc">Está cansado de repetir os mesmos padrões. Quer parar de reagir e começar a escolher. Quer ser melhor para si mesmo e para quem ama.</p>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="paraquem__closer">
-        <p class="paraquem__closer-text">
-          Se você leu até aqui e se reconheceu, <strong>esse treinamento foi feito para você.</strong>
-        </p>
-      </div>
-
-    </div>
-
   </section>
 
   <!-- ── DEPOIMENTOS ── -->
   <section class="depoimentos" id="depoimentos" aria-label="Depoimentos">
+    <div class="sec-line" aria-hidden="true"></div>
 
     <div class="depoimentos__inner">
+      <p class="eyebrow reveal">Quem ja passou por isso</p>
 
-      <p class="depoimentos__eyebrow">Quem já passou por isso</p>
-
-      <h2 class="depoimentos__headline">
-        Histórias de quem decidiu<br>
-        <span class="depoimentos__headline-accent">parar de repetir o ciclo.</span>
+      <h2 class="sec-title reveal" style="margin-bottom: 32px;">
+        Historias de quem decidiu <span class="sec-title-accent">parar de repetir.</span>
       </h2>
-
-      <p class="depoimentos__tagline">
-        Relatos reais de homens que reconheceram o padrão e escolheram mudar. Sem filtro, sem roteiro.
-      </p>
 
       <div class="depoimentos__grid">
 
-        <div class="depoimento depoimento--destaque">
-          <span class="depoimento__aspas" aria-hidden="true">"</span>
+        <div class="depoimento depoimento--wide reveal">
           <p class="depoimento__texto">
-            Eu achava que o problema era ela. Que ela dava motivo, que nao me respeitava. Depois do modulo 3 eu entendi que o problema era a historia que eu contava pra mim mesmo. Hoje a gente conversa de verdade. Sem acusacao, sem drama. Queria ter visto isso antes.
+            Eu achava que o problema era ela. Depois do modulo 3 eu entendi que o problema era a historia que eu contava pra mim mesmo. Hoje a gente conversa de verdade. Sem acusacao, sem drama.
           </p>
-          <div class="depoimento__divider" aria-hidden="true"></div>
           <div class="depoimento__footer">
             <div class="depoimento__avatar" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </div>
-            <div class="depoimento__autor">
+            <div>
               <span class="depoimento__nome">Rafael M.</span>
-              <span class="depoimento__contexto">32 anos, casado ha 6 anos</span>
+              <span class="depoimento__contexto"> · 32 anos, casado ha 6 anos</span>
             </div>
           </div>
         </div>
 
-        <div class="depoimento">
-          <span class="depoimento__aspas" aria-hidden="true">"</span>
+        <div class="depoimento reveal">
           <p class="depoimento__texto">
-            Perdi duas namoradas por ciume. Na terceira vez que comecei a repetir o padrao, procurei ajuda. Esse treinamento me mostrou exatamente o ciclo que eu vivia. Pela primeira vez consegui frear antes de explodir.
+            Perdi duas namoradas por ciume. Na terceira vez que comecei a repetir o padrao, procurei ajuda. Pela primeira vez consegui frear antes de explodir.
           </p>
-          <div class="depoimento__divider" aria-hidden="true"></div>
           <div class="depoimento__footer">
             <div class="depoimento__avatar" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </div>
-            <div class="depoimento__autor">
+            <div>
               <span class="depoimento__nome">Lucas T.</span>
-              <span class="depoimento__contexto">27 anos, namorando</span>
+              <span class="depoimento__contexto"> · 27 anos</span>
             </div>
           </div>
         </div>
 
-        <div class="depoimento">
-          <span class="depoimento__aspas" aria-hidden="true">"</span>
+        <div class="depoimento reveal">
           <p class="depoimento__texto">
-            Eu checava o celular dela todo dia. Sabia que era errado mas nao conseguia parar. O material sobre validacao me abriu os olhos de um jeito que nenhum conselho de amigo conseguiu. Simples, direto e sem frescura.
+            Achei que seria mais um conteudo motivacional vazio. Me surpreendi. E pratico, vai direto no ponto e me fez enxergar padrao que eu repetia desde a adolescencia.
           </p>
-          <div class="depoimento__divider" aria-hidden="true"></div>
           <div class="depoimento__footer">
             <div class="depoimento__avatar" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
             </div>
-            <div class="depoimento__autor">
-              <span class="depoimento__nome">Thiago R.</span>
-              <span class="depoimento__contexto">29 anos, solteiro</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="depoimento depoimento--destaque">
-          <span class="depoimento__aspas" aria-hidden="true">"</span>
-          <p class="depoimento__texto">
-            Minha esposa ja estava no limite. Ela disse que me amava mas nao aguentava mais o controle. Comecei o treinamento num domingo a noite e na segunda ja entendia coisas que anos de briga nao me ensinaram. Hoje ela diz que eu sou outro homem. Eu sei que sou o mesmo, so parei de lutar contra mim.
-          </p>
-          <div class="depoimento__divider" aria-hidden="true"></div>
-          <div class="depoimento__footer">
-            <div class="depoimento__avatar" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
-            <div class="depoimento__autor">
-              <span class="depoimento__nome">Daniel S.</span>
-              <span class="depoimento__contexto">35 anos, casado, 2 filhos</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="depoimento">
-          <span class="depoimento__aspas" aria-hidden="true">"</span>
-          <p class="depoimento__texto">
-            O modulo sobre comparacao me destruiu e reconstruiu. Eu vivia olhando o Instagram de qualquer cara que ela seguia. Hoje entendo que o rival nunca existiu. Era tudo projecao minha.
-          </p>
-          <div class="depoimento__divider" aria-hidden="true"></div>
-          <div class="depoimento__footer">
-            <div class="depoimento__avatar" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
-            <div class="depoimento__autor">
-              <span class="depoimento__nome">Felipe A.</span>
-              <span class="depoimento__contexto">24 anos, primeiro relacionamento serio</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="depoimento">
-          <span class="depoimento__aspas" aria-hidden="true">"</span>
-          <p class="depoimento__texto">
-            Achei que seria mais um conteudo motivacional vazio. Me surpreendi. E pratico, vai direto no ponto e me fez enxergar padrao que eu repetia desde a adolescencia. Pelo preco, e absurdo de bom.
-          </p>
-          <div class="depoimento__divider" aria-hidden="true"></div>
-          <div class="depoimento__footer">
-            <div class="depoimento__avatar" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-            </div>
-            <div class="depoimento__autor">
+            <div>
               <span class="depoimento__nome">Bruno C.</span>
-              <span class="depoimento__contexto">31 anos, divorciado</span>
+              <span class="depoimento__contexto"> · 31 anos</span>
             </div>
           </div>
         </div>
 
       </div>
-
-      <div class="depoimentos__closer">
-        <p class="depoimentos__closer-text">
-          Cada um desses homens estava onde você está agora. <strong>A diferença é que eles decidiram agir.</strong>
-        </p>
-      </div>
-
     </div>
-
-  </section>
-
-  <!-- ── PRODUTO ── -->
-  <section class="produto" id="produto" aria-label="O treinamento">
-
-    <div class="produto__inner">
-
-      <p class="produto__eyebrow">O treinamento</p>
-
-      <h2 class="produto__headline">
-        Entenda seus padrões.<br>
-        <span class="produto__headline-accent">Construa confiança real.</span>
-      </h2>
-
-      <p class="produto__tagline">
-        Um treinamento direto, sem rodeios, para homens que estão cansados de repetir o mesmo ciclo e prontos para mudar de verdade.
-      </p>
-
-      <div class="produto__showcase">
-
-        <!-- Mockup celular -->
-        <div class="produto__device">
-          <div class="produto__device-glow" aria-hidden="true"></div>
-          <div class="produto__phone">
-            <div class="produto__phone-notch"></div>
-            <div class="produto__phone-screen">
-              <!-- Substituir pelo <img class="produto__phone-cover" src="capa.jpg" alt="Capa do treinamento"> -->
-              <div class="produto__phone-placeholder">
-                <div class="produto__phone-placeholder-line"></div>
-                <span class="produto__phone-placeholder-title">O Homem<br>Inseguro</span>
-                <span class="produto__phone-placeholder-sub">Treinamento</span>
-                <div class="produto__phone-placeholder-line"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Descrição -->
-        <div class="produto__info">
-
-          <span class="produto__badge">Treinamento digital</span>
-
-          <h3 class="produto__name">O Homem Inseguro</h3>
-
-          <p class="produto__desc">
-            Um caminho prático para <strong>identificar os padrões que sabotam seus relacionamentos</strong> e desenvolver a segurança emocional que nenhuma validação externa consegue dar.
-          </p>
-
-          <ul class="produto__topics">
-            <li class="produto__topic">
-              <span class="produto__topic-dot" aria-hidden="true"></span>
-              Entenda a raiz da sua insegurança — e por que ela se repete
-            </li>
-            <li class="produto__topic">
-              <span class="produto__topic-dot" aria-hidden="true"></span>
-              Quebre o ciclo de ciúme, comparação e controle
-            </li>
-            <li class="produto__topic">
-              <span class="produto__topic-dot" aria-hidden="true"></span>
-              Desenvolva confiança interna que não depende dela
-            </li>
-            <li class="produto__topic">
-              <span class="produto__topic-dot" aria-hidden="true"></span>
-              Aprenda a se comunicar sem explodir ou engolir
-            </li>
-          </ul>
-
-          <a href="#" class="produto__cta">
-            Quero começar agora
-          </a>
-
-        </div>
-
-      </div>
-
-    </div>
-
   </section>
 
   <!-- ── OFERTA ── -->
   <section class="oferta" id="oferta" aria-label="Oferta">
-
+    <div class="sec-line" aria-hidden="true"></div>
     <div class="oferta__glow" aria-hidden="true"></div>
 
     <div class="oferta__inner">
+      <p class="eyebrow reveal" style="text-align:center">Comece agora</p>
 
-      <p class="oferta__eyebrow">Comece agora</p>
-
-      <h2 class="oferta__headline">
-        Tudo que você precisa para<br>
-        <span class="oferta__headline-accent">quebrar o ciclo.</span>
+      <h2 class="sec-title reveal" style="text-align:center; margin-bottom: 32px;">
+        Tudo que voce precisa para <span class="sec-title-accent">quebrar o ciclo.</span>
       </h2>
 
-      <p class="oferta__tagline">
-        Acesso imediato. Sem espera, sem enrolação. Você começa no momento em que decide.
-      </p>
-
-      <div class="oferta__card">
+      <div class="oferta__card reveal">
 
         <div class="oferta__badge-wrap">
-          <span class="oferta__badge">Acesso imediato e vitalício</span>
+          <span class="oferta__badge">Acesso imediato e vitalicio</span>
         </div>
 
         <ul class="oferta__beneficios">
           <li class="oferta__beneficio">
             <span class="oferta__check">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </span>
-            <span class="oferta__beneficio-text"><strong>7 módulos completos</strong> do treinamento O Homem Inseguro</span>
+            <span class="oferta__beneficio-text"><strong>7 modulos completos</strong> do treinamento</span>
           </li>
           <li class="oferta__beneficio">
             <span class="oferta__check">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </span>
-            <span class="oferta__beneficio-text"><strong>Exercícios práticos</strong> para aplicar no mesmo dia</span>
+            <span class="oferta__beneficio-text"><strong>Exercicios praticos</strong> para aplicar no mesmo dia</span>
           </li>
           <li class="oferta__beneficio">
             <span class="oferta__check">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </span>
-            <span class="oferta__beneficio-text"><strong>Acesso vitalício</strong> ao conteúdo e futuras atualizações</span>
+            <span class="oferta__beneficio-text"><strong>Acesso vitalicio</strong> e futuras atualizacoes</span>
           </li>
           <li class="oferta__beneficio">
             <span class="oferta__check">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
             </span>
-            <span class="oferta__beneficio-text"><strong>Material direto e sem enrolação</strong>, feito para quem quer resultado</span>
-          </li>
-          <li class="oferta__beneficio">
-            <span class="oferta__check">
-              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-            </span>
-            <span class="oferta__beneficio-text"><strong>Garantia de 7 dias</strong>, risco zero para você</span>
+            <span class="oferta__beneficio-text"><strong>Garantia de 7 dias</strong>, risco zero</span>
           </li>
         </ul>
 
@@ -3507,8 +1223,8 @@
         </div>
 
         <div class="oferta__cta-wrap">
-          <a href="#" class="oferta__cta">
-            Quero começar minha transformação
+          <a href="#" class="cta cta--large oferta__cta">
+            Quero comecar minha transformacao
           </a>
         </div>
 
@@ -3516,133 +1232,100 @@
           <span class="oferta__garantia-icon">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
           </span>
-          Compra segura. Acesso imediato após o pagamento.
+          Compra segura. Acesso imediato apos o pagamento.
         </div>
 
       </div>
-
     </div>
-
   </section>
 
   <!-- ── FAQ ── -->
   <section class="faq" id="faq" aria-label="Perguntas frequentes">
+    <div class="sec-line" aria-hidden="true"></div>
     <div class="faq__inner">
-
-      <p class="faq__eyebrow">Tire suas dúvidas</p>
-
-      <h2 class="faq__headline">
-        Perguntas <span class="faq__headline-accent">frequentes</span>
+      <p class="eyebrow reveal">Duvidas</p>
+      <h2 class="sec-title reveal" style="margin-bottom: 32px;">
+        Perguntas <span class="sec-title-accent">frequentes</span>
       </h2>
 
       <div class="faq__list">
-
-        <div class="faq__item">
+        <div class="faq__item reveal">
           <button class="faq__trigger" aria-expanded="false">
-            <span class="faq__question">Como funciona o acesso ao treinamento?</span>
+            <span>Como funciona o acesso?</span>
             <span class="faq__icon" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </span>
           </button>
           <div class="faq__answer" hidden>
-            <p>Após a confirmação do pagamento, você recebe imediatamente um e-mail com os dados de acesso à plataforma. Todo o conteúdo fica disponível 24h por dia, no seu ritmo, sem prazo para terminar.</p>
+            <p>Apos o pagamento, voce recebe um e-mail com acesso imediato a plataforma. Todo o conteudo fica disponivel 24h, no seu ritmo, sem prazo.</p>
           </div>
         </div>
 
-        <div class="faq__item">
+        <div class="faq__item reveal">
           <button class="faq__trigger" aria-expanded="false">
-            <span class="faq__question">Consigo acessar pelo celular?</span>
+            <span>Consigo acessar pelo celular?</span>
             <span class="faq__icon" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </span>
           </button>
           <div class="faq__answer" hidden>
-            <p>Sim. A plataforma funciona em qualquer dispositivo com internet: celular, tablet ou computador. Você pode assistir de onde quiser, quando quiser.</p>
+            <p>Sim. Funciona em celular, tablet ou computador. Voce acessa de onde quiser.</p>
           </div>
         </div>
 
-        <div class="faq__item">
+        <div class="faq__item reveal">
           <button class="faq__trigger" aria-expanded="false">
-            <span class="faq__question">Quanto tempo dura o treinamento?</span>
+            <span>Substitui terapia?</span>
             <span class="faq__icon" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </span>
           </button>
           <div class="faq__answer" hidden>
-            <p>O treinamento tem 7 módulos objetivos e diretos. Você pode consumir tudo em poucos dias ou avançar no seu ritmo. O acesso é vitalício, então não há pressa.</p>
+            <p>Nao. E um material de desenvolvimento pessoal que pode complementar terapia, mas nao substitui acompanhamento profissional de saude mental.</p>
           </div>
         </div>
 
-        <div class="faq__item">
+        <div class="faq__item reveal">
           <button class="faq__trigger" aria-expanded="false">
-            <span class="faq__question">Quais as formas de pagamento?</span>
+            <span>Quais as formas de pagamento?</span>
             <span class="faq__icon" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </span>
           </button>
           <div class="faq__answer" hidden>
-            <p>Você pode pagar com cartão de crédito (com opção de parcelamento), PIX ou boleto bancário. O acesso via cartão e PIX é liberado na hora. Boleto pode levar até 3 dias úteis para compensar.</p>
+            <p>Cartao de credito (com parcelamento), PIX ou boleto. Cartao e PIX liberam acesso na hora.</p>
           </div>
         </div>
-
-        <div class="faq__item">
-          <button class="faq__trigger" aria-expanded="false">
-            <span class="faq__question">Para quem é esse treinamento?</span>
-            <span class="faq__icon" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </span>
-          </button>
-          <div class="faq__answer" hidden>
-            <p>Para qualquer homem que sente que a insegurança está travando a vida dele. Seja nos relacionamentos, no trabalho, na forma como se posiciona ou na imagem que tem de si mesmo. Não importa a idade ou a fase da vida.</p>
-          </div>
-        </div>
-
-        <div class="faq__item">
-          <button class="faq__trigger" aria-expanded="false">
-            <span class="faq__question">O conteúdo substitui terapia?</span>
-            <span class="faq__icon" aria-hidden="true">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-            </span>
-          </button>
-          <div class="faq__answer" hidden>
-            <p>Não. O treinamento é um material de desenvolvimento pessoal e autoconhecimento. Ele pode complementar um processo terapêutico, mas não substitui o acompanhamento de um profissional de saúde mental.</p>
-          </div>
-        </div>
-
       </div>
-
     </div>
   </section>
 
   <!-- ── CTA FINAL ── -->
   <section class="ctafinal" aria-label="Chamada final">
-
+    <div class="sec-line" aria-hidden="true"></div>
     <div class="ctafinal__glow" aria-hidden="true"></div>
 
     <div class="ctafinal__inner">
+      <div class="ctafinal__divider reveal" aria-hidden="true"></div>
 
-      <div class="ctafinal__divider" aria-hidden="true"></div>
-
-      <p class="ctafinal__text">
-        Você pode continuar tentando controlar tudo ao seu redor.
-        <span class="ctafinal__highlight">Ou pode começar a trabalhar aquilo que está acontecendo dentro de você.</span>
+      <p class="ctafinal__text reveal">
+        Voce pode continuar tentando controlar tudo ao seu redor.
+        <span class="ctafinal__highlight">Ou pode comecar a trabalhar o que acontece dentro de voce.</span>
       </p>
 
-      <div class="ctafinal__cta-wrap">
-        <a href="#" class="ctafinal__cta">
-          Quero começar agora
+      <div class="reveal" style="text-align:center">
+        <a href="#oferta" class="cta cta--large ctafinal__cta">
+          Quero comecar agora
         </a>
         <p class="ctafinal__sub">Acesso imediato. Garantia de 7 dias.</p>
       </div>
-
     </div>
-
   </section>
 
   <!-- ── FOOTER ── -->
-  <footer class="footer" aria-label="Rodapé">
+  <footer class="footer" aria-label="Rodape">
+    <div class="sec-line" aria-hidden="true"></div>
     <div class="footer__inner">
-
       <div class="footer__top">
         <span class="footer__brand">O Homem Inseguro</span>
         <ul class="footer__links">
@@ -3651,71 +1334,20 @@
           <li><a href="mailto:contato@ohomeminseguro.com" class="footer__link">Contato</a></li>
         </ul>
       </div>
-
       <div class="footer__divider" aria-hidden="true"></div>
-
       <p class="footer__disclaimer">
-        Este produto tem finalidade exclusivamente educacional e informativa. O conteudo apresentado nao substitui acompanhamento psicologico, psiquiatrico ou qualquer outro tipo de atendimento profissional de saude mental. Em caso de necessidade, procure um profissional qualificado.
+        Este produto tem finalidade exclusivamente educacional e informativa. Nao substitui acompanhamento psicologico ou psiquiatrico. Em caso de necessidade, procure um profissional qualificado.
       </p>
-
       <p class="footer__copy">
         &copy; 2025 O Homem Inseguro. Todos os direitos reservados.
       </p>
-
     </div>
   </footer>
 
-  <!-- ══════════════════════════════════════════════════════
-       TRACKING & CHECKOUT CONFIGURATION
-       ══════════════════════════════════════════════════════ -->
-
-  <!--
-    META PIXEL (Facebook/Instagram Ads)
-    Substitua SEU_PIXEL_ID pelo ID real do seu pixel.
-
-    <script>
-      !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-      n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
-      (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', 'SEU_PIXEL_ID');
-      fbq('track', 'PageView');
-    </script>
-  -->
-
-  <!--
-    GOOGLE TAG MANAGER
-    Substitua GTM-XXXXXXX pelo seu container ID.
-
-    <script>
-      (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-      new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-      j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;
-      j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
-      f.parentNode.insertBefore(j,f);})(window,document,'script','dataLayer','GTM-XXXXXXX');
-    </script>
-  -->
-
-  <!--
-    GOOGLE ANALYTICS 4 (GA4)
-    Substitua G-XXXXXXXXXX pelo seu Measurement ID.
-
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-XXXXXXXXXX');
-    </script>
-  -->
-
+  <!-- ── CHECKOUT ── -->
   <script>
-    // ── CHECKOUT URL CENTRAL ──
-    // Altere esta URL para o link real do seu checkout (Hotmart, Kiwify, etc.)
     var CHECKOUT_URL = 'https://pay.kiwify.com.br/3bs6O18';
 
-    // Preserva UTMs da URL atual e repassa para o checkout
     function buildCheckoutURL() {
       var params = new URLSearchParams(window.location.search);
       var utmKeys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content', 'utm_term', 'src', 'sck'];
@@ -3727,45 +1359,30 @@
       return checkoutURL.toString();
     }
 
-    // Aplica o checkout URL a todos os CTAs de compra
-    document.querySelectorAll('.produto__cta, .oferta__cta, .ctafinal__cta').forEach(function(el) {
+    document.querySelectorAll('.oferta__cta, .ctafinal__cta').forEach(function(el) {
       el.addEventListener('click', function(e) {
         e.preventDefault();
-        var url = buildCheckoutURL();
-
-        // Meta Pixel: evento de inicio de checkout
-        // if (typeof fbq === 'function') fbq('track', 'InitiateCheckout');
-
-        // GA4: evento de inicio de checkout
-        // if (typeof gtag === 'function') gtag('event', 'begin_checkout');
-
-        window.location.href = url;
+        window.location.href = buildCheckoutURL();
       });
     });
   </script>
 
+  <!-- ── SCROLL REVEAL ── -->
   <script>
     (function() {
-      const reveals = document.querySelectorAll('.flow__card, .flow__arrow, .flow__loop, .transf__row, .transf__closer, .rival__inner > *, .modulos__eyebrow, .modulos__headline, .modulos__tagline, .modulo, .modulos__footer, .impacto__inner > *, .paraquem__eyebrow, .paraquem__headline, .paraquem__tagline, .paraquem__item, .paraquem__closer, .depoimentos__eyebrow, .depoimentos__headline, .depoimentos__tagline, .depoimento, .depoimentos__closer, .produto__eyebrow, .produto__headline, .produto__tagline, .produto__showcase, .oferta__eyebrow, .oferta__headline, .oferta__tagline, .oferta__card, .faq__eyebrow, .faq__headline, .faq__item, .ctafinal__divider, .ctafinal__text, .ctafinal__cta-wrap, .oferta__beneficio');
-
-      const io = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('in-view');
-            if (entry.target.classList.contains('flow__card')) {
-              entry.target.classList.add('is-visible');
-            }
-            if (entry.target.classList.contains('flow__arrow')) {
-              entry.target.classList.add('is-visible');
-            }
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) {
+            e.target.classList.add('in-view');
           }
         });
       }, { threshold: 0.15 });
 
-      reveals.forEach(el => io.observe(el));
+      document.querySelectorAll('.reveal').forEach(function(el) { io.observe(el); });
     })();
   </script>
 
+  <!-- ── FAQ ACCORDION ── -->
   <script>
     (function() {
       document.querySelectorAll('.faq__trigger').forEach(function(btn) {
@@ -3776,10 +1393,10 @@
           document.querySelectorAll('.faq__trigger[aria-expanded="true"]').forEach(function(other) {
             if (other !== btn) {
               other.setAttribute('aria-expanded', 'false');
-              var otherAnswer = other.nextElementSibling;
-              otherAnswer.style.maxHeight = null;
-              otherAnswer.classList.remove('is-open');
-              setTimeout(function() { otherAnswer.hidden = true; }, 350);
+              var oa = other.nextElementSibling;
+              oa.style.maxHeight = null;
+              oa.classList.remove('is-open');
+              setTimeout(function() { oa.hidden = true; }, 350);
             }
           });
 
@@ -3792,26 +1409,20 @@
             btn.setAttribute('aria-expanded', 'true');
             answer.hidden = false;
             answer.style.maxHeight = answer.scrollHeight + 'px';
-            requestAnimationFrame(function() {
-              answer.classList.add('is-open');
-            });
+            requestAnimationFrame(function() { answer.classList.add('is-open'); });
           }
         });
       });
     })();
   </script>
 
-  <!-- ── OHI TRACKING ── -->
+  <!-- ── TRACKING ── -->
   <script>
   window.OHI_SUPA_URL = 'https://zfljisjwrnkhfsmwdace.supabase.co';
   window.OHI_SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmbGppc2p3cm5raGZzbXdkYWNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4OTE2NTMsImV4cCI6MjEwNDQ2NzY1M30.YGOH7x6XL-EhiWdSoSRjmMKC8yCdyhisP6zAX3UupHI';
   </script>
   <script>
   (function(){
-    var EVENTS_KEY = 'ohi_events';
-    var events = [];
-    try { events = JSON.parse(localStorage.getItem(EVENTS_KEY)) || []; } catch(e) {}
-
     var SUPA_URL = window.OHI_SUPA_URL || '';
     var SUPA_KEY = window.OHI_SUPA_KEY || '';
 
@@ -3821,18 +1432,19 @@
       sessionStorage.setItem('ohi_sid', sid);
     }
 
-    function sendSupa(evt) {
+    function send(type, detail) {
       if (!SUPA_URL) return;
+      var params = new URLSearchParams(window.location.search);
       var payload = {
         session_id: sid,
-        type: evt.type,
-        detail: evt.detail,
-        utm_source: evt.utm_source,
-        utm_medium: evt.utm_medium,
-        utm_campaign: evt.utm_campaign,
-        utm_content: evt.utm_content,
-        device: evt.device,
-        referrer: evt.ref
+        type: type,
+        detail: detail || '',
+        utm_source: params.get('utm_source') || '',
+        utm_medium: params.get('utm_medium') || '',
+        utm_campaign: params.get('utm_campaign') || '',
+        utm_content: params.get('utm_content') || '',
+        device: /Mobi/.test(navigator.userAgent) ? 'mobile' : 'desktop',
+        referrer: document.referrer || ''
       };
       try {
         fetch(SUPA_URL + '/rest/v1/events', {
@@ -3849,74 +1461,28 @@
       } catch(e) {}
     }
 
-    function track(type, detail, extra) {
-      var params = new URLSearchParams(window.location.search);
-      var evt = {
-        type: type,
-        detail: detail || '',
-        ts: Date.now(),
-        url: location.pathname,
-        utm_source: params.get('utm_source') || '',
-        utm_medium: params.get('utm_medium') || '',
-        utm_campaign: params.get('utm_campaign') || '',
-        utm_content: params.get('utm_content') || '',
-        device: /Mobi/.test(navigator.userAgent) ? 'mobile' : 'desktop',
-        ref: document.referrer || ''
-      };
-      if (extra) Object.assign(evt, extra);
-      events.push(evt);
-      if (events.length > 5000) events = events.slice(-3000);
-      try { localStorage.setItem(EVENTS_KEY, JSON.stringify(events)); } catch(e) {}
-
-      sendSupa(evt);
-
-      if (typeof gtag === 'function') {
-        gtag('event', type, { detail: detail || '', utm_source: evt.utm_source });
-      }
-    }
-
-    track('pageview');
+    send('pageview');
 
     var maxScroll = 0;
-    var milestones = [25, 50, 75, 100];
     window.addEventListener('scroll', function() {
       var pct = Math.round(window.scrollY / (document.body.scrollHeight - window.innerHeight) * 100);
       if (pct > maxScroll) {
-        milestones.forEach(function(m) {
-          if (pct >= m && maxScroll < m) track('scroll', String(m));
+        [25, 50, 75, 100].forEach(function(m) {
+          if (pct >= m && maxScroll < m) send('scroll', String(m));
         });
         maxScroll = pct;
       }
     });
 
-    var sections = document.querySelectorAll('section[id]');
-    var sio = new IntersectionObserver(function(entries) {
-      entries.forEach(function(e) {
-        if (e.isIntersecting) {
-          track('section_view', e.target.id);
-          sio.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.3 });
-    sections.forEach(function(s) { sio.observe(s); });
-
-    document.querySelectorAll('.produto__cta, .oferta__cta, .ctafinal__cta, .hero__cta').forEach(function(el) {
+    document.querySelectorAll('.oferta__cta, .ctafinal__cta, .hero .cta').forEach(function(el) {
       el.addEventListener('click', function() {
-        var label = el.className.split(' ')[0] || 'cta';
-        track('cta_click', label);
-      });
-    });
-
-    document.querySelectorAll('.faq__trigger').forEach(function(btn, i) {
-      btn.addEventListener('click', function() {
-        track('faq_click', 'pergunta_' + (i + 1));
+        send('cta_click', el.className.split(' ')[0] || 'cta');
       });
     });
 
     var startTime = Date.now();
     window.addEventListener('beforeunload', function() {
-      var seconds = Math.round((Date.now() - startTime) / 1000);
-      track('time_on_page', String(seconds));
+      send('time_on_page', String(Math.round((Date.now() - startTime) / 1000)));
     });
   })();
   </script>
