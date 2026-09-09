@@ -27,6 +27,7 @@
 
     html {
       overflow-x: hidden;
+      scroll-behavior: smooth;
     }
 
     /* ── INTRO ANIMATION ── */
@@ -1014,7 +1015,7 @@
         Você checa o celular dela, inventa cenários na cabeça, briga por coisas que nem aconteceram. Sabe que está sendo tóxico, mas não consegue parar. Esse ciclo tem fim.
       </p>
 
-      <a href="#oferta" class="cta">
+      <a href="#problema" class="cta">
         Quero deixar de ser assim
       </a>
     </div>
@@ -1026,7 +1027,7 @@
   </section>
 
   <!-- ── PROBLEMA ── -->
-  <section class="problema" aria-label="O problema">
+  <section class="problema" id="problema" aria-label="O problema">
     <div class="sec-line" aria-hidden="true"></div>
     <div class="problema__ghost" aria-hidden="true"></div>
 
@@ -1506,6 +1507,19 @@
       el.addEventListener('click', function() {
         send('cta_click', el.className.split(' ')[0] || 'cta');
       });
+    });
+
+    var sectionsSeen = {};
+    var secIO = new IntersectionObserver(function(entries) {
+      entries.forEach(function(e) {
+        if (e.isIntersecting && !sectionsSeen[e.target.id]) {
+          sectionsSeen[e.target.id] = true;
+          send('section_view', e.target.id);
+        }
+      });
+    }, { threshold: 0.3 });
+    document.querySelectorAll('[id]').forEach(function(el) {
+      if (['problema','modulos','depoimentos','oferta','faq'].indexOf(el.id) >= 0) secIO.observe(el);
     });
 
     var startTime = Date.now();

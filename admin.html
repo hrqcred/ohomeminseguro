@@ -293,7 +293,7 @@
       font-size: 12px; font-weight: 600; color: var(--text);
     }
     .funnel-label {
-      width: 80px; flex-shrink: 0; font-size: 12px; font-weight: 500; color: var(--text-mid);
+      width: 90px; flex-shrink: 0; font-size: 12px; font-weight: 500; color: var(--text-mid);
     }
     .funnel-drop {
       width: 52px; flex-shrink: 0; text-align: right;
@@ -1038,38 +1038,54 @@
       var total = sids.length;
       $('f-sessions').textContent = total.toLocaleString('pt-BR');
 
-      var scrolled25 = 0, scrolled50 = 0, scrolled75 = 0, scrolled100 = 0, clicked = 0;
+      var clicked = 0;
       var times = [];
+      var secCounts = { problema: 0, modulos: 0, depoimentos: 0, oferta: 0, faq: 0 };
+      var scrolled25 = 0;
 
       sids.forEach(function(sid) {
         var s = sessions[sid];
         var types = {};
         s.events.forEach(function(ev) {
           if (ev.type === 'scroll') types['scroll_' + ev.detail] = true;
+          else if (ev.type === 'section_view') types['sec_' + ev.detail] = true;
           else types[ev.type] = true;
           if (ev.type === 'time_on_page' && ev.detail) times.push(parseInt(ev.detail));
         });
         if (types.scroll_25) scrolled25++;
-        if (types.scroll_50) scrolled50++;
-        if (types.scroll_75) scrolled75++;
-        if (types.scroll_100) scrolled100++;
         if (types.cta_click) clicked++;
+        if (types.sec_problema) secCounts.problema++;
+        if (types.sec_modulos) secCounts.modulos++;
+        if (types.sec_depoimentos) secCounts.depoimentos++;
+        if (types.sec_oferta) secCounts.oferta++;
+        if (types.sec_faq) secCounts.faq++;
       });
 
       var avgTime = times.length ? Math.round(times.reduce(function(a,b){return a+b;},0) / times.length) : 0;
       $('f-time').textContent = avgTime ? avgTime + 's' : '--';
-      $('f-engage').textContent = total > 0 ? Math.round(scrolled25/total*100) + '%' : '--';
+      var engageCount = Math.max(scrolled25, secCounts.problema);
+      $('f-engage').textContent = total > 0 ? Math.round(engageCount/total*100) + '%' : '--';
       $('f-ctr').textContent = total > 0 ? (clicked/total*100).toFixed(1) + '%' : '--';
 
-      // Funnel chart
-      var steps = [
-        { label: 'Visita', count: total, color: 'var(--blue)' },
-        { label: 'Scroll 25%', count: scrolled25, color: 'var(--blue)' },
-        { label: 'Scroll 50%', count: scrolled50, color: 'var(--yellow)' },
-        { label: 'Scroll 75%', count: scrolled75, color: 'var(--yellow)' },
-        { label: 'Scroll 100%', count: scrolled100, color: 'var(--green)' },
-        { label: 'Clique CTA', count: clicked, color: 'var(--green)' }
-      ];
+      var hasSections = secCounts.problema > 0;
+      var steps;
+      if (hasSections) {
+        steps = [
+          { label: 'Visita', count: total, color: 'var(--blue)' },
+          { label: 'Problema', count: secCounts.problema, color: 'var(--blue)' },
+          { label: 'Modulos', count: secCounts.modulos, color: 'var(--yellow)' },
+          { label: 'Depoimentos', count: secCounts.depoimentos, color: 'var(--yellow)' },
+          { label: 'Oferta', count: secCounts.oferta, color: 'var(--ember-glow)' },
+          { label: 'Clique CTA', count: clicked, color: 'var(--green)' }
+        ];
+      } else {
+        steps = [
+          { label: 'Visita', count: total, color: 'var(--blue)' },
+          { label: 'Scroll 25%', count: scrolled25, color: 'var(--blue)' },
+          { label: 'Oferta', count: secCounts.oferta || 0, color: 'var(--ember-glow)' },
+          { label: 'Clique CTA', count: clicked, color: 'var(--green)' }
+        ];
+      }
 
       var fc = $('funnel-chart');
       fc.innerHTML = '';
@@ -1094,14 +1110,16 @@
       sids.forEach(function(sid) {
         var s = sessions[sid];
         var key = (s.src || '(direto)') + ' / ' + (s.med || '(nenhum)');
-        if (!sources[key]) sources[key] = { src: s.src || '(direto)', med: s.med || '(nenhum)', visits: 0, engaged: 0, clicks: 0, camp: {} };
+        if (!sources[key]) sources[key] = { src: s.src || '(direto)', med: s.med || '(nenhum)', visits: 0, engaged: 0, sawOffer: 0, clicks: 0, camp: {} };
         sources[key].visits++;
         var types = {};
         s.events.forEach(function(ev) {
           if (ev.type === 'scroll') types['scroll_' + ev.detail] = true;
+          else if (ev.type === 'section_view') types['sec_' + ev.detail] = true;
           else types[ev.type] = true;
         });
-        if (types.scroll_25) sources[key].engaged++;
+        if (types.sec_problema || types.scroll_25) sources[key].engaged++;
+        if (types.sec_oferta) sources[key].sawOffer++;
         if (types.cta_click) sources[key].clicks++;
         if (s.camp) {
           if (!sources[key].camp[s.camp]) sources[key].camp[s.camp] = 0;
@@ -1130,6 +1148,7 @@
             '<div class="src-stats">' +
             '<span><span class="lbl">Visitas</span>' + s.visits + '</span>' +
             '<span><span class="lbl">Engajou</span>' + s.engaged + '</span>' +
+            '<span><span class="lbl">Oferta</span>' + s.sawOffer + '</span>' +
             '<span><span class="lbl">CTA</span>' + s.clicks + '</span>' +
             '<span><span class="lbl">Conv.</span>' + (s.visits > 0 ? (s.clicks/s.visits*100).toFixed(1) + '%' : '0%') + '</span>' +
             '</div></div>';
@@ -1158,14 +1177,25 @@
           var maxScr = 0;
           var hasCta = false;
           var timeOnPage = 0;
+          var secs = [];
           s.events.forEach(function(ev) {
             if (ev.type === 'scroll' && parseInt(ev.detail) > maxScr) maxScr = parseInt(ev.detail);
             if (ev.type === 'cta_click') hasCta = true;
             if (ev.type === 'time_on_page') timeOnPage = parseInt(ev.detail);
+            if (ev.type === 'section_view') secs.push(ev.detail);
           });
 
           var tags = '<span class="session-tag tag-pv">' + esc(s.device) + '</span>';
-          if (maxScr > 0) tags += '<span class="session-tag tag-scroll">Scroll ' + maxScr + '%</span>';
+          if (secs.length) {
+            var secNames = { problema: 'Problema', modulos: 'Modulos', depoimentos: 'Depoim.', oferta: 'Oferta', faq: 'FAQ' };
+            secs.forEach(function(sec) {
+              var label = secNames[sec] || sec;
+              var cls = sec === 'oferta' ? 'tag-cta' : 'tag-scroll';
+              tags += '<span class="session-tag ' + cls + '">' + label + '</span>';
+            });
+          } else if (maxScr > 0) {
+            tags += '<span class="session-tag tag-scroll">Scroll ' + maxScr + '%</span>';
+          }
           if (hasCta) tags += '<span class="session-tag tag-cta">Clicou CTA</span>';
           if (timeOnPage > 0) tags += '<span class="session-tag tag-time">' + timeOnPage + 's</span>';
 
