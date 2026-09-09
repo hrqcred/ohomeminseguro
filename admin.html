@@ -1040,7 +1040,7 @@
 
       var clicked = 0;
       var times = [];
-      var secCounts = { problema: 0, modulos: 0, depoimentos: 0, oferta: 0, faq: 0 };
+      var secCounts = { problema: 0, modulos: 0, entrega: 0, depoimentos: 0, oferta: 0, faq: 0 };
       var scrolled25 = 0;
 
       sids.forEach(function(sid) {
@@ -1056,6 +1056,7 @@
         if (types.cta_click) clicked++;
         if (types.sec_problema) secCounts.problema++;
         if (types.sec_modulos) secCounts.modulos++;
+        if (types.sec_entrega) secCounts.entrega++;
         if (types.sec_depoimentos) secCounts.depoimentos++;
         if (types.sec_oferta) secCounts.oferta++;
         if (types.sec_faq) secCounts.faq++;
@@ -1073,8 +1074,9 @@
         steps = [
           { label: 'Visita', count: total, color: 'var(--blue)' },
           { label: 'Problema', count: secCounts.problema, color: 'var(--blue)' },
-          { label: 'Modulos', count: secCounts.modulos, color: 'var(--yellow)' },
-          { label: 'Depoimentos', count: secCounts.depoimentos, color: 'var(--yellow)' },
+          { label: 'Mecanismo', count: secCounts.modulos, color: 'var(--yellow)' },
+          { label: 'Entrega', count: secCounts.entrega, color: 'var(--yellow)' },
+          { label: 'Prova', count: secCounts.depoimentos, color: 'var(--yellow)' },
           { label: 'Oferta', count: secCounts.oferta, color: 'var(--ember-glow)' },
           { label: 'Clique CTA', count: clicked, color: 'var(--green)' }
         ];
@@ -1187,7 +1189,7 @@
 
           var tags = '<span class="session-tag tag-pv">' + esc(s.device) + '</span>';
           if (secs.length) {
-            var secNames = { problema: 'Problema', modulos: 'Modulos', depoimentos: 'Depoim.', oferta: 'Oferta', faq: 'FAQ' };
+            var secNames = { problema: 'Problema', modulos: 'Mecanismo', entrega: 'Entrega', depoimentos: 'Prova', oferta: 'Oferta', faq: 'FAQ' };
             secs.forEach(function(sec) {
               var label = secNames[sec] || sec;
               var cls = sec === 'oferta' ? 'tag-cta' : 'tag-scroll';
