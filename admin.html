@@ -273,6 +273,72 @@
 
     .empty { text-align: center; padding: 30px 16px; color: var(--muted); font-size: 13px; }
     .hidden { display: none !important; }
+
+    /* ── FUNIL ── */
+    .funnel-step {
+      display: flex; align-items: center; gap: 12px;
+      padding: 12px 0; border-bottom: 1px solid var(--border);
+    }
+    .funnel-step:last-child { border-bottom: none; }
+    .funnel-bar-wrap {
+      flex: 1; height: 32px; background: var(--surface-2);
+      border-radius: 6px; overflow: hidden; position: relative;
+    }
+    .funnel-bar {
+      height: 100%; border-radius: 6px;
+      transition: width 0.5s ease;
+    }
+    .funnel-bar-wrap .funnel-val {
+      position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+      font-size: 12px; font-weight: 600; color: var(--text);
+    }
+    .funnel-label {
+      width: 80px; flex-shrink: 0; font-size: 12px; font-weight: 500; color: var(--text-mid);
+    }
+    .funnel-drop {
+      width: 52px; flex-shrink: 0; text-align: right;
+      font-size: 11px; font-weight: 600; color: var(--ember);
+    }
+
+    .src-row {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+    }
+    .src-row:last-child { border-bottom: none; }
+    .src-name { flex: 1; font-size: 13px; font-weight: 500; }
+    .src-name small { display: block; font-size: 11px; color: var(--muted); font-weight: 400; }
+    .src-stats { display: flex; gap: 16px; font-size: 12px; font-variant-numeric: tabular-nums; }
+    .src-stats span { display: flex; flex-direction: column; align-items: center; gap: 2px; }
+    .src-stats .lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; }
+
+    .session-row {
+      padding: 10px 0; border-bottom: 1px solid var(--border);
+      font-size: 12px;
+    }
+    .session-row:last-child { border-bottom: none; }
+    .session-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+    .session-src { font-weight: 600; }
+    .session-time { color: var(--muted); font-size: 11px; }
+    .session-journey { display: flex; gap: 4px; flex-wrap: wrap; }
+    .session-tag {
+      padding: 2px 6px; border-radius: 4px;
+      font-size: 10px; font-weight: 600;
+    }
+    .tag-pv { background: var(--blue-dim); color: var(--blue); }
+    .tag-scroll { background: var(--yellow-dim); color: var(--yellow); }
+    .tag-cta { background: var(--green-dim); color: var(--green); }
+    .tag-time { background: var(--surface-2); color: var(--text-mid); }
+
+    .period-sel {
+      display: flex; gap: 4px; margin-bottom: 16px;
+    }
+    .period-btn {
+      padding: 6px 12px; border-radius: 6px; border: 1px solid var(--border);
+      background: var(--surface); color: var(--muted);
+      font-family: var(--font); font-size: 11px; font-weight: 600;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .period-btn.active { background: var(--surface-2); color: var(--text); border-color: var(--ember-dim); }
   </style>
 </head>
 <body>
@@ -316,6 +382,7 @@
 
   <div class="tabs">
     <button class="tab active" data-t="resumo">Resumo</button>
+    <button class="tab" data-t="funil">Funil</button>
     <button class="tab" data-t="registrar">Registrar</button>
     <button class="tab" data-t="utm">UTM</button>
     <button class="tab" data-t="checklist">Checklist</button>
@@ -364,6 +431,56 @@
           <tbody id="tb-recent"><tr><td colspan="4" class="empty">Registre suas metricas na aba "Registrar"</td></tr></tbody>
         </table>
       </div>
+    </div>
+  </div>
+
+  <!-- ═══ FUNIL ═══ -->
+  <div class="page" id="p-funil">
+    <div class="period-sel">
+      <button class="period-btn active" data-days="7">7 dias</button>
+      <button class="period-btn" data-days="14">14 dias</button>
+      <button class="period-btn" data-days="30">30 dias</button>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi">
+        <div class="kpi__label">Taxa de Engajamento</div>
+        <div class="kpi__value" id="f-engage">--</div>
+        <div class="kpi__sub">Scrollaram 25%+</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">Taxa de Clique CTA</div>
+        <div class="kpi__value" id="f-ctr">--</div>
+        <div class="kpi__sub">Clicaram no botao</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">Tempo Medio</div>
+        <div class="kpi__value" id="f-time">--</div>
+        <div class="kpi__sub">Segundos na pagina</div>
+      </div>
+      <div class="kpi">
+        <div class="kpi__label">Sessoes</div>
+        <div class="kpi__value" id="f-sessions">0</div>
+        <div class="kpi__sub">No periodo</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card__head">Funil de comportamento</div>
+      <p class="desc">Cada etapa mostra quantas pessoas chegaram la. A queda mostra onde voce perde visitantes.</p>
+      <div id="funnel-chart"></div>
+    </div>
+
+    <div class="card">
+      <div class="card__head">Origem dos visitantes <span class="sub" id="f-src-count"></span></div>
+      <p class="desc">De onde vem seus leads e quantos engajam.</p>
+      <div id="src-list"><p class="empty">Carregando...</p></div>
+    </div>
+
+    <div class="card">
+      <div class="card__head">Ultimas sessoes <span class="sub" id="f-sess-count"></span></div>
+      <p class="desc">Jornada individual de cada visitante recente.</p>
+      <div id="session-list"><p class="empty">Carregando...</p></div>
     </div>
   </div>
 
@@ -593,7 +710,7 @@
   });
 
   // ── RENDER ──
-  function renderAll() { renderDash(); renderMetrics(); renderUTMs(); renderCK(); renderCfg(); }
+  function renderAll() { renderDash(); renderFunnel(); renderMetrics(); renderUTMs(); renderCK(); renderCfg(); }
 
   function last7() {
     var days = [];
@@ -866,6 +983,208 @@
     };
     r.readAsText(f);
   });
+
+  // ── FUNIL ──
+  var funnelDays = 7;
+
+  document.querySelectorAll('.period-btn').forEach(function(b) {
+    b.addEventListener('click', function() {
+      document.querySelectorAll('.period-btn').forEach(function(x) { x.classList.remove('active'); });
+      this.classList.add('active');
+      funnelDays = parseInt(this.dataset.days);
+      renderFunnel();
+    });
+  });
+
+  function renderFunnel() {
+    if (!D.config.supaUrl || !D.config.supaKey) {
+      $('funnel-chart').innerHTML = '<p class="empty">Configure o Supabase em Ajustes para ver o funil</p>';
+      $('src-list').innerHTML = '<p class="empty">Supabase nao configurado</p>';
+      $('session-list').innerHTML = '<p class="empty">Supabase nao configurado</p>';
+      return;
+    }
+
+    var since = new Date();
+    since.setDate(since.getDate() - funnelDays);
+
+    supaFetch({
+      select: '*',
+      created_at: 'gte.' + since.toISOString(),
+      order: 'created_at.desc',
+      limit: '50000'
+    }).then(function(events) {
+      if (!events) {
+        $('funnel-chart').innerHTML = '<p class="empty">Erro ao carregar dados</p>';
+        return;
+      }
+
+      var sessions = {};
+      events.forEach(function(e) {
+        var sid = e.session_id;
+        if (!sid) return;
+        if (!sessions[sid]) sessions[sid] = {
+          events: [],
+          src: e.utm_source || '',
+          med: e.utm_medium || '',
+          camp: e.utm_campaign || '',
+          device: e.device || 'desktop',
+          referrer: e.referrer || '',
+          time: e.created_at
+        };
+        sessions[sid].events.push({ type: e.type, detail: e.detail, time: e.created_at });
+      });
+
+      var sids = Object.keys(sessions);
+      var total = sids.length;
+      $('f-sessions').textContent = total.toLocaleString('pt-BR');
+
+      var scrolled25 = 0, scrolled50 = 0, scrolled75 = 0, scrolled100 = 0, clicked = 0;
+      var times = [];
+
+      sids.forEach(function(sid) {
+        var s = sessions[sid];
+        var types = {};
+        s.events.forEach(function(ev) {
+          if (ev.type === 'scroll') types['scroll_' + ev.detail] = true;
+          else types[ev.type] = true;
+          if (ev.type === 'time_on_page' && ev.detail) times.push(parseInt(ev.detail));
+        });
+        if (types.scroll_25) scrolled25++;
+        if (types.scroll_50) scrolled50++;
+        if (types.scroll_75) scrolled75++;
+        if (types.scroll_100) scrolled100++;
+        if (types.cta_click) clicked++;
+      });
+
+      var avgTime = times.length ? Math.round(times.reduce(function(a,b){return a+b;},0) / times.length) : 0;
+      $('f-time').textContent = avgTime ? avgTime + 's' : '--';
+      $('f-engage').textContent = total > 0 ? Math.round(scrolled25/total*100) + '%' : '--';
+      $('f-ctr').textContent = total > 0 ? (clicked/total*100).toFixed(1) + '%' : '--';
+
+      // Funnel chart
+      var steps = [
+        { label: 'Visita', count: total, color: 'var(--blue)' },
+        { label: 'Scroll 25%', count: scrolled25, color: 'var(--blue)' },
+        { label: 'Scroll 50%', count: scrolled50, color: 'var(--yellow)' },
+        { label: 'Scroll 75%', count: scrolled75, color: 'var(--yellow)' },
+        { label: 'Scroll 100%', count: scrolled100, color: 'var(--green)' },
+        { label: 'Clique CTA', count: clicked, color: 'var(--green)' }
+      ];
+
+      var fc = $('funnel-chart');
+      fc.innerHTML = '';
+      var mx = Math.max(total, 1);
+      steps.forEach(function(step, i) {
+        var pct = Math.max(step.count / mx * 100, 2);
+        var drop = '';
+        if (i > 0 && steps[i-1].count > 0) {
+          var lost = Math.round((1 - step.count / steps[i-1].count) * 100);
+          if (lost > 0) drop = '-' + lost + '%';
+          else if (lost < 0) drop = '+' + Math.abs(lost) + '%';
+        }
+        fc.innerHTML += '<div class="funnel-step">' +
+          '<div class="funnel-label">' + step.label + '</div>' +
+          '<div class="funnel-bar-wrap"><div class="funnel-bar" style="width:' + pct + '%;background:' + step.color + '"></div><span class="funnel-val">' + step.count + '</span></div>' +
+          '<div class="funnel-drop">' + drop + '</div>' +
+          '</div>';
+      });
+
+      // Sources
+      var sources = {};
+      sids.forEach(function(sid) {
+        var s = sessions[sid];
+        var key = (s.src || '(direto)') + ' / ' + (s.med || '(nenhum)');
+        if (!sources[key]) sources[key] = { src: s.src || '(direto)', med: s.med || '(nenhum)', visits: 0, engaged: 0, clicks: 0, camp: {} };
+        sources[key].visits++;
+        var types = {};
+        s.events.forEach(function(ev) {
+          if (ev.type === 'scroll') types['scroll_' + ev.detail] = true;
+          else types[ev.type] = true;
+        });
+        if (types.scroll_25) sources[key].engaged++;
+        if (types.cta_click) sources[key].clicks++;
+        if (s.camp) {
+          if (!sources[key].camp[s.camp]) sources[key].camp[s.camp] = 0;
+          sources[key].camp[s.camp]++;
+        }
+      });
+
+      var srcArr = Object.keys(sources).map(function(k) { return sources[k]; });
+      srcArr.sort(function(a, b) { return b.visits - a.visits; });
+
+      var sl = $('src-list');
+      $('f-src-count').textContent = srcArr.length + ' origens';
+      if (!srcArr.length) { sl.innerHTML = '<p class="empty">Nenhuma visita no periodo</p>'; }
+      else {
+        sl.innerHTML = '';
+        srcArr.forEach(function(s) {
+          var campList = Object.keys(s.camp).filter(function(c) { return c; }).map(function(c) {
+            return c.length > 16 ? c.slice(0, 8) + '...' : c;
+          });
+          var campStr = campList.length ? campList.join(', ') : '';
+          var srcDisplay = s.src.length > 16 ? s.src.slice(0, 8) + '...' : s.src;
+          sl.innerHTML += '<div class="src-row">' +
+            '<div class="src-name">' + esc(srcDisplay) + ' / ' + esc(s.med) +
+            (campStr ? '<small>' + esc(campStr) + '</small>' : '') +
+            '</div>' +
+            '<div class="src-stats">' +
+            '<span><span class="lbl">Visitas</span>' + s.visits + '</span>' +
+            '<span><span class="lbl">Engajou</span>' + s.engaged + '</span>' +
+            '<span><span class="lbl">CTA</span>' + s.clicks + '</span>' +
+            '<span><span class="lbl">Conv.</span>' + (s.visits > 0 ? (s.clicks/s.visits*100).toFixed(1) + '%' : '0%') + '</span>' +
+            '</div></div>';
+        });
+      }
+
+      // Recent sessions
+      var sessArr = sids.map(function(sid) {
+        var s = sessions[sid];
+        return { sid: sid, src: s.src, med: s.med, camp: s.camp, device: s.device, time: s.time, events: s.events };
+      });
+      sessArr.sort(function(a, b) { return b.time > a.time ? 1 : -1; });
+      sessArr = sessArr.slice(0, 30);
+
+      var seList = $('session-list');
+      $('f-sess-count').textContent = 'ultimas ' + sessArr.length;
+      if (!sessArr.length) { seList.innerHTML = '<p class="empty">Nenhuma sessao</p>'; }
+      else {
+        seList.innerHTML = '';
+        sessArr.forEach(function(s) {
+          var campDisplay = s.camp || '';
+          if (campDisplay.length > 20) campDisplay = campDisplay.slice(0, 8) + '...';
+          var srcLabel = (s.src || 'direto') + (campDisplay ? ' (' + campDisplay + ')' : '');
+          var ago = timeAgo(s.time);
+
+          var maxScr = 0;
+          var hasCta = false;
+          var timeOnPage = 0;
+          s.events.forEach(function(ev) {
+            if (ev.type === 'scroll' && parseInt(ev.detail) > maxScr) maxScr = parseInt(ev.detail);
+            if (ev.type === 'cta_click') hasCta = true;
+            if (ev.type === 'time_on_page') timeOnPage = parseInt(ev.detail);
+          });
+
+          var tags = '<span class="session-tag tag-pv">' + esc(s.device) + '</span>';
+          if (maxScr > 0) tags += '<span class="session-tag tag-scroll">Scroll ' + maxScr + '%</span>';
+          if (hasCta) tags += '<span class="session-tag tag-cta">Clicou CTA</span>';
+          if (timeOnPage > 0) tags += '<span class="session-tag tag-time">' + timeOnPage + 's</span>';
+
+          seList.innerHTML += '<div class="session-row">' +
+            '<div class="session-top"><span class="session-src">' + esc(srcLabel) + '</span><span class="session-time">' + ago + '</span></div>' +
+            '<div class="session-journey">' + tags + '</div>' +
+            '</div>';
+        });
+      }
+    });
+  }
+
+  function timeAgo(ts) {
+    var diff = Math.floor((Date.now() - new Date(ts).getTime()) / 1000);
+    if (diff < 60) return 'agora';
+    if (diff < 3600) return Math.floor(diff/60) + ' min';
+    if (diff < 86400) return Math.floor(diff/3600) + 'h';
+    return Math.floor(diff/86400) + 'd atras';
+  }
 
   // ── INIT UTM BASE ──
   if (D.config.checkout) {
