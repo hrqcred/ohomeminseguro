@@ -524,17 +524,25 @@
     }
 
     .depoimento__avatar {
-      width: 36px;
-      height: 36px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       background: #1A1D22;
-      border: 1px solid #2A2D32;
+      border: 2px solid #2A2D32;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-shrink: 0;
       color: #4A4540;
       font-size: 13px;
+      overflow: hidden;
+    }
+
+    .depoimento__avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: grayscale(30%) brightness(0.95);
     }
 
     .depoimento__nome {
@@ -1145,8 +1153,8 @@
             Eu achava que o problema era ela. Depois do módulo 3 eu entendi que o problema era a história que eu contava pra mim mesmo. Hoje a gente conversa de verdade. Sem acusação, sem drama.
           </p>
           <div class="depoimento__footer">
-            <div class="depoimento__avatar" aria-hidden="true">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <div class="depoimento__avatar">
+              <img src="rafael.jpg" alt="Rafael M." loading="lazy" />
             </div>
             <div>
               <span class="depoimento__nome">Rafael M.</span>
@@ -1160,8 +1168,8 @@
             Perdi duas namoradas por ciúme. Na terceira vez que comecei a repetir o padrão, procurei ajuda. Pela primeira vez consegui frear antes de explodir.
           </p>
           <div class="depoimento__footer">
-            <div class="depoimento__avatar" aria-hidden="true">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <div class="depoimento__avatar">
+              <img src="lucas.jpg" alt="Lucas T." loading="lazy" />
             </div>
             <div>
               <span class="depoimento__nome">Lucas T.</span>
@@ -1175,8 +1183,8 @@
             Achei que seria mais um conteúdo motivacional vazio. Me surpreendi. É prático, vai direto no ponto e me fez enxergar padrão que eu repetia desde a adolescência.
           </p>
           <div class="depoimento__footer">
-            <div class="depoimento__avatar" aria-hidden="true">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <div class="depoimento__avatar">
+              <img src="bruno.jpg" alt="Bruno C." loading="lazy" />
             </div>
             <div>
               <span class="depoimento__nome">Bruno C.</span>
