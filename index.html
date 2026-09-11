@@ -600,6 +600,263 @@
       color: var(--text-muted);
     }
 
+
+    /* ── CINEMATIC TESTIMONIAL CAROUSEL ── */
+    #landing {
+      min-height: 100dvh;
+      background:
+        radial-gradient(900px 420px at 76% 8%, rgba(192,37,37,.055), transparent 60%),
+        #09080E;
+    }
+
+    #landing .brand-mark,
+    #landing .brand-tally,
+    #landing .hero__sub,
+    #landing .cta-meta,
+    #landing .stories__label,
+    #landing .story-card__loc {
+      color: #958E87;
+    }
+
+    #landing .hero__h1,
+    #landing .story-card__name {
+      color: #EDE5DB;
+    }
+
+    #landing .hero__pill-text,
+    #landing .hero__h1 em {
+      color: #C02525;
+    }
+
+    #landing .section-divider {
+      background: #1C1A2A;
+    }
+
+    #landing .stories {
+      padding: 72px 0 82px;
+      overflow: hidden;
+    }
+
+    #landing .stories__label {
+      max-width: 1400px;
+      margin: 0 auto 16px;
+      padding: 0 5vw;
+      font-size: 10px;
+      letter-spacing: .2em;
+    }
+
+    #landing .stories__label::before {
+      content: "";
+      display: inline-block;
+      width: 28px;
+      height: 1px;
+      margin: 0 10px 3px 0;
+      background: #C02525;
+    }
+
+    #landing .stories__headline {
+      max-width: 1400px;
+      margin: 0 auto 38px;
+      padding: 0 5vw;
+      font-family: var(--serif);
+      font-size: clamp(32px, 4.2vw, 58px);
+      line-height: 1.05;
+      font-weight: 500;
+      color: #EDE5DB;
+      letter-spacing: -.015em;
+    }
+
+    #landing .stories__headline em {
+      color: #C02525;
+      font-style: italic;
+    }
+
+    #landing .stories__sub {
+      max-width: 650px;
+      margin: -22px auto 34px;
+      padding: 0 5vw;
+      color: #958E87;
+      font-size: 14px;
+      line-height: 1.65;
+      text-align: left;
+    }
+
+    #landing .stories__viewport {
+      position: relative;
+      width: 100%;
+      overflow: hidden;
+      padding: 0 5vw 8px;
+    }
+
+    #landing .stories__track {
+      display: flex;
+      gap: 22px;
+      width: max-content;
+      transform: translate3d(0,0,0);
+      transition: transform .75s cubic-bezier(.22,.61,.36,1);
+      will-change: transform;
+    }
+
+    #landing .story-card {
+      width: min(480px, 29vw);
+      min-height: 236px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,.025), rgba(255,255,255,.008)),
+        #0d0c14;
+      border: 1px solid #1C1A2A;
+      border-radius: 16px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: border-color .35s ease, transform .35s ease, opacity .35s ease, box-shadow .35s ease;
+      flex-shrink: 0;
+    }
+
+    #landing .story-card.is-active {
+      border-color: rgba(192,37,37,.72);
+      box-shadow: 0 0 45px rgba(192,37,37,.08);
+      transform: translateY(-2px);
+    }
+
+    #landing .story-card__qmark {
+      color: #28253C;
+      font-size: 70px;
+      top: 3px;
+    }
+
+    #landing .story-card__quote {
+      color: #B5AEA7;
+      font-family: var(--serif);
+      font-size: 18px;
+      font-style: italic;
+      line-height: 1.45;
+      margin: 0 0 24px;
+      padding-right: 18px;
+      z-index: 1;
+    }
+
+    #landing .story-card__person {
+      gap: 14px;
+    }
+
+    #landing .story-card__photo {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      border: 1px solid #3A3548;
+      filter: grayscale(12%);
+      box-shadow: 0 0 0 4px rgba(255,255,255,.015);
+    }
+
+    #landing .story-card__name {
+      font-size: 14px;
+    }
+
+    #landing .story-card__loc {
+      font-size: 11px;
+    }
+
+    #landing .stories__controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    #landing .stories__arrow {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      border: 1px solid #28253C;
+      background: #11101A;
+      color: #EDE5DB;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      transition: border-color .2s, background .2s, transform .2s;
+    }
+
+    #landing .stories__arrow:hover {
+      border-color: #C02525;
+      background: #17121A;
+      transform: translateY(-1px);
+    }
+
+    #landing .stories__dots {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      margin: 0 8px;
+    }
+
+    #landing .stories__dot {
+      width: 7px;
+      height: 7px;
+      border: 0;
+      border-radius: 50%;
+      padding: 0;
+      background: #403B4A;
+      cursor: pointer;
+      transition: width .25s, background .25s;
+    }
+
+    #landing .stories__dot.active {
+      width: 22px;
+      border-radius: 8px;
+      background: #C02525;
+    }
+
+    #landing .stories__note {
+      max-width: 1400px;
+      margin: 22px auto 0;
+      padding: 0 5vw;
+      color: #5C5856;
+      font-size: 10px;
+      line-height: 1.5;
+    }
+
+    @media (max-width: 900px) {
+      #landing .story-card {
+        width: min(430px, 72vw);
+      }
+    }
+
+    @media (max-width: 580px) {
+      #landing .stories {
+        padding: 56px 0 64px;
+      }
+
+      #landing .stories__headline {
+        font-size: 36px;
+        margin-bottom: 28px;
+      }
+
+      #landing .stories__sub {
+        margin-top: -12px;
+      }
+
+      #landing .stories__viewport {
+        padding: 0 20px 8px;
+      }
+
+      #landing .stories__track {
+        gap: 14px;
+      }
+
+      #landing .story-card {
+        width: calc(100vw - 40px);
+        min-height: 250px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      #landing .stories__track {
+        transition: none;
+      }
+    }
+
     /* Responsive */
     @media (max-width: 480px) {
       .brand-bar, .hero, .stories, .section-divider { padding-left: 20px; padding-right: 20px; margin-left: 0; margin-right: 0; }
@@ -651,51 +908,102 @@
 
   <div class="stories">
     <p class="stories__label">Quem reconheceu o padrão</p>
-    <div class="stories__grid">
 
-      <div class="story-card">
-        <div class="story-card__qmark" aria-hidden="true">&ldquo;</div>
-        <p class="story-card__quote">
-          Mandei 14 mensagens em uma hora. Sem resposta. Fui de preocupado a certeza de traição. Tudo dentro da minha cabeça.
-        </p>
-        <div class="story-card__person">
-          <img class="story-card__photo" src="rafael.jpg.jpeg" alt="Rafael" />
-          <div>
-            <div class="story-card__name">Rafael</div>
-            <div class="story-card__loc">31 anos · São Paulo</div>
+    <h2 class="stories__headline">
+      Histórias de homens que <em>reconheceram</em> o próprio padrão.
+    </h2>
+
+    <p class="stories__sub">
+      Relatos ilustrativos baseados nas dores e comportamentos que o diagnóstico foi criado para identificar.
+    </p>
+
+    <div class="stories__viewport" aria-label="Relatos">
+      <div class="stories__track" id="storiesTrack">
+
+        <article class="story-card is-active">
+          <div class="story-card__qmark" aria-hidden="true">&ldquo;</div>
+          <p class="story-card__quote">Mandei 14 mensagens em uma hora. Sem resposta. Fui de preocupado a certeza de traição. Tudo dentro da minha cabeça.</p>
+          <div class="story-card__person">
+            <img class="story-card__photo" src="https://randomuser.me/api/portraits/men/32.jpg" alt="Foto ilustrativa de Rafael" loading="lazy" />
+            <div><div class="story-card__name">Rafael</div><div class="story-card__loc">31 anos · São Paulo</div></div>
           </div>
-        </div>
-      </div>
+        </article>
 
-      <div class="story-card">
-        <div class="story-card__qmark" aria-hidden="true">&ldquo;</div>
-        <p class="story-card__quote">
-          Terminei um relacionamento de 3 anos. Ela nunca me traiu. Mas eu criei tanta briga imaginária que ela foi embora.
-        </p>
-        <div class="story-card__person">
-          <img class="story-card__photo" src="lucas.jpg.jpeg" alt="Lucas" />
-          <div>
-            <div class="story-card__name">Lucas</div>
-            <div class="story-card__loc">28 anos · Curitiba</div>
+        <article class="story-card">
+          <div class="story-card__qmark" aria-hidden="true">&ldquo;</div>
+          <p class="story-card__quote">Terminei um relacionamento de 3 anos. Ela nunca me traiu. Mas eu criei tanta briga imaginária que ela foi embora.</p>
+          <div class="story-card__person">
+            <img class="story-card__photo" src="https://randomuser.me/api/portraits/men/44.jpg" alt="Foto ilustrativa de Lucas" loading="lazy" />
+            <div><div class="story-card__name">Lucas</div><div class="story-card__loc">28 anos · Curitiba</div></div>
           </div>
-        </div>
-      </div>
+        </article>
 
-      <div class="story-card">
-        <div class="story-card__qmark" aria-hidden="true">&ldquo;</div>
-        <p class="story-card__quote">
-          Eu sabia que era controle. Sabia que era insegurança. Mas não conseguia parar. Parecia um loop sem saída.
-        </p>
-        <div class="story-card__person">
-          <img class="story-card__photo" src="bruno.jpg.jpeg" alt="Bruno" />
-          <div>
-            <div class="story-card__name">Bruno</div>
-            <div class="story-card__loc">35 anos · Fortaleza</div>
+        <article class="story-card">
+          <div class="story-card__qmark" aria-hidden="true">&ldquo;</div>
+          <p class="story-card__quote">Eu sabia que era controle. Sabia que era insegurança. Mas não conseguia parar. Parecia um loop sem saída.</p>
+          <div class="story-card__person">
+            <img class="story-card__photo" src="https://randomuser.me/api/portraits/men/56.jpg" alt="Foto ilustrativa de Bruno" loading="lazy" />
+            <div><div class="story-card__name">Bruno</div><div class="story-card__loc">35 anos · Fortaleza</div></div>
           </div>
-        </div>
-      </div>
+        </article>
 
+        <article class="story-card">
+          <div class="story-card__qmark" aria-hidden="true">&ldquo;</div>
+          <p class="story-card__quote">Eu interpretava qualquer demora como sinal de que tinha alguma coisa errada. A minha cabeça completava o resto.</p>
+          <div class="story-card__person">
+            <img class="story-card__photo" src="https://randomuser.me/api/portraits/men/67.jpg" alt="Foto ilustrativa de Felipe" loading="lazy" />
+            <div><div class="story-card__name">Felipe</div><div class="story-card__loc">27 anos · Belo Horizonte</div></div>
+          </div>
+        </article>
+
+        <article class="story-card">
+          <div class="story-card__qmark" aria-hidden="true">&ldquo;</div>
+          <p class="story-card__quote">Eu queria confiar, mas sempre procurava alguma coisa para confirmar o medo. Quanto mais eu procurava, pior ficava.</p>
+          <div class="story-card__person">
+            <img class="story-card__photo" src="https://randomuser.me/api/portraits/men/71.jpg" alt="Foto ilustrativa de André" loading="lazy" />
+            <div><div class="story-card__name">André</div><div class="story-card__loc">33 anos · Recife</div></div>
+          </div>
+        </article>
+
+        <article class="story-card">
+          <div class="story-card__qmark" aria-hidden="true">&ldquo;</div>
+          <p class="story-card__quote">Depois da briga eu percebia que tinha reagido a uma história que eu mesmo inventei. O problema era que eu não sabia interromper o ciclo.</p>
+          <div class="story-card__person">
+            <img class="story-card__photo" src="https://randomuser.me/api/portraits/men/75.jpg" alt="Foto ilustrativa de Marcelo" loading="lazy" />
+            <div><div class="story-card__name">Marcelo</div><div class="story-card__loc">30 anos · Porto Alegre</div></div>
+          </div>
+        </article>
+
+        <article class="story-card">
+          <div class="story-card__qmark" aria-hidden="true">&ldquo;</div>
+          <p class="story-card__quote">Eu sabia racionalmente que não fazia sentido. Mesmo assim, quando o gatilho aparecia, parecia impossível pensar com calma.</p>
+          <div class="story-card__person">
+            <img class="story-card__photo" src="https://randomuser.me/api/portraits/men/81.jpg" alt="Foto ilustrativa de Diego" loading="lazy" />
+            <div><div class="story-card__name">Diego</div><div class="story-card__loc">29 anos · Goiânia</div></div>
+          </div>
+        </article>
+
+        <article class="story-card">
+          <div class="story-card__qmark" aria-hidden="true">&ldquo;</div>
+          <p class="story-card__quote">Eu confundia cuidado com controle. Quando percebi a diferença, ficou mais fácil entender por que as minhas atitudes afastavam quem eu queria perto.</p>
+          <div class="story-card__person">
+            <img class="story-card__photo" src="https://randomuser.me/api/portraits/men/83.jpg" alt="Foto ilustrativa de Thiago" loading="lazy" />
+            <div><div class="story-card__name">Thiago</div><div class="story-card__loc">34 anos · Campinas</div></div>
+          </div>
+        </article>
+
+      </div>
     </div>
+
+    <div class="stories__controls">
+      <button class="stories__arrow" id="storiesPrev" aria-label="Relatos anteriores">&#8592;</button>
+      <div class="stories__dots" id="storiesDots" aria-label="Navegação dos relatos"></div>
+      <button class="stories__arrow" id="storiesNext" aria-label="Próximos relatos">&#8594;</button>
+    </div>
+
+    <p class="stories__note">
+      * As fotos acima são ilustrativas. Substitua por fotos autorizadas e relatos reais antes de publicar como prova social.
+    </p>
   </div>
 
 </div>
@@ -988,7 +1296,94 @@ function send(type, detail) {
 send('pageview');
 
 // ── CTA: transition landing → quiz ──
-document.getElementById('startBtn').addEventListener('click', () => {
+
+// ── TESTIMONIAL CAROUSEL ──
+(() => {
+  const viewport = document.querySelector('.stories__viewport');
+  const track = document.getElementById('storiesTrack');
+  const cards = [...document.querySelectorAll('#storiesTrack .story-card')];
+  const dotsEl = document.getElementById('storiesDots');
+  const prev = document.getElementById('storiesPrev');
+  const next = document.getElementById('storiesNext');
+  if (!viewport || !track || !cards.length) return;
+
+  let index = 0;
+  let timer;
+  let step = 0;
+
+  // Desktop: advance one card at a time. Mobile: show one card.
+  function measure() {
+    if (!cards[0]) return;
+    const gap = parseFloat(getComputedStyle(track).gap) || 0;
+    step = cards[0].getBoundingClientRect().width + gap;
+  }
+
+  // Keep the active card visually centered whenever possible.
+  function visibleCards() {
+    const vw = viewport.clientWidth;
+    return Math.max(1, Math.floor((vw + 22) / (cards[0].getBoundingClientRect().width + 22)));
+  }
+
+  function maxIndex() {
+    return Math.max(0, cards.length - visibleCards());
+  }
+
+  function renderDots() {
+    dotsEl.innerHTML = '';
+    const count = maxIndex() + 1;
+    for (let i = 0; i < count; i++) {
+      const dot = document.createElement('button');
+      dot.className = 'stories__dot' + (i === index ? ' active' : '');
+      dot.type = 'button';
+      dot.setAttribute('aria-label', `Ir para o grupo ${i + 1}`);
+      dot.addEventListener('click', () => go(i, true));
+      dotsEl.appendChild(dot);
+    }
+  }
+
+  function go(nextIndex, restart = false) {
+    const max = maxIndex();
+    index = nextIndex > max ? 0 : nextIndex < 0 ? max : nextIndex;
+
+    cards.forEach((card, i) => card.classList.toggle('is-active', i === index));
+
+    const maxTranslate = Math.max(0, track.scrollWidth - viewport.clientWidth);
+    const target = Math.min(index * step, maxTranslate);
+    track.style.transform = `translate3d(${-target}px,0,0)`;
+
+    [...dotsEl.children].forEach((dot, i) => dot.classList.toggle('active', i === index));
+
+    if (restart) start();
+  }
+
+  function start() {
+    clearInterval(timer);
+    timer = setInterval(() => go(index + 1), 4800);
+  }
+
+  prev.addEventListener('click', () => go(index - 1, true));
+  next.addEventListener('click', () => go(index + 1, true));
+
+  viewport.addEventListener('mouseenter', () => clearInterval(timer));
+  viewport.addEventListener('mouseleave', start);
+  viewport.addEventListener('touchstart', () => clearInterval(timer), { passive: true });
+  viewport.addEventListener('touchend', start, { passive: true });
+
+  window.addEventListener('resize', () => {
+    measure();
+    index = Math.min(index, maxIndex());
+    renderDots();
+    go(index);
+  });
+
+  measure();
+  renderDots();
+  go(0);
+  start();
+})();
+
+
+    document.getElementById('startBtn').addEventListener('click', () => {
   send('quiz_start', '');
   document.getElementById('landing').classList.add('exiting');
   setTimeout(() => {
