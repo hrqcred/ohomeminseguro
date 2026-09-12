@@ -1,0 +1,12 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ohomeminseguro",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["serve", "/Users/hrqcred/Desktop/projetos/ohomeminseguro"],
+      "port": 3457,
+      "autoPort": true
+    }
+  ]
+}
