@@ -1203,10 +1203,21 @@ const SUPA_URL = 'https://zfljisjwrnkhfsmwdace.supabase.co';
 const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmbGppc2p3cm5raGZzbXdkYWNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4OTE2NTMsImV4cCI6MjEwNDQ2NzY1M30.YGOH7x6XL-EhiWdSoSRjmMKC8yCdyhisP6zAX3UupHI';
 
 // ── QUIZ DATA ──
+async function introThenQuiz() {
+  await botSay('Você clicou aqui por um motivo.', 1400);
+  await sleep(1200);
+  await botSay('Não foi por curiosidade. Foi porque você sabe que tem algo errado. E sabe que está ficando pior.', 1800);
+  await sleep(1800);
+  await botSay('A maioria dos homens que chega aqui já tentou parar sozinho. Já prometeu que ia mudar. Já pediu desculpa de madrugada. E no dia seguinte, fez tudo de novo.', 2000);
+  await sleep(2000);
+  await botSay('Eu vou te fazer 5 perguntas. Responde com honestidade. Ninguém vai ver suas respostas.', 1600);
+  await sleep(800);
+  runQ(0);
+}
+
 const QUESTIONS = [
   {
     msgs: [
-      'Vou te fazer 5 perguntas. Responde com honestidade.',
       'Qual é a sua situação agora?'
     ],
     opts: [
@@ -1650,7 +1661,7 @@ send('pageview');
   document.getElementById('landing').classList.add('exiting');
   setTimeout(() => {
     document.body.classList.add('quiz-mode');
-    runQ(0);
+    introThenQuiz();
   }, 420);
 });
 </script>
