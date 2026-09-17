@@ -400,15 +400,15 @@
   <div class="page active" id="p-resumo">
     <div class="kpi-grid">
       <div class="kpi">
-        <div class="kpi__label">Visitas (7d)</div>
+        <div class="kpi__label">Visitas <span id="lbl-vis-period">(Hoje)</span></div>
         <div class="kpi__value" id="k-vis">0</div>
       </div>
       <div class="kpi">
-        <div class="kpi__label">Vendas (7d)</div>
+        <div class="kpi__label">Vendas <span id="lbl-sales-period">(Hoje)</span></div>
         <div class="kpi__value" id="k-ven">0</div>
       </div>
       <div class="kpi">
-        <div class="kpi__label">Receita (7d)</div>
+        <div class="kpi__label">Receita <span id="lbl-rev-period">(Hoje)</span></div>
         <div class="kpi__value" id="k-rec">R$ 0</div>
       </div>
       <div class="kpi">
@@ -751,15 +751,92 @@
   });
 
   // ── RENDER ──
-  function renderAll() { renderDash(); renderFunnel(); renderMetrics(); renderUTMs(); renderATM(); renderCK(); renderCfg(); }
+  function renderAll() { initDashPeriodFilter(); renderDash(); renderFunnel(); renderMetrics(); renderUTMs(); renderATM(); renderCK(); renderCfg(); }
 
-  function last7() {
+  var dashDays = 1;
+
+  function localYmd(v) {
+    var d = v ? new Date(v) : new Date();
+    return d.getFullYear() + '-' +
+      String(d.getMonth()+1).padStart(2,'0') + '-' +
+      String(d.getDate()).padStart(2,'0');
+  }
+
+  function dashDates() {
     var days = [];
-    for (var i = 6; i >= 0; i--) {
-      var d = new Date(); d.setDate(d.getDate() - i);
-      days.push(d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0'));
+    for (var i = dashDays - 1; i >= 0; i--) {
+      var d = new Date();
+      d.setHours(0,0,0,0);
+      d.setDate(d.getDate() - i);
+
+      days.push(
+        d.getFullYear() + '-' +
+        String(d.getMonth()+1).padStart(2,'0') + '-' +
+        String(d.getDate()).padStart(2,'0')
+      );
     }
     return days;
+  }
+
+  function dashPeriodText() {
+    if (dashDays === 1) return 'Hoje';
+    return dashDays + 'd';
+  }
+
+  function updateDashPeriodUI() {
+    var txt = '(' + dashPeriodText() + ')';
+
+    if ($('lbl-vis-period')) $('lbl-vis-period').textContent = txt;
+    if ($('lbl-sales-period')) $('lbl-sales-period').textContent = txt;
+    if ($('lbl-rev-period')) $('lbl-rev-period').textContent = txt;
+
+    var buttons = document.querySelectorAll('#dash-period-filter button');
+
+    buttons.forEach(function(btn) {
+      var active = parseInt(btn.dataset.days) === dashDays;
+
+      btn.style.opacity = active ? '1' : '.55';
+      btn.style.borderColor = active ? 'var(--accent)' : 'var(--border)';
+      btn.style.background = active ? 'var(--surface-hi)' : '';
+    });
+  }
+
+  function initDashPeriodFilter() {
+    if ($('dash-period-filter')) return;
+
+    var firstLabel = document.querySelector('.kpi__label');
+    if (!firstLabel) return;
+
+    var card = firstLabel.parentElement;
+    var grid = card ? card.parentElement : null;
+
+    if (!grid || !grid.parentElement) return;
+
+    var box = document.createElement('div');
+    box.id = 'dash-period-filter';
+
+    box.style.cssText =
+      'display:flex;align-items:center;gap:8px;flex-wrap:wrap;' +
+      'margin:0 0 18px 0;';
+
+    box.innerHTML =
+      '<span style="font-size:12px;color:var(--muted);margin-right:4px">Período</span>' +
+      '<button class="btn btn--sm" type="button" data-days="1">Hoje</button>' +
+      '<button class="btn btn--sm" type="button" data-days="3">3 dias</button>' +
+      '<button class="btn btn--sm" type="button" data-days="7">7 dias</button>' +
+      '<button class="btn btn--sm" type="button" data-days="30">30 dias</button>';
+
+    grid.parentElement.insertBefore(box, grid);
+
+    box.querySelectorAll('button').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        dashDays = parseInt(this.dataset.days) || 1;
+        updateDashPeriodUI();
+        renderDash();
+      });
+    });
+
+    updateDashPeriodUI();
   }
 
   function supaFetch(params) {
@@ -773,7 +850,7 @@
   }
 
   function renderDash() {
-    var days = last7();
+    var days = dashDates();
     var tS=0, tR=0, tA=0;
 
     D.metrics.forEach(function(m) {
@@ -809,7 +886,8 @@
     }
 
     var since = new Date();
-    since.setDate(since.getDate() - 7);
+    since.setHours(0,0,0,0);
+    since.setDate(since.getDate() - (dashDays - 1));
     supaFetch({
       select: '*',
       created_at: 'gte.' + since.toISOString(),
@@ -826,7 +904,7 @@
       var byDay = {};
       days.forEach(function(d) { byDay[d] = 0; });
       pageviews.forEach(function(e) {
-        var d = e.created_at.slice(0, 10);
+        var d = localYmd(e.created_at);
         if (byDay[d] !== undefined) byDay[d]++;
       });
       var ch = $('chart');
