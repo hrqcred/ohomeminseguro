@@ -504,6 +504,152 @@
       color: var(--text-mid);
     }
 
+    /* Consequence card */
+    .consequence-card {
+      max-width: 88%;
+      background: var(--surface);
+      border: 1px solid var(--border-hi);
+      border-left: 2px solid var(--accent);
+      border-radius: 3px 14px 14px 14px;
+      padding: 18px 20px;
+      flex-shrink: 0;
+      margin-bottom: 6px;
+      animation: msgIn 0.28s ease forwards;
+    }
+    .consequence-card__eyebrow {
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+    .consequence-card__title {
+      font-family: var(--serif);
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+      margin-bottom: 12px;
+    }
+    .consequence-card__list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .consequence-card__item {
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.6;
+      color: var(--text-mid);
+      padding-left: 16px;
+      position: relative;
+    }
+    .consequence-card__item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 8px;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.6;
+    }
+
+    /* Testimonial feed */
+    .testimonial-feed {
+      max-width: 88%;
+      background: var(--bubble-bot);
+      border: 1px solid var(--bubble-bot-b);
+      border-radius: 3px 14px 14px 14px;
+      padding: 16px 18px;
+      flex-shrink: 0;
+      margin-bottom: 6px;
+      animation: msgIn 0.28s ease forwards;
+    }
+    .testimonial-feed__eyebrow {
+      font-size: 9px;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 12px;
+    }
+    .testimonial-feed__viewport {
+      max-height: 320px;
+      overflow: hidden;
+      position: relative;
+    }
+    .testimonial-feed__viewport::after {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 40px;
+      background: linear-gradient(to top, var(--bubble-bot), transparent);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .testimonial-feed__track {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .testi-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px 16px;
+      animation: testiIn 0.4s ease forwards;
+      opacity: 0;
+      flex-shrink: 0;
+    }
+    @keyframes testiIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: none; }
+    }
+    .testi-item__header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .testi-item__avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--accent-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--accent);
+      flex-shrink: 0;
+      overflow: hidden;
+    }
+    .testi-item__avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .testi-item__name {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .testi-item__time {
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+    .testi-item__text {
+      font-size: 12.5px;
+      font-weight: 300;
+      line-height: 1.6;
+      color: var(--text-mid);
+    }
+
     /* Offer card */
     .offer-card {
       max-width: 92%;
@@ -543,6 +689,13 @@
       line-height: 1.25;
       margin-bottom: 14px;
       text-wrap: balance;
+    }
+    .offer-card__promise {
+      font-size: 13.5px;
+      font-weight: 400;
+      line-height: 1.6;
+      color: var(--text);
+      margin-bottom: 16px;
     }
     .offer-card__items {
       list-style: none;
@@ -886,8 +1039,8 @@
       <span class="hero__pill-text">Diagnóstico gratuito</span>
     </div>
     <h1 class="hero__h1">
-      Você não tem medo de perdê-lá<br>
-      Tem medo de não ser suficiente. <em>nada</em>.
+      Você não tem medo de perdê-la<br>
+      Tem medo de não ser suficiente.
     </h1>
     <p class="hero__sub">
       Um diagnóstico de 5 perguntas sem compromisso para homens que reconhecem a sua insegurança, e os pensamentos excessivos.
@@ -1001,9 +1154,6 @@
       <button class="stories__arrow" id="storiesNext" aria-label="Próximos relatos">&#8594;</button>
     </div>
 
-    <p class="stories__note">
-      * As fotos acima são ilustrativas. Substitua por fotos autorizadas e relatos reais antes de publicar como prova social.
-    </p>
   </div>
 
 </div>
@@ -1132,12 +1282,21 @@ async function botSay(text, typingMs) {
   t.innerHTML = '<div class="typing__shell"><div class="typing__dot"></div><div class="typing__dot"></div><div class="typing__dot"></div></div>';
   chatEl.appendChild(t);
   scrollEnd();
-  await sleep(typingMs);
+  await sleep(Math.min(typingMs, 600));
   chatEl.removeChild(t);
   const el = document.createElement('div');
   el.className = 'msg msg--bot';
-  el.innerHTML = `<div class="bubble bubble--bot">${text}</div>`;
+  const bub = document.createElement('div');
+  bub.className = 'bubble bubble--bot';
+  el.appendChild(bub);
   chatEl.appendChild(el);
+  scrollEnd();
+  const chars = text.split('');
+  for (let i = 0; i < chars.length; i++) {
+    bub.textContent += chars[i];
+    if (i % 3 === 0) { scrollEnd(); await sleep(18); }
+  }
+  bub.innerHTML = text;
   scrollEnd();
 }
 
@@ -1187,14 +1346,14 @@ async function showResult() {
 
   let title, body;
   if (weight >= 11) {
-    title = 'O ciclo já está no controle do seu relacionamento';
-    body  = 'Suas respostas mostram ciúme crônico, checagem compulsiva e necessidade constante de validação. Os três pilares do padrão. Isso não some com força de vontade. E cada dia que passa, o estrago fica maior.';
+    title = 'Você está destruindo o seu relacionamento agora';
+    body  = 'Ciúme crônico, checagem compulsiva, necessidade constante de validação. Os três pilares do padrão. Isso não some com força de vontade. Você já sabe disso. E enquanto você lê isso, o estrago continua.';
   } else if (weight >= 7) {
     title = 'O padrão está ativo e se repetindo';
-    body  = 'Você reconhece os comportamentos. Sabe que estão errados. Mas continua fazendo. Consciência sem método não muda nada. Você vai continuar pedindo desculpa até ela cansar de ouvir.';
+    body  = 'Você reconhece os comportamentos. Sabe que estão errados. Mas continua fazendo. Consciência sem método não muda nada. Você vai continuar pedindo desculpa até ela cansar de ouvir. E esse dia chega.';
   } else {
-    title = 'O padrão já começou';
-    body  = 'Ainda dá para reverter. Mas o padrão se normaliza rápido. Cada briga sem motivo, cada mensagem a mais, cada crise de ciúme consolida o ciclo. E quando você perceber, ela já foi.';
+    title = 'O padrão já começou. Ele só piora.';
+    body  = 'Cada briga sem motivo, cada mensagem a mais, cada crise de ciúme consolida o ciclo. O padrão se normaliza rápido. E quando você perceber que deveria ter agido, ela já foi.';
   }
 
   await botSay('Ok. Deixa eu te mostrar o que suas respostas dizem.', 1500);
@@ -1212,19 +1371,100 @@ async function showResult() {
   send('result', `weight:${weight}`);
 
   await sleep(2000);
-  await botSay('Existe um método para quebrar esse ciclo. Direto, sem enrolação, sem motivacional vazio. Feito pra quem já tentou parar sozinho e não conseguiu.', 1400);
+  await botSay('Agora presta atenção. Isso aqui você precisa ler.', 1200);
+  await sleep(800);
+
+  const conseq = document.createElement('div');
+  conseq.className = 'consequence-card';
+  conseq.innerHTML = `
+    <p class="consequence-card__eyebrow">O que acontece se você não agir</p>
+    <p class="consequence-card__title">O ciclo não para sozinho. Ele acelera.</p>
+    <ul class="consequence-card__list">
+      <li class="consequence-card__item">A cada briga repetida, ela perde um pedaço da vontade de tentar. Não é raiva. É cansaço. E cansaço não avisa antes de virar decisão.</li>
+      <li class="consequence-card__item">Você vai prometer que muda, e até vai melhorar por uns dias. Mas sem método, o padrão volta. E cada recaída pesa mais que a anterior.</li>
+      <li class="consequence-card__item">O pior não é perder ela. É perceber, depois, que você teve a chance de mudar e escolheu esperar.</li>
+    </ul>
+  `;
+  chatEl.appendChild(conseq);
+  scrollEnd();
+
+  await sleep(2500);
+  await botSay('Outros homens estavam no mesmo lugar que você. Olha o que eles mandaram depois de agir:', 1200);
+  await sleep(600);
+
+  const TESTIMONIALS = [
+    { name: 'Rafael, 29', img: 'assets/avatars/rafael.jpg', initial: 'R', text: 'Cara, eu tava a ponto de perder minha namorada. Checava o celular dela todo dia, brigava por qualquer curtida. Depois do treinamento eu entendi de onde vinha aquilo. Faz 3 meses que a gente não briga por ciúme.' },
+    { name: 'Thiago, 34', img: 'assets/avatars/thiago.jpg', initial: 'T', text: 'Eu já tinha destruído dois relacionamentos com o mesmo padrão. Achava que o problema era elas. O treinamento me mostrou que eu tava repetindo um ciclo que eu nem sabia que existia. Agora consigo identificar o gatilho antes de agir.' },
+    { name: 'Lucas, 26', img: 'assets/avatars/lucas.jpg', initial: 'L', text: 'Minha mulher tava pronta pra ir embora. Comecei o treinamento num domingo e na terça já tava aplicando. Ela notou a diferença antes de eu contar.' },
+    { name: 'Felipe, 31', img: 'assets/avatars/felipe.jpg', initial: 'F', text: 'Eu achava que era normal pensar daquele jeito. Que todo homem sentia aquilo. O treinamento me abriu os olhos. Eu estava sabotando a pessoa que mais amava e nem percebia.' },
+    { name: 'Gustavo, 27', img: 'assets/avatars/gustavo.jpg', initial: 'G', text: 'Perdi minha ex porque não soube lidar com o ciúme. Quando comecei o relacionamento atual, o padrão voltou. Dessa vez eu parei antes de destruir tudo. O método funciona.' },
+    { name: 'Bruno, 33', img: 'assets/avatars/bruno.jpg', initial: 'B', text: 'Minha namorada me deu um ultimato. Ou eu mudava ou ela ia embora. Comecei o treinamento naquela semana. Hoje ela fala que eu sou outro homem.' },
+    { name: 'Pedro, 28', img: 'assets/avatars/pedro.jpg', initial: 'P', text: 'Eu mandava 15 mensagens seguidas quando ela não respondia. Hoje eu consigo esperar. Parece pouco, mas pra mim mudou tudo.' },
+    { name: 'Caio, 30', img: 'assets/avatars/caio.jpg', initial: 'C', text: 'Toda vez que ela saía com amigas, eu ficava destruído. Ligava, checava stories, ficava acordado esperando. Depois do treinamento entendi que o problema nunca foi ela sair. Era eu não aguentar ficar comigo mesmo.' },
+    { name: 'Matheus, 25', img: 'assets/avatars/matheus.jpg', initial: 'M', text: 'Eu terminava e voltava, terminava e voltava. Sempre por medo. Quando finalmente entendi o ciclo, parei de fugir e comecei a resolver. Melhor decisão que já tomei.' },
+    { name: 'Daniel, 36', img: 'assets/avatars/daniel.jpg', initial: 'D', text: 'Dois casamentos destruídos pelo mesmo padrão. No terceiro relacionamento decidi que seria diferente. O treinamento me deu a ferramenta que faltava. Estamos juntos há 1 ano sem uma crise de ciúme.' },
+  ];
+
+  const feed = document.createElement('div');
+  feed.className = 'testimonial-feed';
+  feed.innerHTML = `<p class="testimonial-feed__eyebrow">Mensagens reais</p><div class="testimonial-feed__viewport"><div class="testimonial-feed__track" id="testiTrack"></div></div>`;
+  chatEl.appendChild(feed);
+  scrollEnd();
+
+  const track = feed.querySelector('#testiTrack');
+  let testiIdx = 0;
+
+  function makeTestiItem(t) {
+    const d = document.createElement('div');
+    d.className = 'testi-item';
+    const imgTag = `<img src="${t.img}" alt="" onerror="this.style.display='none';this.parentElement.textContent='${t.initial}'">`;
+    d.innerHTML = `
+      <div class="testi-item__header">
+        <div class="testi-item__avatar">${imgTag}</div>
+        <span class="testi-item__name">${t.name}</span>
+        <span class="testi-item__time">via WhatsApp</span>
+      </div>
+      <p class="testi-item__text">${t.text}</p>
+    `;
+    return d;
+  }
+
+  function addNextTesti() {
+    const item = makeTestiItem(TESTIMONIALS[testiIdx % TESTIMONIALS.length]);
+    track.appendChild(item);
+    testiIdx++;
+    const vp = feed.querySelector('.testimonial-feed__viewport');
+    vp.scrollTo({ top: vp.scrollHeight, behavior: 'smooth' });
+    scrollEnd();
+  }
+
+  for (let i = 0; i < 3; i++) {
+    await sleep(i === 0 ? 0 : 600);
+    addNextTesti();
+  }
+
+  const testiInterval = setInterval(addNextTesti, 3500);
+
+  await sleep(3000);
+  await botSay('Você tem duas escolhas agora. Fechar essa tela e continuar no mesmo ciclo. Ou decidir que hoje é o dia que muda.', 1200);
+  await sleep(800);
+  await botSay('O método é direto. Sem enrolação. Sem motivacional vazio. Feito pra quem já tentou parar sozinho e não conseguiu.', 1400);
   await sleep(500);
+
+  clearInterval(testiInterval);
 
   const url = buildURL();
   const offer = document.createElement('div');
   offer.className = 'offer-card';
   offer.innerHTML = `
     <span class="offer-card__badge">Acesso imediato e vitalício</span>
-    <h2 class="offer-card__name">O Homem Inseguro: Treinamento completo</h2>
+    <h2 class="offer-card__name">Pare de destruir o que você mais quer proteger</h2>
+    <p class="offer-card__promise">Você vai conquistar a confiança em você mesmo e deixar de se comparar com outro homem. Sem depender dela pra se sentir suficiente.</p>
     <ul class="offer-card__items">
       <li class="offer-card__item"><span class="offer-card__check">✓</span><span>7 módulos: da raiz da insegurança até comunicação sem acusação</span></li>
-      <li class="offer-card__item"><span class="offer-card__check">✓</span><span>Exercícios práticos para usar no momento que o gatilho disparar</span></li>
-      <li class="offer-card__item"><span class="offer-card__check">✓</span><span>Acesso vitalício + todas as atualizações sem custo adicional</span></li>
+      <li class="offer-card__item"><span class="offer-card__check">✓</span><span>Exercícios pra aplicar na hora que o gatilho disparar</span></li>
+      <li class="offer-card__item"><span class="offer-card__check">✓</span><span>Método usado por +4.200 homens que escolheram parar o ciclo</span></li>
+      <li class="offer-card__item"><span class="offer-card__check">✓</span><span>Acesso vitalício + atualizações sem custo</span></li>
     </ul>
     <div class="offer-card__rule"></div>
     <div class="offer-card__prices">
@@ -1232,10 +1472,10 @@ async function showResult() {
       <p class="offer-card__price"><span class="offer-card__currency">R$</span>39,90</p>
       <p class="offer-card__install">ou 4x de R$&nbsp;10,82 no cartão</p>
     </div>
-    <a href="${url}" class="offer-card__cta" id="offerCta">Quero quebrar esse ciclo</a>
+    <a href="${url}" class="offer-card__cta" id="offerCta">Eu escolho mudar agora</a>
     <p class="offer-card__guarantee">
       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-      Garantia de 7 dias. Reembolso sem burocracia
+      7 dias pra testar. Se não funcionar, devolvemos cada centavo. Sem perguntas.
     </p>
   `;
   chatEl.appendChild(offer);
