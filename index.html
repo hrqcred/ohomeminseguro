@@ -578,19 +578,25 @@
       margin-bottom: 12px;
     }
     .testimonial-feed__viewport {
-      max-height: 320px;
-      overflow: hidden;
+      max-height: 380px;
+      overflow-y: auto;
+      overflow-x: hidden;
       position: relative;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
     }
-    .testimonial-feed__viewport::after {
-      content: '';
+    .testimonial-feed__viewport::-webkit-scrollbar { width: 0; }
+    .testimonial-feed__mask {
       position: absolute;
-      bottom: 0; left: 0; right: 0;
-      height: 40px;
-      background: linear-gradient(to top, var(--bubble-bot), transparent);
+      top: 0; left: 0; right: 0;
+      height: 50px;
+      background: linear-gradient(to bottom, var(--bubble-bot), transparent);
       pointer-events: none;
       z-index: 1;
+      opacity: 0;
+      transition: opacity 0.4s;
     }
+    .testimonial-feed__mask.visible { opacity: 1; }
     .testimonial-feed__track {
       display: flex;
       flex-direction: column;
@@ -1010,11 +1016,22 @@
       }
     }
 
-    /* Responsive */
+    /* Desktop quiz layout */
+    @media (min-width: 768px) {
+      #quiz-shell { max-width: 680px; }
+      .chat { padding: 28px 28px 12px; }
+      .answers { padding: 14px 28px 28px; }
+      .testimonial-feed__viewport { max-height: 420px; }
+    }
+
+    /* Responsive mobile */
     @media (max-width: 480px) {
       .brand-bar, .hero, .stories, .section-divider { padding-left: 20px; padding-right: 20px; margin-left: 0; margin-right: 0; }
       .bubble { max-width: 90%; }
-      .result-card, .offer-card { max-width: 96%; }
+      .result-card, .offer-card, .consequence-card, .testimonial-feed { max-width: 96%; }
+      .testimonial-feed__viewport { max-height: 300px; }
+      .testi-item { padding: 12px 14px; }
+      .testi-item__text { font-size: 12px; }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1278,7 +1295,7 @@ async function botSay(text, typingMs) {
   t.innerHTML = '<div class="typing__shell"><div class="typing__dot"></div><div class="typing__dot"></div><div class="typing__dot"></div></div>';
   chatEl.appendChild(t);
   scrollEnd();
-  await sleep(Math.min(typingMs, 600));
+  await sleep(typingMs);
   chatEl.removeChild(t);
   const el = document.createElement('div');
   el.className = 'msg msg--bot';
@@ -1287,10 +1304,10 @@ async function botSay(text, typingMs) {
   el.appendChild(bub);
   chatEl.appendChild(el);
   scrollEnd();
-  const chars = text.split('');
-  for (let i = 0; i < chars.length; i++) {
-    bub.textContent += chars[i];
-    if (i % 3 === 0) { scrollEnd(); await sleep(18); }
+  const plain = text.replace(/<[^>]*>/g, '');
+  for (let i = 0; i < plain.length; i++) {
+    bub.textContent += plain[i];
+    if (i % 2 === 0) { scrollEnd(); await sleep(28 + Math.random() * 18); }
   }
   bub.innerHTML = text;
   scrollEnd();
@@ -1322,17 +1339,17 @@ async function runQ(idx) {
   setProgress(idx);
   const q = QUESTIONS[idx];
   for (let i = 0; i < q.msgs.length; i++) {
-    const ms = i === 0 ? (idx === 0 ? 900 : 1300) : 1000;
+    const ms = i === 0 ? (idx === 0 ? 1200 : 1800) : 1400;
     await botSay(q.msgs[i], ms);
-    if (i < q.msgs.length - 1) await sleep(180);
+    if (i < q.msgs.length - 1) await sleep(600);
   }
-  await sleep(180);
+  await sleep(400);
   showAnswers(q.opts, async sel => {
     weight += sel.w;
     userSay(sel.text);
     send('answer', `q${idx}:${sel.w}`);
-    if (idx < QUESTIONS.length - 1) { await sleep(700); runQ(idx + 1); }
-    else { await sleep(900); showResult(); }
+    if (idx < QUESTIONS.length - 1) { await sleep(1200); runQ(idx + 1); }
+    else { await sleep(1400); showResult(); }
   });
 }
 
@@ -1352,8 +1369,8 @@ async function showResult() {
     body  = 'Cada briga sem motivo, cada mensagem a mais, cada crise de ciúme consolida o ciclo. O padrão se normaliza rápido. E quando você perceber que deveria ter agido, ela já foi.';
   }
 
-  await botSay('Ok. Deixa eu te mostrar o que suas respostas dizem.', 1500);
-  await sleep(500);
+  await botSay('Ok. Deixa eu te mostrar o que suas respostas dizem.', 2000);
+  await sleep(1200);
 
   const card = document.createElement('div');
   card.className = 'result-card';
@@ -1366,9 +1383,9 @@ async function showResult() {
   scrollEnd();
   send('result', `weight:${weight}`);
 
-  await sleep(2000);
-  await botSay('Agora presta atenção. Isso aqui você precisa ler.', 1200);
-  await sleep(800);
+  await sleep(3000);
+  await botSay('Agora presta atenção. Isso aqui você precisa ler.', 1800);
+  await sleep(1200);
 
   const conseq = document.createElement('div');
   conseq.className = 'consequence-card';
@@ -1384,9 +1401,9 @@ async function showResult() {
   chatEl.appendChild(conseq);
   scrollEnd();
 
-  await sleep(2500);
-  await botSay('Outros homens estavam no mesmo lugar que você. Olha o que eles mandaram depois de agir:', 1200);
-  await sleep(600);
+  await sleep(3500);
+  await botSay('Outros homens estavam no mesmo lugar que você. Olha o que eles mandaram depois de agir:', 1800);
+  await sleep(1000);
 
   const TESTIMONIALS = [
     { name: 'Rafael, 29', img: 'assets/avatars/rafael.jpg', initial: 'R', text: 'Cara, eu tava a ponto de perder minha namorada. Checava o celular dela todo dia, brigava por qualquer curtida. Depois do treinamento eu entendi de onde vinha aquilo. Faz 3 meses que a gente não briga por ciúme.' },
@@ -1403,10 +1420,17 @@ async function showResult() {
 
   const feed = document.createElement('div');
   feed.className = 'testimonial-feed';
-  feed.innerHTML = `<p class="testimonial-feed__eyebrow">Mensagens reais</p><div class="testimonial-feed__viewport"><div class="testimonial-feed__track" id="testiTrack"></div></div>`;
+  feed.innerHTML = `
+    <p class="testimonial-feed__eyebrow">Mensagens reais</p>
+    <div class="testimonial-feed__viewport">
+      <div class="testimonial-feed__mask"></div>
+      <div class="testimonial-feed__track" id="testiTrack"></div>
+    </div>`;
   chatEl.appendChild(feed);
   scrollEnd();
 
+  const vp = feed.querySelector('.testimonial-feed__viewport');
+  const mask = feed.querySelector('.testimonial-feed__mask');
   const track = feed.querySelector('#testiTrack');
   let testiIdx = 0;
 
@@ -1429,23 +1453,25 @@ async function showResult() {
     const item = makeTestiItem(TESTIMONIALS[testiIdx % TESTIMONIALS.length]);
     track.appendChild(item);
     testiIdx++;
-    const vp = feed.querySelector('.testimonial-feed__viewport');
-    vp.scrollTo({ top: vp.scrollHeight, behavior: 'smooth' });
+    requestAnimationFrame(() => {
+      vp.scrollTo({ top: vp.scrollHeight, behavior: 'smooth' });
+      if (vp.scrollHeight > vp.clientHeight) mask.classList.add('visible');
+    });
     scrollEnd();
   }
 
   for (let i = 0; i < 3; i++) {
-    await sleep(i === 0 ? 0 : 600);
+    await sleep(i === 0 ? 0 : 800);
     addNextTesti();
   }
 
-  const testiInterval = setInterval(addNextTesti, 3500);
+  const testiInterval = setInterval(addNextTesti, 4000);
 
-  await sleep(3000);
-  await botSay('Você tem duas escolhas agora. Fechar essa tela e continuar no mesmo ciclo. Ou decidir que hoje é o dia que muda.', 1200);
-  await sleep(800);
-  await botSay('O método é direto. Sem enrolação. Sem motivacional vazio. Feito pra quem já tentou parar sozinho e não conseguiu.', 1400);
-  await sleep(500);
+  await sleep(4000);
+  await botSay('Você tem duas escolhas agora. Fechar essa tela e continuar no mesmo ciclo. Ou decidir que hoje é o dia que muda.', 2000);
+  await sleep(1500);
+  await botSay('O método é direto. Sem enrolação. Sem motivacional vazio. Feito pra quem já tentou parar sozinho e não conseguiu.', 2000);
+  await sleep(1000);
 
   clearInterval(testiInterval);
 
