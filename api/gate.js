@@ -35,12 +35,12 @@ export default async function handler(req,res){
     }
     track(req,url,atm?'atm_invalid':'atm_missing').catch(()=>{});
     res.setHeader('Content-Type','text/html; charset=utf-8');
-    res.setHeader('Cache-Control','public, max-age=0, s-maxage=120');
+    res.setHeader('Cache-Control','private, no-store, max-age=0');
     return res.status(200).send(getBlogHtml());
   } catch(e){
     console.error(e);
     res.setHeader('Content-Type','text/html; charset=utf-8');
-    res.setHeader('Cache-Control','public, max-age=0, s-maxage=120');
+    res.setHeader('Cache-Control','private, no-store, max-age=0');
     return res.status(200).send(getBlogHtml());
   }
 }
