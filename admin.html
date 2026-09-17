@@ -339,6 +339,12 @@
       cursor: pointer; transition: all 0.15s;
     }
     .period-btn.active { background: var(--surface-2); color: var(--text); border-color: var(--ember-dim); }
+
+    /* ── ATM GATE ── */
+    .atm-status{display:flex;align-items:center;gap:10px;margin:8px 0 18px}.atm-dot{width:9px;height:9px;border-radius:50%;background:#555}.atm-dot.on{background:#34c759;box-shadow:0 0 0 4px rgba(52,199,89,.12)}
+    .atm-url{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;line-height:1.5;word-break:break-all;background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:12px;min-height:70px;color:var(--text)}
+    .atm-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.atm-kpi{background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:14px}.atm-kpi strong{display:block;font-size:24px;margin-bottom:3px}.atm-kpi span{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em}
+    @media(max-width:600px){.atm-grid{grid-template-columns:1fr}}
   </style>
 </head>
 <body>
@@ -385,6 +391,7 @@
     <button class="tab" data-t="funil">Funil</button>
     <button class="tab" data-t="registrar">Registrar</button>
     <button class="tab" data-t="utm">UTM</button>
+    <button class="tab" data-t="atm">ATM</button>
     <button class="tab" data-t="checklist">Checklist</button>
     <button class="tab" data-t="ajustes">Ajustes</button>
   </div>
@@ -538,6 +545,39 @@
     </div>
   </div>
 
+
+  <!-- ═══ ATM ═══ -->
+  <div class="page" id="p-atm">
+    <p class="desc">Controle o link privado usado nas campanhas. O domínio puro continua abrindo o blog; somente uma ATM válida libera o funil na página inicial.</p>
+    <div class="card">
+      <div class="card__head">Status do gate</div>
+      <div class="atm-status"><span class="atm-dot" id="atm-dot"></span><strong id="atm-status-text">Não verificado</strong></div>
+      <div class="row2">
+        <div class="fg"><label>Versão ativa</label><input class="input" id="atm-version" value="--" readonly /></div>
+        <div class="fg"><label>Última rotação</label><input class="input" id="atm-updated" value="--" readonly /></div>
+      </div>
+      <div class="fg"><label>Token administrativo (ATM_ADMIN_TOKEN da Vercel)</label><input class="input" type="password" id="atm-token" placeholder="Cole o token configurado na Vercel" /></div>
+      <button class="btn btn--sm" id="atm-check">Verificar conexão</button>
+    </div>
+    <div class="card">
+      <div class="card__head">Gerar nova chave</div>
+      <p class="desc" style="margin-bottom:12px">A chave anterior pode continuar funcionando por algumas horas para você trocar a URL das campanhas sem interromper o tráfego.</p>
+      <div class="fg"><label>Validade da chave anterior</label><select class="input" id="atm-grace"><option value="0">Revogar imediatamente</option><option value="6">6 horas</option><option value="24" selected>24 horas</option><option value="72">72 horas</option><option value="168">7 dias</option></select></div>
+      <button class="btn btn--red" id="atm-rotate">Gerar nova ATM</button>
+      <button class="btn btn--sm" id="atm-revoke" style="margin-left:6px">Revogar chave anterior</button>
+    </div>
+    <div class="card">
+      <div class="card__head">URL pronta para o Gerenciador de Anúncios</div>
+      <p class="desc" style="margin-bottom:10px">Inclui ATM + UTMs + IDs de campanha, conjunto, anúncio, criativo, placement e origem.</p>
+      <div class="atm-url" id="atm-url">Gere uma chave para criar a URL.</div>
+      <button class="btn btn--sm" id="atm-copy" style="margin-top:10px">Copiar URL</button>
+    </div>
+    <div class="card">
+      <div class="card__head">Acessos de hoje</div>
+      <div class="atm-grid"><div class="atm-kpi"><strong id="atm-valid">--</strong><span>ATM válido</span></div><div class="atm-kpi"><strong id="atm-invalid">--</strong><span>ATM inválido</span></div><div class="atm-kpi"><strong id="atm-missing">--</strong><span>Sem ATM</span></div></div>
+    </div>
+  </div>
+
   <!-- ═══ CHECKLIST ═══ -->
   <div class="page" id="p-checklist">
     <p class="desc">Antes de ativar o trafego, confirme que tudo esta no lugar.</p>
@@ -613,10 +653,11 @@
     try { localStorage.setItem(KEY, JSON.stringify(D)); } catch(e) {}
   }
   function fresh() {
-    return { pin: '', config: { ga4: '', pixel: '', checkout: 'https://pay.kiwify.com.br/3bs6O18', supaUrl: 'https://zfljisjwrnkhfsmwdace.supabase.co', supaKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmbGppc2p3cm5raGZzbXdkYWNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4OTE2NTMsImV4cCI6MjEwNDQ2NzY1M30.YGOH7x6XL-EhiWdSoSRjmMKC8yCdyhisP6zAX3UupHI' }, metrics: [], utms: [], checklist: {} };
+    return { pin: '', atm: { adminToken:'', lastUrl:'', lastAtm:'' }, config: { ga4: '', pixel: '', checkout: 'https://pay.kiwify.com.br/3bs6O18', supaUrl: 'https://zfljisjwrnkhfsmwdace.supabase.co', supaKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmbGppc2p3cm5raGZzbXdkYWNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4OTE2NTMsImV4cCI6MjEwNDQ2NzY1M30.YGOH7x6XL-EhiWdSoSRjmMKC8yCdyhisP6zAX3UupHI' }, metrics: [], utms: [], checklist: {} };
   }
 
   var D = load();
+  if (!D.atm) D.atm = { adminToken:'', lastUrl:'', lastAtm:'' };
   if (!D.config.supaUrl || !D.config.supaKey) {
     D.config.supaUrl = 'https://zfljisjwrnkhfsmwdace.supabase.co';
     D.config.supaKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpmbGppc2p3cm5raGZzbXdkYWNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODg4OTE2NTMsImV4cCI6MjEwNDQ2NzY1M30.YGOH7x6XL-EhiWdSoSRjmMKC8yCdyhisP6zAX3UupHI';
@@ -710,7 +751,7 @@
   });
 
   // ── RENDER ──
-  function renderAll() { renderDash(); renderFunnel(); renderMetrics(); renderUTMs(); renderCK(); renderCfg(); }
+  function renderAll() { renderDash(); renderFunnel(); renderMetrics(); renderUTMs(); renderATM(); renderCK(); renderCfg(); }
 
   function last7() {
     var days = [];
@@ -895,6 +936,61 @@
       tb.appendChild(tr);
     });
   }
+
+
+  // ── ATM GATE ──
+  function atmHeaders(json) {
+    var h = { 'x-atm-admin-token': $('atm-token').value.trim() };
+    if (json) h['Content-Type'] = 'application/json';
+    return h;
+  }
+  function atmFmtDate(v) {
+    if (!v) return '--';
+    try { return new Date(v).toLocaleString('pt-BR'); } catch(e) { return v; }
+  }
+  function renderATM() {
+    if (!$('atm-token')) return;
+    $('atm-token').value = D.atm.adminToken || '';
+    $('atm-url').textContent = D.atm.lastUrl || 'Gere uma chave para criar a URL.';
+    if (D.atm.adminToken) atmStatus(false);
+  }
+  $('atm-token').addEventListener('change', function(){ D.atm.adminToken = this.value.trim(); save(); });
+  $('atm-check').addEventListener('click', function(){ D.atm.adminToken = $('atm-token').value.trim(); save(); atmStatus(true); });
+  function atmStatus(showToast) {
+    var token = $('atm-token').value.trim();
+    if (!token) { if(showToast) toast('Cole o ATM_ADMIN_TOKEN'); return; }
+    fetch('/api/admin/atm-status', { headers: atmHeaders(false) }).then(function(r){ return r.json().then(function(d){return {ok:r.ok,d:d};}); }).then(function(x){
+      if (!x.ok) { $('atm-dot').classList.remove('on'); $('atm-status-text').textContent='Falha na conexão'; if(showToast) toast(x.d.error||'Erro'); return; }
+      $('atm-dot').classList.toggle('on', !!x.d.configured);
+      $('atm-status-text').textContent = x.d.configured ? 'ATM ativa' : 'Pronto para gerar a primeira ATM';
+      $('atm-version').value = x.d.version || 0;
+      $('atm-updated').value = atmFmtDate(x.d.updatedAt);
+      $('atm-valid').textContent = x.d.stats.valid;
+      $('atm-invalid').textContent = x.d.stats.invalid;
+      $('atm-missing').textContent = x.d.stats.missing;
+      if(showToast) toast('Conexão ATM OK');
+    }).catch(function(){ if(showToast) toast('Erro ao consultar ATM'); });
+  }
+  $('atm-rotate').addEventListener('click', function(){
+    D.atm.adminToken = $('atm-token').value.trim(); save();
+    if (!D.atm.adminToken) { toast('Cole o ATM_ADMIN_TOKEN primeiro'); return; }
+    this.disabled = true; var btn=this; btn.textContent='Gerando...';
+    fetch('/api/admin/atm-rotate',{method:'POST',headers:atmHeaders(true),body:JSON.stringify({graceHours:parseInt($('atm-grace').value)||0})})
+      .then(function(r){return r.json().then(function(d){return {ok:r.ok,d:d};});})
+      .then(function(x){
+        if(!x.ok){toast(x.d.error||'Erro');return;}
+        D.atm.lastAtm=x.d.atm; D.atm.lastUrl=x.d.campaignUrl; save();
+        $('atm-url').textContent=x.d.campaignUrl; toast('Nova ATM gerada'); atmStatus(false);
+      }).catch(function(){toast('Erro ao gerar ATM');})
+      .finally(function(){btn.disabled=false;btn.textContent='Gerar nova ATM';});
+  });
+  $('atm-revoke').addEventListener('click', function(){
+    if(!confirm('Revogar a chave anterior agora?')) return;
+    fetch('/api/admin/atm-revoke',{method:'POST',headers:atmHeaders(false)}).then(function(r){return r.json().then(function(d){return {ok:r.ok,d:d};});}).then(function(x){toast(x.ok?'Chave anterior revogada':(x.d.error||'Erro'));atmStatus(false);});
+  });
+  $('atm-copy').addEventListener('click', function(){
+    var u=$('atm-url').textContent; if(!u || u.indexOf('https://')!==0){toast('Gere uma ATM primeiro');return;} navigator.clipboard.writeText(u); toast('URL copiada!');
+  });
 
   // ── CHECKLIST ──
   var CK_PRE = [
